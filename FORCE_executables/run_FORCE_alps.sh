@@ -1,21 +1,36 @@
+#!/bin/bash
 
-### Run FORCE for one tile ###
+################################################################################
+# Script Name:     run_FORCE_alps.sh
+# Description:     This script executes all FORCE sub-programs
+# Author:          Lisa Mandl
+# Created Date:    November 2, 2022
+# Last Modified:   February 8, 2024
+# Version:         3.2.5
+################################################################################
 
-# create a gsutil config file and sign in with your google account
+#-------------------------------------------------------------------------------
+### Step 1: Create a gsutil config file and sign in with your google account
+#-------------------------------------------------------------------------------
 gsutil config -f
 gcloud auth login 
 
-
-### Settings
+#-------------------------------------------------------------------------------
+### Step 2: Define start and end date as well as max. cloud cover
+#-------------------------------------------------------------------------------
 
 startdate=0101
 enddate=1231
-maxcloud=60 #try
-#basepath=/mnt/public/Projects/ ### this is the basepath for amonsul
-#basepath=/data/public/Projects/ ### this is the basepath for Lorien
+maxcloud=60 
+
+# define base path
 basepath=/data/eo/
 
-### update metadata catalogue
+#-------------------------------------------------------------------------------
+### Step 3: Update metadata catalogue, contains now all Landsat/Sentinel-2 images
+#-------------------------------------------------------------------------------
+
+### from 1986 to 2023
 docker run \
   -v $basepath/datacube:/path \
   --user "$(id -u):10000514" \
@@ -25,17 +40,20 @@ docker run \
   force-level1-csd -u /path/metadata/
 
 #-------------------------------------------------------------------------------
-### landsat search
+### Step 4: Search for all available Landsat scenes + download
+#-------------------------------------------------------------------------------
+
+# Landsat search
 docker run \
   -v $basepath/EO4Alps:/path \
   --user "$(id -u):10000514" \
   --memory 128GB \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials davidfrantz/force \
-  force-level1-landsat search /path/gis/AOI_alps.gpkg /path/level1 -s TM,ETM,OLI -d 19860101,20231231 -c 0,60 --secret /path/lib/m2m_new.txt
+  force-level1-landsat search /path/gis/AOI_alps.gpkg /path/level1 -s TM,ETM,OLI 
+  -d 19860101,20231231 -c 0,60 --secret /path/lib/m2m_new.txt
 
-
-### Landsat download
+# Landsat download
 docker run \
   -v $basepath/EO4Alps:/path \
   --user "$(id -u):10000514" \
@@ -45,18 +63,18 @@ docker run \
   davidfrantz/force:3.7.11 \
   force-level1-landsat download /path/level1/urls_landsat_TM_ETM_OLI_missing.txt /path/level1 
   
-### de-tar Copernicus DEM
+#-------------------------------------------------------------------------------
+### Step 5: de-tar Copernicus DEM
+#-------------------------------------------------------------------------------
 tar -xvf /data/eo/EO4Alps/dem/Copernicus_DSM_10_N29_00_E014_00.tar
 
 unzip /data/public/Projects/DataCube/projects/foreco/alps/dem/032ab314564b9cb72c98fbeb093aeaf69720fbfd.zip -d .
 
-
 #-------------------------------------------------------------------------------
-### level 2 processing
+### Step 6a: Level 2 processing
 #-------------------------------------------------------------------------------
 
-# run FORCE for the entire Alps
-
+# run FORCE level 2 processing using the param file
 docker run \
   -v $basepath/EO4Alps:/path \
   --user "$(id -u):10000514" \
@@ -64,11 +82,9 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-level2 /path/param/param_l2_alps.prm
+  force-level2 /path/EO4PADAC/param_files/param_l2_alps.prm
   
-
-  
-### Create report LS
+# Create report based on log files
 docker run \
   -v $basepath/EO4Alps:/path \
   --user "$(id -u):10000514" \
@@ -78,55 +94,16 @@ docker run \
   davidfrantz/force \
   force-level2-report /path/log
   
+#-------------------------------------------------------------------------------
+### Step 6b: Coregistration
+### this step is only needed when using Landsat AND Sentinel-2 data!
 
-### Process landsat 1997er data to leel 2
-docker run \
-  -v $basepath/datacube:/path 
-  --user "$(id -u):10000514" \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials davidfrantz/force \
-  force-level2 /path/projects/foreco/alps/param/param_l2_alps_ls1997.prm
-  
-  
-###
-### Coregistration
-###
+#-------------------------------------------------------------------------------
+### Step 7: Level 3 processing
+#-------------------------------------------------------------------------------
 
-### search for all log files, that do not contain the string "Skip"
-### his is the new tile pool
-### sink writes the console output to the previously defined file
-
-### list files
-fileNames <- list.files(path = "F:/Projects/DataCube/projects/foreco/alps//temp_trash/log_coreg_II/")
-
-### scam through list and only select files where !Skip.
-### write all files in an empty txt file
-
-sink(file = "C:/Users/ge45vaz/Documents/local/log_II.txt", append = T)
-for (fileName in fileNames) {
-  if (length(grep("Skip", invert = TRUE, readLines(fileName))) > 0) { print(fileName)}
-}
-sink()
-
-
-  
-### create html report
-# create report for BGD datacube
-docker run \
-  -v $basepath/datacube:/path 
-  --user "$(id -u):10000514" \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials davidfrantz/force \
-  force-level2-report /path/projects/foreco/alps/log
-  
-  
-### 
-### Level 3 processing
-###
-basepath=/data/public/Projects/ ### this is the basepath for Lorien
-basepath=/mnt/public/Projects/ ### this is the basepath for amonsul
-
-
+# Compute spectral-temporal-metrics from Level 2 data using the setting given
+# in param file
 docker run \
   -v $basepath/datacube:/path 
   --user "$(id -u):10000514" \
@@ -134,9 +111,9 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/projects/foreco/alps/param/param_STMs_X3_Y-1/param_l3_STM_2021.prm
+  force-higher-level /path/EO4PADAC/param_files/param_l3_STM_alps.prm
   
-  
+# compute a mosaic (if you want to do so...)  
 docker run \
   -v $basepath/datacube:/path 
   --user "$(id -u):10000514" \
@@ -146,8 +123,12 @@ docker run \
   davidfrantz/force \  
   force-mosaic /path/projects/foreco/alps/level3/l3_STMs/1990
   
+#-------------------------------------------------------------------------------
+### Step 8: Sampling for creating synthetic training data
+#-------------------------------------------------------------------------------
   
-### Level 3 sampling
+# Run sampling
+# before, make sure you created a training data file (X, Y, class (csv))
 docker run \
   -v $basepath/datacube:/path 
   --user "$(id -u):10000514" \
@@ -155,7 +136,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/projects/foreco/alps/param/sampling_v21.prm
+  force-higher-level /path/EO4PADAC/param_files/sampling.prm
   
   
 ### Create parameter files
@@ -164,7 +145,7 @@ docker run \
   --user "$(id -u):10000514" \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials davidfrantz/force \
-  force-parameter /path/projects/foreco/alps/param/synth_mix.prm SYNTHMIX
+  force-parameter /path/EO4PADAC/param_files/param_synthmix.prm SYNTHMIX
   
 
 ### run synthmix
@@ -174,43 +155,45 @@ docker run \
   --memory 128GB \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials davidfrantz/force \
-  force-synthmix /path/projects/foreco/alps/param/synth_mix_l2.prm
-  
+  force-synthmix /path/EO4PADAC/param_files/synth_mix.prm
 
-### Model training
+#-------------------------------------------------------------------------------
+### Step 8: Model training
+#-------------------------------------------------------------------------------
+
+### Create trianing files (5 per end member)
 docker run \
   -v $basepath/datacube:/path 
   --user "$(id -u):10000514" \
   --memory 128GB \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials davidfrantz/force \
-  force-magic-parameters -o /path/projects/foreco/alps/param/train_param_v3_l2 /path/projects/foreco/alps/param/train_SVM_v3_l2.prm
+  force-magic-parameters -o /path/projects/foreco/alps/param/train_param_v3_l2 /path/EO4PADAC/param_files/train_param_SVM.prm
   
-
-
-### train 15 models by calling all 15 parameter files
+# train 5 models per endmember by calling all 45 (5*9) parameter files
 docker run \
   -v $basepath/datacube:/path 
   --user "$(id -u):10000514" \
   --memory 128GB \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials davidfrantz/force \
-  force-train /path/projects/foreco/alps/param/train_param_v3_l2/train_SVM_v3_l2_00025.prm
+  force-train /path/EO4PADAC/param_files/train_SVM.prm
   
 #for f in /path/projects/foreco/alps/param/train_param/*.prm; do dforce force-train $f; done
 
+#-------------------------------------------------------------------------------
+### Step 9: Apply all previously trained models
+#-------------------------------------------------------------------------------
 
-
-### apply all previously trained models
+### Run
 docker run \
   -v $basepath/datacube:/path \
   --user "$(id -u):10000514" \
   --memory 128GB \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials davidfrantz/force \
-  force-higher-level /path/projects/foreco/alps/param/prediction_v3_proc_mask.prm
+  force-higher-level /path/EO4PADAC/param_files/prediction_v3_proc_mask.prm
   
-basepath=/data/eo/
 ### apply all previously trained models
 docker run \
   -v $basepath/datacube:/path \
