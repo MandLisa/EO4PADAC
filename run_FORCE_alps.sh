@@ -8,7 +8,7 @@ gcloud auth login
 
 ### Settings
 
-startdate=0101 
+startdate=0101
 enddate=1231
 maxcloud=60 #try
 #basepath=/mnt/public/Projects/ ### this is the basepath for amonsul
