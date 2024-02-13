@@ -25,6 +25,7 @@ maxcloud=60
 
 # define base path
 basepath=/data/eo/
+#basepath=/data/public/Projects/
 
 #-------------------------------------------------------------------------------
 ### Step 3: Update metadata catalogue, contains now all Landsat/Sentinel-2 images
