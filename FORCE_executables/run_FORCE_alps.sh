@@ -21,7 +21,7 @@ gcloud auth login
 
 startdate=0101
 enddate=1231
-maxcloud=61 
+maxcloud=60
 
 # define base path
 basepath=/data/eo/
