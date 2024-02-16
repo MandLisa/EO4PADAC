@@ -95,9 +95,22 @@ docker run \
   davidfrantz/force \
   force-level2-report /path/log
   
+# Export tiles as grid; either as KML or shp, format: bottom top left right
+docker run \
+  -v $basepath/DataCube:/path \
+  --user "$(id -u):10000514" \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-tabulate-grid -b 45,48,9,15 -f shp /path/level2
+  
 #-------------------------------------------------------------------------------
 ### Step 6b: Coregistration
 ### this step is only needed when using Landsat AND Sentinel-2 data!
+
+# when you see that level 2 data looks fine, consider deleting level 1 data
+
+#rm -rf $basepath/EO4Alps/level1/
 
 #-------------------------------------------------------------------------------
 ### Step 7: Level 3 processing
