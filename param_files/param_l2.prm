@@ -7,7 +7,7 @@
 # into the parameter file. The file queue is mandatory for force-level2, but
 # may be NULL for force-l2ps.
 # Type: full file path
-FILE_QUEUE =/path/level1/tile_pool_0702.txt
+FILE_QUEUE =/path/level1/tile_pool_1986n.txt
 # This is the output directory where the Level 2 data will be stored. Note
 # that data will be overwritten/mosaicked if you reprocess images. It is
 # safe and recommended to use a single Level 2 data pool for different
@@ -263,8 +263,8 @@ TIER = 1
 # it is adviced to use less processes and more threads per process. The
 # number of processes and threads is given by following parameters.
 # Type: Integer. Valid range: [1,...
-NPROC = 4
-NTHREAD = 2
+NPROC = 8
+NTHREAD = 4
 # This parameter controls whether the individual bands of the Level 1 input
 # images are read sequentially or in parallel. Note that we observed two kinds
 # of GDAL installation: (1) the JPEG driver reads each band parallely, but 
