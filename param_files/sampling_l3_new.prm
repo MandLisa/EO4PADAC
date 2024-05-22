@@ -139,7 +139,7 @@ FEATURE_NODATA = -9999
 # Type: Logical. Valid values: {TRUE,FALSE}
 FEATURE_EXCLUDE = FALSE
 
-# SAMPLING
+# SAMPLIN
 # ------------------------------------------------------------------------
 # File with coordinates, at which the features should be sampled.
 # 1st column: x-coordinate, 2nd column: y-coordinate, 3rd column: response

@@ -97,7 +97,7 @@ docker run \
   
 # Export tiles as grid; either as KML or shp, format: bottom top left right
 docker run \
-  -v $basepath/DataCube:/path \
+  -v $basepath/EO4Alps:/path \
   --user "$(id -u):10000514" \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
@@ -119,7 +119,7 @@ docker run \
 # Compute spectral-temporal-metrics from Level 2 data using the setting given
 # in param file
 docker run \
-  -v $basepath/datacube:/path 
+  -v $basepath/EO4Alps:/path 
   --user "$(id -u):10000514" \
   --memory 128GB \
   --env FORCE_CREDENTIALS=/app/credentials \
@@ -129,7 +129,7 @@ docker run \
   
 # compute a mosaic (if you want to do so...)  
 docker run \
-  -v $basepath/datacube:/path 
+  -v $basepath/EO4Alps:/path 
   --user "$(id -u):10000514" \
   --memory 128GB \
   --env FORCE_CREDENTIALS=/app/credentials \
@@ -144,19 +144,20 @@ docker run \
 # Run sampling
 # before, make sure you created a training data file (X, Y, class (csv))
 docker run \
-  -v $basepath/datacube:/path 
+  -v $basepath/EO4Alps:/path \
   --user "$(id -u):10000514" \
   --memory 128GB \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling.prm
+  force-higher-level /path/param/sampling_l3_new.prm
   
   
 ### Create parameter files
   docker run \
   -v $basepath/datacube:/path 
   --user "$(id -u):10000514" \
+  --memory 128GB \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials davidfrantz/force \
   force-parameter /path/EO4PADAC/param_files/param_synthmix.prm SYNTHMIX
