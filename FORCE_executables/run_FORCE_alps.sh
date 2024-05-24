@@ -150,7 +150,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/param/sampling_l3_new.prm
+  force-higher-level /path/EO4PADAC/param_files/sampling_l3_new.prm
   
   
 ### Create parameter files

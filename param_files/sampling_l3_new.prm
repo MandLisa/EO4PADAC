@@ -118,19 +118,19 @@ RESOLUTION = 30
 # in the same order as given here, thus keep this in mind when training
 # machine learning models with force-train.
 # Type: Basename of file, followed by Integer list
-INPUT_FEATURE = 2023-2023_001-365_HL_TSA_LNDLG_BLU_STM.tif 4 6 7 10 12 14 
-INPUT_FEATURE = 2023-2023_001-365_HL_TSA_LNDLG_GRN_STM.tif 4 6 7 10 12 14
-INPUT_FEATURE = 2023-2023_001-365_HL_TSA_LNDLG_RED_STM.tif 4 6 7 10 12 14
-INPUT_FEATURE = 2023-2023_001-365_HL_TSA_LNDLG_NIR_STM.tif 4 6 7 10 12 14
-INPUT_FEATURE = 2023-2023_001-365_HL_TSA_LNDLG_SW1_STM.tif 4 6 7 10 12 14
-INPUT_FEATURE = 2023-2023_001-365_HL_TSA_LNDLG_SW2_STM.tif 4 6 7 10 12 14
-INPUT_FEATURE = 2023-2023_001-365_HL_TSA_LNDLG_NBR_STM.tif 4 6 7 10 12 14
-INPUT_FEATURE = 2023-2023_001-365_HL_TSA_LNDLG_NDV_STM.tif 4 6 7 10 12 14
-INPUT_FEATURE = 2023-2023_001-365_HL_TSA_LNDLG_EVI_STM.tif 4 6 7 10 12 14
-INPUT_FEATURE = 2023-2023_001-365_HL_TSA_LNDLG_NDM_STM.tif 4 6 7 10 12 14
-INPUT_FEATURE = 2023-2023_001-365_HL_TSA_LNDLG_NDS_STM.tif 4 6 7 10 12 14
-INPUT_FEATURE = 2023-2023_001-365_HL_TSA_LNDLG_NDW_STM.tif 4 6 7 10 12 14
-INPUT_FEATURE = 2023-2023_001-365_HL_TSA_LNDLG_SAV_STM.tif 4 6 7 10 12 14
+INPUT_FEATURE = 2016-2016_001-365_HL_TSA_LNDLG_BLU_STM.tif 4 6 7 10 12 14 
+INPUT_FEATURE = 2016-2016_001-365_HL_TSA_LNDLG_GRN_STM.tif 4 6 7 10 12 14
+INPUT_FEATURE = 2016-2016_001-365_HL_TSA_LNDLG_RED_STM.tif 4 6 7 10 12 14
+INPUT_FEATURE = 2016-2016_001-365_HL_TSA_LNDLG_NIR_STM.tif 4 6 7 10 12 14
+INPUT_FEATURE = 2016-2016_001-365_HL_TSA_LNDLG_SW1_STM.tif 4 6 7 10 12 14
+INPUT_FEATURE = 2016-2016_001-365_HL_TSA_LNDLG_SW2_STM.tif 4 6 7 10 12 14
+INPUT_FEATURE = 2016-2016_001-365_HL_TSA_LNDLG_NBR_STM.tif 4 6 7 10 12 14
+INPUT_FEATURE = 2016-2016_001-365_HL_TSA_LNDLG_NDV_STM.tif 4 6 7 10 12 14
+INPUT_FEATURE = 2016-2016_001-365_HL_TSA_LNDLG_EVI_STM.tif 4 6 7 10 12 14
+INPUT_FEATURE = 2016-2016_001-365_HL_TSA_LNDLG_NDM_STM.tif 4 6 7 10 12 14
+INPUT_FEATURE = 2016-2016_001-365_HL_TSA_LNDLG_NDS_STM.tif 4 6 7 10 12 14
+INPUT_FEATURE = 2016-2016_001-365_HL_TSA_LNDLG_NDW_STM.tif 4 6 7 10 12 14
+INPUT_FEATURE = 2016-2016_001-365_HL_TSA_LNDLG_SAV_STM.tif 4 6 7 10 12 14
 # Nodata value of the features.
 # Type: Integer. Valid values: [-32768,32767]
 FEATURE_NODATA = -9999
@@ -139,23 +139,23 @@ FEATURE_NODATA = -9999
 # Type: Logical. Valid values: {TRUE,FALSE}
 FEATURE_EXCLUDE = FALSE
 
-# SAMPLIN
+# SAMPLINGgit add 
 # ------------------------------------------------------------------------
 # File with coordinates, at which the features should be sampled.
 # 1st column: x-coordinate, 2nd column: y-coordinate, 3rd column: response
 # Type: full file path
-FILE_POINTS = /path/spec_lib/l3/spec_lib_l3.txt
+FILE_POINTS = /path/spec_lib/l3/spec_lib_l3_2305.txt
 # File with sampled features. This file should not exist.
 # Type: full file path
-FILE_SAMPLE = /path/level3/STMs_samples/features/features_2023.txt
+FILE_SAMPLE = /path/level3/STMs_samples/features/features_2016.txt
 # File with the response variable corresponding to the sampled features.
 # This file should not exist.
 # Type: full file path
-FILE_RESPONSE = /path/level3/STMs_samples/response/response_2023.txt
+FILE_RESPONSE = /path/level3/STMs_samples/response/response_2016.txt
 # File with the coordinates corresponding to the sampled features.
 # This file should not exist.
 # Type: full file path
-FILE_COORDINATES = /path/level3/STMs_samples/coordinates/coordinates_2023.txt
+FILE_COORDINATES = /path/level3/STMs_samples/coordinates/coordinates_2016.txt
 # Are the coordinates in FILE_POINTS in the projection of the datacube
 # (X/Y: TRUE)? Or are they geographic coordinates (Lon/Lat: FALSE)
 # Type: Logical. Valid values: {TRUE,FALSE}
