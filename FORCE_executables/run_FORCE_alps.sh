@@ -5,8 +5,8 @@
 # Description:     This script executes all FORCE sub-programs
 # Author:          Lisa Mandl
 # Created Date:    November 2, 2022
-# Last Modified:   May 30, 2024
-# Version:         3.2.5
+# Last Modified:   May 31, 2024
+# Version:         3.2.6
 ################################################################################
 
 #-------------------------------------------------------------------------------
