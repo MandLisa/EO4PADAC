@@ -50,16 +50,21 @@ for (tif_file in tif_files) {
 }
 
 
+
+
+
+
+
 ###
 # Combine information from one metric and each band and year in one csv file
 ###
 
 ### move all csv files in a separate folder
 # Set the directory where the CSV files are located
-source_dir <- "/data/public/Projects/DataCube/projects/foreco/alps/level3/l3_STMs/all"
+source_dir <- "/data/eo/EO4Alps/level3/NDVI/"
 
 # Set the directory where the CSV files should be moved to
-destination_dir <- "/data/public/Projects/DataCube/projects/foreco/alps/level3/l3_STMs/all/csv"
+destination_dir <- "/data/eo/EO4Alps/level3/NDVI/csv"
 
 # Get a list of all CSV files in the source directory
 csv_files <- list.files(source_dir, pattern = "\\.csv$")
