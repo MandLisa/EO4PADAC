@@ -152,6 +152,16 @@ docker run \
   davidfrantz/force \
   force-higher-level /path/EO4PADAC/param_files/sampling_l3_new.prm
   
+# extract NDVI time series
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/sampling_l3_NDVI.prm
+  
   
 ### Create parameter files
   docker run \
