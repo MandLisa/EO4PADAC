@@ -152,7 +152,7 @@ docker run \
   davidfrantz/force \
   force-higher-level /path/EO4PADAC/param_files/sampling_l3_new.prm
   
-# extract NDVI time series
+# extract NDVI time serie
 docker run \
   -v $basepath/EO4Alps:/path \
   --user "$(id -u):10000514" \
