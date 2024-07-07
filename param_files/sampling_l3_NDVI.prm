@@ -118,7 +118,7 @@ RESOLUTION = 30
 # in the same order as given here, thus keep this in mind when training
 # machine learning models with force-train.
 # Type: Basename of file, followed by Integer list
-INPUT_FEATURE = 1993-1993_001-365_HL_TSA_LNDLG_NDV_STM.tif 3
+INPUT_FEATURE = 2023-2023_001-365_HL_TSA_LNDLG_NDV_STM.tif 3
 
 # Nodata value of the features.
 # Type: Integer. Valid values: [-32768,32767]
@@ -136,15 +136,15 @@ FEATURE_EXCLUDE = FALSE
 FILE_POINTS = /path/spec_lib/l3/spec_lib_l3_2305.txt
 # File with sampled features. This file should not exist.
 # Type: full file path
-FILE_SAMPLE = /path/level3/NDVI/features/features_1993.txt
+FILE_SAMPLE = /path/level3/NDVI/features/features_2023.txt
 # File with the response variable corresponding to the sampled features.
 # This file should not exist.
 # Type: full file path
-FILE_RESPONSE = /path/level3/NDVI/response/response_1993.txt
+FILE_RESPONSE = /path/level3/NDVI/response/response_2023.txt
 # File with the coordinates corresponding to the sampled features.
 # This file should not exist.
 # Type: full file path
-FILE_COORDINATES = /path/level3/NDVI/coordinates/coordinates_1993.txt
+FILE_COORDINATES = /path/level3/NDVI/coordinates/coordinates_2023.txt
 # Are the coordinates in FILE_POINTS in the projection of the datacube
 # (X/Y: TRUE)? Or are they geographic coordinates (Lon/Lat: FALSE)
 # Type: Logical. Valid values: {TRUE,FALSE}
