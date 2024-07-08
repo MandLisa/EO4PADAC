@@ -7,6 +7,58 @@ library(data.table)
 # Set the working directory to the folder with the tif files and the shapefile
 setwd("/data/eo/EO4Alps/level3/NDVI/")
 
+### rename csv files according to the folder they are stored in
+# Load necessary library
+library(stringr)
+
+# Function to rename and copy CSV files
+rename_and_copy_csv_files <- function(source_directory, destination_directory) {
+  # Create the destination directory if it does not exist
+  if (!dir.exists(destination_directory)) {
+    dir.create(destination_directory, recursive = TRUE)
+  }
+  
+  # List all folders in the source directory
+  folders <- list.dirs(source_directory, full.names = TRUE, recursive = FALSE)
+  
+  # Iterate over each folder
+  for (folder in folders) {
+    # Get the folder name
+    folder_name <- basename(folder)
+    
+    # List all csv files in the folder
+    csv_files <- list.files(folder, pattern = "\\.csv$", full.names = TRUE)
+    
+    # Iterate over each CSV file
+    for (csv_file in csv_files) {
+      # Get the original file name
+      original_file_name <- basename(csv_file)
+      
+      # Construct the new file name
+      new_file_name <- paste0(folder_name, "_", original_file_name)
+      
+      # Construct the full path for the new file name in the destination directory
+      new_file_path <- file.path(destination_directory, new_file_name)
+      
+      # Copy the file to the new location with the new name
+      file.copy(csv_file, new_file_path)
+      
+      # Print the copying action
+      cat("Copied:", csv_file, "to", new_file_path, "\n")
+    }
+  }
+}
+
+# Specify the source directory containing the folders with CSV files
+source_directory <- "/data/eo/EO4Alps/level3/NDVI"
+
+# Specify the destination directory where renamed CSV files will be copied
+destination_directory <- "/data/eo/EO4Alps/level3/NDVI/csv"
+
+# Call the function to rename and copy CSV files
+rename_and_copy_csv_files(source_directory, destination_directory)
+
+#-------------------------------------------------------------------------------
 
 # Read the shapefile
 shapefile <- readOGR(dsn = ".", layer = "candidates")
@@ -60,65 +112,18 @@ for (tif_file in tif_files) {
 }
 
 
-### rename csv files according to the folder they are stored in
-# Load necessary library
-library(stringr)
 
-# Function to rename and copy CSV files
-rename_and_copy_csv_files <- function(source_directory, destination_directory) {
-  # Create the destination directory if it does not exist
-  if (!dir.exists(destination_directory)) {
-    dir.create(destination_directory, recursive = TRUE)
-  }
-  
-  # List all folders in the source directory
-  folders <- list.dirs(source_directory, full.names = TRUE, recursive = FALSE)
-  
-  # Iterate over each folder
-  for (folder in folders) {
-    # Get the folder name
-    folder_name <- basename(folder)
-    
-    # List all CSV files in the folder
-    csv_files <- list.files(folder, pattern = "\\.csv$", full.names = TRUE)
-    
-    # Iterate over each CSV file
-    for (csv_file in csv_files) {
-      # Get the original file name
-      original_file_name <- basename(csv_file)
-      
-      # Construct the new file name
-      new_file_name <- paste0(folder_name, "_", original_file_name)
-      
-      # Construct the full path for the new file name in the destination directory
-      new_file_path <- file.path(destination_directory, new_file_name)
-      
-      # Copy the file to the new location with the new name
-      file.copy(csv_file, new_file_path)
-      
-      # Print the copying action
-      cat("Copied:", csv_file, "to", new_file_path, "\n")
-    }
-  }
-}
 
-# Specify the source directory containing the folders with CSV files
-source_directory <- "/data/eo/EO4Alps/level3/NDVI"
-
-# Specify the destination directory where renamed CSV files will be copied
-destination_directory <- "/data/eo/EO4Alps/level3/NDVI/csv"
-
-# Call the function to rename and copy CSV files
-rename_and_copy_csv_files(source_directory, destination_directory)
 
 ############################
+
 
 # Function to add the year column to CSV files in place
 add_year_to_csv_files <- function(directory) {
   # List all CSV files in the directory
   csv_files <- list.files(directory, pattern = "\\.csv$", full.names = TRUE)
   
-  # Iterate over each CSV file
+  # Iterate over each csv file
   for (csv_file in csv_files) {
     # Read the CSV file
     data <- read.csv(csv_file, stringsAsFactors = FALSE)
