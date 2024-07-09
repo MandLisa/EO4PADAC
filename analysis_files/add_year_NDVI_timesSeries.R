@@ -268,9 +268,16 @@ class_mapping <- c(
 combined_features_clean5 <- combined_features_clean5 %>%
   mutate(class_name = class_mapping[as.character(class)])
 
+# unique IDs
+# Remove duplicate IDs
+combined_features_clean5_unique <- combined_features_clean5 %>%
+  distinct(ID, .keep_all = TRUE)
 
 # write
 write.csv(combined_features_clean5, "/data/eo/EO4Alps/level3/NDVI/combined_features_cleaned_classname.csv", row.names = FALSE)
+write.csv(combined_features_clean5_unique, "/data/eo/EO4Alps/level3/NDVI/combined_features_cleaned_classname_unique.csv", row.names = FALSE)
+
+
 
 # Calculate summary statistics
 summary_stats <- combined_features_clean5 %>%
@@ -304,16 +311,14 @@ ggsave("/data/eo/EO4Alps/figs/spectral_stability.jpg", plot = p, dpi = 300, widt
 
 
 
-
-
 # Calculate the count of IDs per class
-class_counts <- summary_stats %>%
-  group_by(class) %>%
-  summarise(num_ids = n_distinct(sd_value)) %>%
+class_counts <- combined_features_clean5 %>%
+  group_by(class_name) %>%
+  summarise(num_ids = n_distinct(ID)) %>%
   ungroup()
 
 # Plot the bar chart
-ggplot(class_counts, aes(x = class, y = num_ids)) +
+ggplot(class_counts, aes(x = class_name, y = num_ids)) +
   geom_bar(stat = "identity", fill = "skyblue", color = "black") +
   geom_text(aes(label = num_ids), vjust = -0.5, color = "black", size = 4) +  # Add labels with num_ids values
   theme_minimal() +
