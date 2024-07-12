@@ -63,9 +63,9 @@ OUTPUT_SUBFOLDERS = TRUE
 # output. Each team can have multiple sub-threads to speed up the work. The
 # number of threads to use for each team is given by following parameters.
 # Type: Integer. Valid range: [1,...
-NTHREAD_READ = 8
+NTHREAD_READ = 12
 NTHREAD_COMPUTE = 22
-NTHREAD_WRITE = 4
+NTHREAD_WRITE = 6
 # Use STREAMING = FALSE to disable streaming. This will perform reading,
 # computing and writing after one another in sequential mode.
 # Each operation will still be parallelized with above settings.
@@ -118,19 +118,19 @@ RESOLUTION = 30
 # in the same order as given here, thus keep this in mind when training
 # machine learning models with force-train.
 # Type: Basename of file, followed by Integer list
-INPUT_FEATURE = 2008-2008_001-365_HL_TSA_LNDLG_BLU_STM.tif 4 6 7 10 11 12 13
-INPUT_FEATURE = 2008-2008_001-365_HL_TSA_LNDLG_GRN_STM.tif 4 6 7 10 11 12 13
-INPUT_FEATURE = 2008-2008_001-365_HL_TSA_LNDLG_RED_STM.tif 4 6 7 10 11 12 13
-INPUT_FEATURE = 2008-2008_001-365_HL_TSA_LNDLG_NIR_STM.tif 4 6 7 10 11 12 13
-INPUT_FEATURE = 2008-2008_001-365_HL_TSA_LNDLG_SW1_STM.tif 4 6 7 10 11 12 13
-INPUT_FEATURE = 2008-2008_001-365_HL_TSA_LNDLG_SW2_STM.tif 4 6 7 10 11 12 13
-INPUT_FEATURE = 2008-2008_001-365_HL_TSA_LNDLG_NBR_STM.tif 4 6 7 10 11 12 13
-INPUT_FEATURE = 2008-2008_001-365_HL_TSA_LNDLG_NDV_STM.tif 4 6 7 10 11 12 13
-INPUT_FEATURE = 2008-2008_001-365_HL_TSA_LNDLG_EVI_STM.tif 4 6 7 10 11 12 13
-INPUT_FEATURE = 2008-2008_001-365_HL_TSA_LNDLG_NDM_STM.tif 4 6 7 10 11 12 13
-INPUT_FEATURE = 2008-2008_001-365_HL_TSA_LNDLG_NDS_STM.tif 4 6 7 10 11 12 13
-INPUT_FEATURE = 2008-2008_001-365_HL_TSA_LNDLG_NDW_STM.tif 4 6 7 10 11 12 13
-INPUT_FEATURE = 2008-2008_001-365_HL_TSA_LNDLG_SAV_STM.tif 4 6 7 10 11 12 13
+INPUT_FEATURE = 1986-1986_001-365_HL_TSA_LNDLG_BLU_STM.tif 4 6 7 10 11 12 13
+INPUT_FEATURE = 1986-1986_001-365_HL_TSA_LNDLG_GRN_STM.tif 4 6 7 10 11 12 13
+INPUT_FEATURE = 1986-1986_001-365_HL_TSA_LNDLG_RED_STM.tif 4 6 7 10 11 12 13
+INPUT_FEATURE = 1986-1986_001-365_HL_TSA_LNDLG_NIR_STM.tif 4 6 7 10 11 12 13
+INPUT_FEATURE = 1986-1986_001-365_HL_TSA_LNDLG_SW1_STM.tif 4 6 7 10 11 12 13
+INPUT_FEATURE = 1986-1986_001-365_HL_TSA_LNDLG_SW2_STM.tif 4 6 7 10 11 12 13
+INPUT_FEATURE = 1986-1986_001-365_HL_TSA_LNDLG_NBR_STM.tif 4 6 7 10 11 12 13
+INPUT_FEATURE = 1986-1986_001-365_HL_TSA_LNDLG_NDV_STM.tif 4 6 7 10 11 12 13
+INPUT_FEATURE = 1986-1986_001-365_HL_TSA_LNDLG_EVI_STM.tif 4 6 7 10 11 12 13
+INPUT_FEATURE = 1986-1986_001-365_HL_TSA_LNDLG_NDM_STM.tif 4 6 7 10 11 12 13
+INPUT_FEATURE = 1986-1986_001-365_HL_TSA_LNDLG_NDS_STM.tif 4 6 7 10 11 12 13
+INPUT_FEATURE = 1986-1986_001-365_HL_TSA_LNDLG_NDW_STM.tif 4 6 7 10 11 12 13
+INPUT_FEATURE = 1986-1986_001-365_HL_TSA_LNDLG_SAV_STM.tif 4 6 7 10 11 12 13
 # Nodata value of the features.
 # Type: Integer. Valid values: [-32768,32767]
 FEATURE_NODATA = -9999
@@ -147,15 +147,15 @@ FEATURE_EXCLUDE = FALSE
 FILE_POINTS = /path/spec_lib/l3/candidates_FORCE.txt
 # File with sampled features. This file should not exist.
 # Type: full file path
-FILE_SAMPLE = /path/level3/STMs_samples/features/features_2008.txt
+FILE_SAMPLE = /path/level3/STMs_samples/features/features_1986.txt
 # File with the response variable corresponding to the sampled features.
 # This file should not exist.
 # Type: full file path
-FILE_RESPONSE = /path/level3/STMs_samples/response/response_2008.txt
+FILE_RESPONSE = /path/level3/STMs_samples/response/response_1986.txt
 # File with the coordinates corresponding to the sampled features.
 # This file should not exist.
 # Type: full file path
-FILE_COORDINATES = /path/level3/STMs_samples/coordinates/coordinates_2008.txt
+FILE_COORDINATES = /path/level3/STMs_samples/coordinates/coordinates_1986.txt
 # Are the coordinates in FILE_POINTS in the projection of the datacube
 # (X/Y: TRUE)? Or are they geographic coordinates (Lon/Lat: FALSE)
 # Type: Logical. Valid values: {TRUE,FALSE}

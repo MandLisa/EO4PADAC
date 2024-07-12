@@ -8,12 +8,12 @@
 # for each sample. Do not include a header. The samples need to match the
 # response file.
 # Type: full file path 
-FILE_FEATURES = /path/level3_sampled/v3/features/features_multi.txt
+FILE_FEATURES = /path/level3/STMs_samples/features/features_all.txt
 # File that is holding the class labels. The file needs to be a table with
 # one column, and samples in rows. Do not include a header. The samples need 
 # to match the feature file.
 # Type: full file path
-FILE_RESPONSE = /path/projects/foreco/alps/level3_sampled/v3/response/response_multi.txt
+FILE_RESPONSE = /path/level3/STMs_samples/response/response_all.txt
 
 # SYNTHETIC MIXING
 # ------------------------------------------------------------------------
