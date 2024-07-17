@@ -182,7 +182,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-synthmix /path/EO4PADAC/param_files/param_synthmix_l3.prm
+  force-synthmix /path/EO4PADAC/param_files/param_synthmix_l2.prm
 
 #-------------------------------------------------------------------------------
 ### Step 8: Model training
