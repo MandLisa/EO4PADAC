@@ -8,12 +8,12 @@
 # for each sample. Do not include a header. The samples need to match the
 # response file.
 # Type: full file path
-FILE_FEATURES = /path/level3/STMs_samples/features/features_all_clean.txt
+FILE_FEATURES = /path/level3/STMs_samples/features/features_all_clean_l2.txt
 # File that is holding the class labels. The file needs to be a table with
 # one column, and samples in rows. Do not include a header. The samples need 
 # to match the feature file.
 # Type: full file path
-FILE_RESPONSE = /path/level3/STMs_samples/response/response_all_clean.txt
+FILE_RESPONSE = /path/level3/STMs_samples/response/response_all_clean_l2.txt
 
 # SYNTHETIC MIXING
 # ------------------------------------------------------------------------
