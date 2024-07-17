@@ -164,23 +164,25 @@ docker run \
   
   
 ### Create parameter files
-  docker run \
-  -v $basepath/datacube:/path 
+docker run \
+  -v $basepath/EO4Alps:/path \
   --user "$(id -u):10000514" \
   --memory 128GB \
   --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials davidfrantz/force \
-  force-parameter /path/EO4PADAC/param_files/param_synthmix.prm SYNTHMIX
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-parameter /path/EO4PADAC/param_files/param_synthmix_l3.prm SYNTHMIX
   
 
 ### run synthmix
 docker run \
-  -v $basepath/datacube:/path 
+  -v $basepath/EO4Alps:/path \
   --user "$(id -u):10000514" \
   --memory 128GB \
   --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials davidfrantz/force \
-  force-synthmix /path/EO4PADAC/param_files/synth_mix.prm
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-synthmix /path/EO4PADAC/param_files/param_synthmix_l3.prm
 
 #-------------------------------------------------------------------------------
 ### Step 8: Model training
@@ -188,21 +190,377 @@ docker run \
 
 ### Create trianing files (5 per end member)
 docker run \
-  -v $basepath/datacube:/path 
+  -v $basepath/EO4Alps:/path \
   --user "$(id -u):10000514" \
   --memory 128GB \
   --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials davidfrantz/force \
-  force-magic-parameters -o /path/projects/foreco/alps/param/train_param_v3_l2 /path/EO4PADAC/param_files/train_param_SVM.prm
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-magic-parameters -o /path/EO4PADAC/param_files/train_param_l3 /path/EO4PADAC/param_files/train_SVM_l3.prm
   
-# train 5 models per endmember by calling all 45 (5*9) parameter files
+# train 5 models per endmember by calling all 40 (5*8) parameter files
 docker run \
-  -v $basepath/datacube:/path 
+  -v $basepath/EO4Alps:/path \
   --user "$(id -u):10000514" \
   --memory 128GB \
   --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_SVM.prm
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00001.prm
+
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00002.prm
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00003.prm
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00004.prm
+
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00005.prm
+
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00006.prm
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00007.prm
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00008.prm
+  
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00009.prm
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00010.prm
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00011.prm
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00012.prm
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00013.prm
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00014.prm
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00015.prm
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00016.prm
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00017.prm
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00018.prm
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00019.prm
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00020.prm
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00021.prm
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00022.prm
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00023.prm
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00024.prm
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00025.prm
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00026.prm
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00027.prm
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00028.prm
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00029.prm
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00030.prm
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00031.prm
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00032.prm
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00033.prm
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00034.prm
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00035.prm
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00036.prm
+
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00037.prm
+
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00038.prm
+
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00039.prm
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00040.prm
+  
+  
   
 #for f in /path/projects/foreco/alps/param/train_param/*.prm; do dforce force-train $f; done
 
@@ -212,12 +570,24 @@ docker run \
 
 ### Run
 docker run \
-  -v $basepath/datacube:/path \
+  -v $basepath/EO4Alps:/path \
   --user "$(id -u):10000514" \
   --memory 128GB \
   --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/prediction_v3_proc_mask.prm
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/prediction_l3_test.prm
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-magic-parameters -o /path/EO4PADAC/param_files/predictions_l3 /path/EO4PADAC/param_files/predictions_l31.prm
+  
+  
   
 ### apply all previously trained models
 docker run \
