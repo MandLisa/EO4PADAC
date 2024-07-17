@@ -1,7 +1,7 @@
 # Path to the input file
-input_file_path <- "/data/eo/EO4Alps/level3/STMs_samples/features/features_all_clean_l2.txt"
+input_file_path <- "/data/eo/EO4Alps/level3/STMs_samples/features/features_all_clean_l21.txt"
 # Path to the output file (you can use the same path to overwrite the original file)
-output_file_path <- "/data/eo/EO4Alps/level3/STMs_samples/features/features_all_clean_l21.txt"
+output_file_path <- "/data/eo/EO4Alps/level3/STMs_samples/features/features_all_clean_l2.txt"
 
 # Read the content of the file
 file_content <- readLines(input_file_path)
