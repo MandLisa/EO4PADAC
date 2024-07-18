@@ -196,7 +196,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-magic-parameters -o /path/EO4PADAC/param_files/train_param_l3 /path/EO4PADAC/param_files/train_SVM_l3.prm
+  force-magic-parameters -o /path/EO4PADAC/param_files/train_param_l2 /path/EO4PADAC/param_files/train_SVM_l2.prm
   
 # train 5 models per endmember by calling all 40 (5*8) parameter files
 docker run \
@@ -206,7 +206,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00001.prm
+  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00001.prm
 
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -215,7 +215,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00002.prm
+  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00002.prm
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -224,7 +224,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00003.prm
+  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00003.prm
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -233,7 +233,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00004.prm
+  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00004.prm
 
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -242,7 +242,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00005.prm
+  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00005.prm
 
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -251,7 +251,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00006.prm
+  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00006.prm
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -260,7 +260,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00007.prm
+  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00007.prm
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -269,7 +269,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00008.prm
+  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00008.prm
   
   
 docker run \
@@ -279,7 +279,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00009.prm
+  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00009.prm
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -288,7 +288,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00010.prm
+  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00010.prm
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -297,7 +297,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00011.prm
+  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00011.prm
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -306,7 +306,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00012.prm
+  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00012.prm
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -315,7 +315,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00013.prm
+  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00013.prm
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -324,7 +324,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00014.prm
+  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00014.prm
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -333,7 +333,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00015.prm
+  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00015.prm
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -342,7 +342,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00016.prm
+  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00016.prm
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -351,7 +351,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00017.prm
+  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00017.prm
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -360,7 +360,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00018.prm
+  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00018.prm
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -369,7 +369,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00019.prm
+  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00019.prm
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -378,7 +378,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00020.prm
+  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00020.prm
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -387,7 +387,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00021.prm
+  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00021.prm
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -396,7 +396,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00022.prm
+  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00022.prm
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -405,7 +405,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00023.prm
+  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00023.prm
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -414,7 +414,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00024.prm
+  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00024.prm
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -423,7 +423,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00025.prm
+  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00025.prm
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -432,7 +432,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00026.prm
+  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00026.prm
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -441,7 +441,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00027.prm
+  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00027.prm
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -450,7 +450,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00028.prm
+  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00028.prm
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -459,7 +459,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00029.prm
+  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00029.prm
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -468,7 +468,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00030.prm
+  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00030.prm
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -477,7 +477,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00031.prm
+  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00031.prm
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -486,7 +486,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00032.prm
+  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00032.prm
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -495,7 +495,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00033.prm
+  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00033.prm
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -504,7 +504,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00034.prm
+  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00034.prm
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -513,7 +513,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00035.prm
+  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00035.prm
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -522,7 +522,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00036.prm
+  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00036.prm
 
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -531,7 +531,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00037.prm
+  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00037.prm
 
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -540,7 +540,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00038.prm
+  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00038.prm
 
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -549,7 +549,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00039.prm
+  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00039.prm
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -558,7 +558,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l3/train_SVM_l3_00040.prm
+  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00040.prm
   
   
   
