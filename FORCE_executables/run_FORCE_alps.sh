@@ -140,7 +140,7 @@ docker run \
 #-------------------------------------------------------------------------------
 ### Step 8: Sampling for creating synthetic training data
 #-------------------------------------------------------------------------------
-  
+
 # Run sampling
 # before, make sure you created a training data file (X, Y, class (csv))
 docker run \
@@ -150,7 +150,351 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l3_new.prm
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2_new.prm
+
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_1986.prm  
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_1987.prm  
+
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_1988.prm  
+
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_1989.prm  
+
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_1990.prm 
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_1991.prm  
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_1992.prm  
+
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_1993.prm  
+
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_1994.prm  
+
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_1995.prm  
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_1996.prm  
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_1997.prm  
+
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_1998.prm  
+
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_1999.prm  
+
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2000.prm  
+
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2001.prm  
+
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2002.prm
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2003.prm  
+
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2004.prm  
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2005.prm  
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2006.prm  
+
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2007.prm  
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2008.prm  
+
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2009.prm  
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2010.prm
+
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2011.prm  
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2012.prm  
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2013.prm
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2014.prm 
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2015.prm  
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2016.prm  
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2017.prm  
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2018.prm 
+
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2019.prm  
+
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2020.prm  
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2021.prm  
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2022.prm 
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2023.prm  
+  
+  
   
 # extract NDVI time serie
 docker run \
@@ -576,7 +920,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/prediction_l3_test.prm
+  force-higher-level /path/EO4PADAC/param_files/prediction_l2_test.prm
   
 docker run \
   -v $basepath/EO4Alps:/path \
