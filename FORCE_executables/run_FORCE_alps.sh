@@ -859,51 +859,7 @@ docker run \
   davidfrantz/force \
   force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00035.prm
   
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00036.prm
 
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00037.prm
-
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00038.prm
-
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00039.prm
-  
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00040.prm
-  
   
   
 #for f in /path/projects/foreco/alps/param/train_param/*.prm; do dforce force-train $f; done
