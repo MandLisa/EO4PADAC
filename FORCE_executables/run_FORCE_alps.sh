@@ -16,7 +16,7 @@ gsutil config -f
 gcloud auth login 
 
 #-------------------------------------------------------------------------------
-### Step 2: Define start and end date as well as max cloud cover
+### Step 2: Define start and end date as well as max cloud cove
 #-------------------------------------------------------------------------------
 
 startdate=0101
