@@ -37,7 +37,7 @@ MIXING_COMPLEXITY = 1 2 3
 # complexities given with MIXING_COMPLEXITY. The sum of all likelihoods 
 # should be 1.
 # Type: Float list. Valid values: [0,1]
-MIXING_LIKELIHOOD = 0.2 0.5 0.3
+MIXING_LIKELIHOOD = 0.1 0.6 0.3
 # Allow mixing endmembers of the same class? If FALSE, a two endmember mix-
 # ture will always mix endmembers from different classes. If TRUE, a two 
 # endmember mixture might mix endmembers from the same class, too.
