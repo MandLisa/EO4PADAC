@@ -2,27 +2,59 @@ library(sf)
 library(raster)
 library(dplyr)
 library(fs)
-# Load your raster file
-r <- raster("/data/eo/EO4Alps/gis/dist_alps_LAEA.tif")
+library(rgdal)
 
-# Reclassify raster values
-r[r >= 1990 & r <= 2020] <- 1
-r[r < 1990 | r > 2020] <- 0
-r[is.na(r)] <- 0
+
+# Load your raster file
+r <- raster("/data/eo/EO4Alps/gis/disturbances_reclass.tif")
+
 
 plot(r)
+resolution <- res(r)
+print(resolution)
 
-# Save the reclassified raster to a new file
-#writeRaster(r, "/data/public/Projects/DataCube/projects/foreco/alps/gis/processing_mask_new.tif", format = "GTiff")
+### raster do not align 100%
+# Check CRS
+pred <- raster("/data/eo/EO4Alps/level3_predictions/l2/X0030_Y0028/PREDICTION_l2_2023_v3_HL_ML_MLP.tif")
+crs(r)
+crs(pred)
+
+# Check extent
+extent(r)
+extent(pred)
+
+# Resample raster2 to match raster1
+dist_resampled <- resample(r, pred, method = "ngb")
+
+
+
+# convert disturbance raser to same CRS as grid shapefile
+shapefile_crs <- st_crs(shape)
+
+# Reproject the raster
+disturbances_LAEA <- projectRaster(r, crs = shapefile_crs$proj4string)
+
+# Save the reprojected raster to a new file
+writeRaster(disturbances_LAEA, "/data/eo/EO4Alps/gis/disturbances_reclass_LAEA1.tif", overwrite = TRUE)
 
 
 # Set the file paths
 shapefile <- "/data/eo/EO4Alps/level2/shp/grid.shp"
-rasterfile <- "/data/eo/EO4Alps/gis/dist_alps_LAEA.tif"
+rasterfile <- "/data/eo/EO4Alps/gis/dist_aligned1.tif"
+
 
 # Read in the shapefile and raster
 shape <- st_read(shapefile)
 raster <- raster(rasterfile)
+
+# Check CRS of raster
+crs(raster)
+
+# Check CRS of shapefile
+st_crs(shape)
+
+# Reproject raster to match shapefile's CRS
+raster <- projectRaster(raster, crs = st_crs(shape)$proj4string)
 
 # Get the output directory path
 out_dir <- dirname(rasterfile)
@@ -72,3 +104,23 @@ for (file in tif_files) {
 
 # Confirm the operation
 cat("Files have been successfully moved to their respective subfolders.")
+
+
+### raster do not align 100%
+# Check CRS
+pred <- raster("/data/eo/EO4Alps/level3_predictions/l2/X0030_Y0028/PREDICTION_l2_2023_v3_HL_ML_MLP.tif")
+crs(r)
+crs(pred)
+
+# Check extent
+extent(r)
+extent(pred)
+
+# Resample raster2 to match raster1
+resampled_raster2 <- resample(r, pred, method = "ngb")
+
+writeRaster(resampled_raster2, "/data/eo/EO4Alps/gis/dist_aligned.tif", overwrite = TRUE)
+
+
+
+
