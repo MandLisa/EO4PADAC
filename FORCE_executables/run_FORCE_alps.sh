@@ -25,6 +25,7 @@ maxcloud=60
 
 # define base path
 basepath=/data/eo/
+basepath=/home/lmandl/eo_nas/
 #basepath=/data/public/Projects/
 
 #-------------------------------------------------------------------------------
@@ -119,13 +120,13 @@ docker run \
 # Compute spectral-temporal-metrics from Level 2 data using the setting given
 # in param file
 docker run \
-  -v $basepath/EO4Alps:/path 
+  -v $basepath/EO4Alps:/path \
   --user "$(id -u):10000514" \
   --memory 128GB \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/param_l3_STM_alps.prm
+  force-higher-level /path/EO4PADAC/param_files/param_l3_STMs_1998.prm
   
 # compute a mosaic (if you want to do so...)  
 docker run \
@@ -540,7 +541,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-magic-parameters -o /path/EO4PADAC/param_files/train_param_l2 /path/EO4PADAC/param_files/train_SVM_l2.prm
+  force-magic-parameters -o /path/EO4PADAC/param_files/train_param_l2_adapted /path/EO4PADAC/param_files/train_SVM_l2_adapted.prm
   
 # train 5 models per endmember by calling all 40 (5*8) parameter files
 docker run \
@@ -550,7 +551,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00001.prm
+  force-train /path/EO4PADAC/param_files/train_param_l2_adapted/train_SVM_l2_adapted_00001.prm
 
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -559,7 +560,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l2/train_SVM_l2_00002.prm
+  force-train /path/EO4PADAC/param_files/train_param_l2_adapted/train_SVM_l2_adapted_00002.prm
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -877,6 +878,17 @@ docker run \
   -v $HOME:/app/credentials \
   davidfrantz/force \
   force-higher-level /path/EO4PADAC/param_files/prediction_l2_test.prm
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/predictions_l2/prediction_l2_1998.prm
+  
+  
   
 docker run \
   -v $basepath/EO4Alps:/path \

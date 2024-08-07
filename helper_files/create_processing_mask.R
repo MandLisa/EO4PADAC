@@ -123,4 +123,34 @@ writeRaster(resampled_raster2, "/data/eo/EO4Alps/gis/dist_aligned.tif", overwrit
 
 
 
+# rename
+# Define the parent directory
+parent_dir <- "/data/eo/EO4Alps/gis/proc_mask"
+
+# List all subdirectories in the parent directory
+subdirs <- list.dirs(parent_dir, full.names = TRUE, recursive = FALSE)
+
+# Loop over each subdirectory
+for (subdir in subdirs) {
+  
+  # List all tif files in the current subdirectory
+  tif_files <- list.files(subdir, pattern = "\\.tif$", full.names = TRUE)
+  
+  # Check if there is exactly one tif file
+  if (length(tif_files) == 1) {
+    
+    # Define the new file name
+    new_file_name <- file.path(subdir, "proc_mask.tif")
+    
+    # Rename the file
+    file.rename(tif_files, new_file_name)
+    
+    # Print a message to confirm renaming
+    cat("Renamed:", tif_files, "to", new_file_name, "\n")
+  } else {
+    cat("Warning: No tif file or multiple tif files found in", subdir, "\n")
+  }
+}
+
+
 
