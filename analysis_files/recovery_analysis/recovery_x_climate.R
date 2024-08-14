@@ -143,7 +143,7 @@ if (length(new_colnames) == (num_cols - 18)) {
 }
 
 
-# Count the number of NA values in the 'value' column
+# Count the number of NA values in the 'value' colum
 num_na <- sum(is.na(recovery_climate$VPD_Oct_2018))
 
 print(num_na)
