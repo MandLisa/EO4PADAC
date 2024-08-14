@@ -7,7 +7,6 @@ library(sf)
 library(ggplot2)
 library(terra)
 library(spatial)
-library(spatialEco)
 library(readr)
 library(spatstat)
 library(pryr)
@@ -68,7 +67,7 @@ extract_vpd_anomalies <- function(raster_path, recovery_sf) {
 }
 
 # List of reprojected raster files (update the paths as needed)
-raster_files <- list.files(path = "~/eo_nas/EO4Alps/climate_data/VPD_clip/anomalies/LAEA", pattern = "_LAEA\\.tif$", full.names = TRUE)
+raster_files <- list.files(path = "~/eo_nas/EO4Alps/climate_data/VPD_clip/anomalies/LAEA/mod", pattern = "_mod\\.tif$", full.names = TRUE)
 
 # Extract VPD anomaly values for each reprojected raster
 vpd_anomalies <- lapply(raster_files, extract_vpd_anomalies, recovery_sf = recovery_sf)
@@ -163,9 +162,19 @@ write.csv(recovery_climate, "~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_cli
 
 #-------------------------------------------------------------------------------
 # reorder data
-# Assuming your data frame is named 'df'
-recovery_climate_ <- df[, 19:256]
-
+# Perform the pivot_longer operation
+recovery_climate_long <- recovery_climate %>%
+  pivot_longer(
+    cols = matches("VPD_(Apr|May|Jun|Jul|Aug|Sep|Oct)_\\d{4}"),  # Select columns with both month and year
+    names_to = c("Month", "Year"),   # Create new columns for "Month" and "Year"
+    names_pattern = "VPD_(\\w+)_(\\d+)",    # Regex to extract "Month" and "Year"
+    values_to = "VPD_value"                 # The values will go into this column
+  ) %>%
+  mutate(Year = as.integer(Year)) %>%       # Convert "Year" column to integer
+  pivot_wider(
+    names_from = "Month",                   # Spread "Month" into columns
+    values_from = "VPD_value"               # Use the values from "VPD_value" column
+  )
 
 
 
