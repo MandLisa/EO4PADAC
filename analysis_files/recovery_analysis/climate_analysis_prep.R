@@ -31,7 +31,7 @@ recovery_long <- recovery_climate_topo %>%
 
 # Compute the average VPD_anomaly value for each ID across all years before yod
 pre_dist_VPD <- recovery_long %>%
-  filter(year <= yod) %>%  # Step 1: Filter rows where year is less than yod
+  filter(year < yod) %>%  # Step 1: Filter rows where year is less than yod
   group_by(ID) %>%  # Step 2: Group by ID
   summarize(mean_VPD = mean(VPD_anomaly, na.rm = TRUE))  
 
@@ -42,12 +42,12 @@ recovery_long1 <- recovery_long %>%
 
 # Assign the mean_VPD_anomaly only to the rows where year <= yod
 recovery_long1 <- recovery_long1 %>%
-  mutate(pre_disturbance_VPD_anomaly = ifelse(year <= yod, mean_VPD, NA))
+  mutate(pre_disturbance_VPD_anomaly = ifelse(year < yod, mean_VPD, NA))
 
 
 # Compute the average VPD_anomaly value for each ID across all years before yod
 post_dist_VPD <- recovery_long %>%
-  filter(year > yod) %>%  # Step 1: Filter rows where year is less than yod
+  filter(year >= yod) %>%  # Step 1: Filter rows where year is less than yod
   group_by(ID) %>%  # Step 2: Group by ID
   summarize(mean_VPD_post = mean(VPD_anomaly, na.rm = TRUE))
 
@@ -70,6 +70,7 @@ compute_means <- function(df) {
   yod <- unique(df$yod)  # Get the disturbance year for the current ID
   
   data.frame(
+    mean_VPD_yod = mean(df$VPD_anomaly[df$year %in% (yod + 0)], na.rm = TRUE),
     mean_VPD_post_1_year = mean(df$VPD_anomaly[df$year %in% (yod + 1)], na.rm = TRUE),
     mean_VPD_post_2_year = mean(df$VPD_anomaly[df$year %in% (yod + 1):(yod + 2)], na.rm = TRUE),
     mean_VPD_post_3_year = mean(df$VPD_anomaly[df$year %in% (yod + 1):(yod + 3)], na.rm = TRUE),
@@ -84,6 +85,7 @@ VPD_time_windows <- recovery_long2 %>%
   do(compute_means(.)) %>%
   ungroup() %>%
   rename(
+    mean_VPD_yod = mean_VPD_yod,
     mean_VPD_post_1_year = mean_VPD_post_1_year,
     mean_VPD_post_2_year = mean_VPD_post_2_year,
     mean_VPD_post_3_year = mean_VPD_post_3_year,
@@ -140,7 +142,7 @@ compute_consecutive_positive_within_year <- function(df) {
 
 # Filter for years greater than yod, compute within-year consecutive VPD months
 df_consecutive <- recovery_long2 %>%
-  filter(year > yod) %>%  # Keep rows where year is greater than yod
+  filter(year >= yod) %>%  # Keep rows where year is greater than yod
   compute_consecutive_positive_within_year()
 
 # Merge the consecutive VPD counts back into the original dataframe
@@ -152,6 +154,7 @@ recovery_long3 <- recovery_long2 %>%
 recovery_long3 <- recovery_long3 %>%
   group_by(ID) %>%  # Group by ID to handle this per ID
   mutate(
+    VPD_consecutive_yod = ifelse(ysd == 0, VPD_consecutive, NA),
     VPD_consecutive_1y = ifelse(ysd == 1, VPD_consecutive, NA),
     VPD_consecutive_2y = ifelse(ysd == 2, VPD_consecutive, NA),
     VPD_consecutive_3y = ifelse(ysd == 3, VPD_consecutive, NA),
@@ -159,7 +162,7 @@ recovery_long3 <- recovery_long3 %>%
     VPD_consecutive_5y = ifelse(ysd == 5, VPD_consecutive, NA)
   ) %>%
   # Fill down within each group to ensure the correct value is filled
-  fill(VPD_consecutive_1y, VPD_consecutive_2y, VPD_consecutive_3y,
+  fill(VPD_consecutive_yod, VPD_consecutive_1y, VPD_consecutive_2y, VPD_consecutive_3y,
        VPD_consecutive_4y, VPD_consecutive_5y, .direction = "downup") %>%
   ungroup()  # Ungroup after mutation
 
@@ -177,11 +180,11 @@ recovery_long3_filtered <- recovery_long3 %>% filter(recovery_rate < 100)
 write.csv(recovery_long3_filtered, "~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_climate_topo_2.0_filt.csv", row.names=FALSE)
 
 # Keep the first observation for each ID
-recovery_long3_unique <- recovery_long3_filtered %>%
+recovery_long3_filt_unique <- recovery_long3_filtered %>%
   distinct(ID, .keep_all = TRUE)
 
 ### write
-write.csv(recovery_long3_unique, "~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_climate_topo_2.0_unique.csv", row.names=FALSE)
+write.csv(recovery_long3_filt_unique, "~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_climate_topo_2.0_filt_unique.csv", row.names=FALSE)
 
 
 # Create a binary variable indicating whether recovery is complete
@@ -190,6 +193,49 @@ recovery_long3_unique <- recovery_long3_unique %>%
 
 recovery_long3 <- recovery_long3 %>%
   mutate(recovery_status = if_else(recovery_rate == 100, "Not Recovered", "Recovered"))
+
+
+### compute spring/summer/autumn VPD anomalies
+
+# Create a new column 'season' based on the month_num
+recovery_all <- recovery_all %>%
+  mutate(season = case_when(
+    month_num %in% c(1, 2) ~ 'VPD_spring',   # April, May
+    month_num %in% c(3, 4, 5) ~ 'VPD_summer', # June, July, August
+    month_num %in% c(6, 7) ~ 'VPD_autumn'     # September, October
+  ))
+
+# Calculate mean VPD values for each ID, year, and season
+result <- recovery_all %>%
+  group_by(ID, year, season) %>%
+  summarise(mean_VPD = mean(VPD_anomaly, na.rm = TRUE)) %>%
+  ungroup()
+
+# Reshape the data to have seasons as columns
+result1 <- result %>%
+  pivot_wider(names_from = season, values_from = mean_VPD)
+
+# Merge the newly created seasonal columns with the original dataframe
+recovery_all <- recovery_all %>%
+  left_join(result1, by = c("ID", "year"))
+
+# Exclude observations where recovery_rate = 100
+recovery_all_filtered <- recovery_all %>% filter(recovery_rate < 100)
+
+
+# Keep the first observation for each ID
+recovery_all_unique <- recovery_all_filtered %>%
+  distinct(ID, .keep_all = TRUE)
+
+
+
+### write
+write.csv(recovery_all_unique, "~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_all_unique.csv", row.names=FALSE)
+write.csv(recovery_all_filtered, "~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_all_filtered.csv", row.names=FALSE)
+write.csv(recovery_all, "~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_all.csv", row.names=FALSE)
+
+
+
 
 
 #-------------------------------------------------------------------------------
