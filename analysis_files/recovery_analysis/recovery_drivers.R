@@ -111,7 +111,7 @@ models <- recovery_standardized %>%
                   severity_relative + 
                   slope + 
                   height +
-                  aspect +
+                  #aspect +
                   mean_VPD_pre +
                   VPD_consecutive_1y +
                   VPD_consecutive_2y +
