@@ -301,6 +301,258 @@ recovery_final <- recovery_final %>%
 ### write
 write.csv(recovery_final, "~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_1808.csv", row.names=FALSE)
 
+# Subset the data frame and remove columns indexed 1, 2, and 5
+fcover_all_wide_subset <- fcover_all_wide %>%
+  select(-c(1, 2, 5))
+
+
+# Perform a left join
+recovery_final1 <- recovery_final %>%
+  left_join(fcover_all_wide_subset, by = c("ID", "year"))
+
+# Keep only one observation per ID and year
+recovery_final2 <- recovery_final1 %>%
+  distinct(ID, year, .keep_all = TRUE)
+
+# Apply the unique function to each list element in the relevant columns
+recovery_final2$artifical_land_share <- sapply(recovery_final2$artifical_land_share, function(x) paste(unique(unlist(x)), collapse = ","))
+recovery_final2$bare_land_share <- sapply(recovery_final2$bare_land_share, function(x) paste(unique(unlist(x)), collapse = ","))
+recovery_final2$water_share <- sapply(recovery_final2$water_share, function(x) paste(unique(unlist(x)), collapse = ","))
+recovery_final2$grassland_share <- sapply(recovery_final2$grassland_share, function(x) paste(unique(unlist(x)), collapse = ","))
+recovery_final2$shrubland_share <- sapply(recovery_final2$shrubland_share, function(x) paste(unique(unlist(x)), collapse = ","))
+recovery_final2$coniferous_woodland_share <- sapply(recovery_final2$coniferous_woodland_share, function(x) paste(unique(unlist(x)), collapse = ","))
+recovery_final2$broadleaved_woodland_share <- sapply(recovery_final2$broadleaved_woodland_share, function(x) paste(unique(unlist(x)), collapse = ","))
+
+
+
+### write
+write.csv(recovery_final2, "~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_all_fractions.csv", row.names=FALSE)
+
+# Keep only one observation per ID and year
+recovery_final2_unique <- recovery_all_fractions %>%
+  distinct(ID, .keep_all = TRUE)
+
+
+### write
+write.csv(recovery_final2_unique, "~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_all_fractions_unique.csv", row.names=FALSE)
+
+
+# compute pre-disturbed land cover fractions
+pre_dist_lc <- recovery_all_fractions %>%
+  filter(year < yod) %>%  # Step 1: Filter rows where year is less than yod
+  group_by(ID) %>%  # Step 2: Group by ID
+  summarize(across(c(artifical_land_share, bare_land_share, water_share, 
+                     grassland_share, shrubland_share, coniferous_woodland_share, 
+                     broadleaved_woodland_share), 
+                   \(x) mean(x, na.rm = TRUE), .names = "mean_pre_dist_{col}"))
+
+# Perform the left join
+recovery_all_fractions1 <- recovery_all_fractions %>%
+  left_join(pre_dist_lc, by = "ID")
+
+
+post_land_cover_shares <- recovery_all_fractions1 %>%
+  filter(year == yod) %>%  # Filter for rows where year equals yod
+  select(ID, artifical_land_share, bare_land_share, water_share, 
+         grassland_share, shrubland_share, coniferous_woodland_share, 
+         broadleaved_woodland_share) %>%  # Select necessary columns
+  rename(artifical_land_share_yod = artifical_land_share,
+         bare_land_share_yod = bare_land_share,
+         water_share_yod = water_share,
+         grassland_share_yod = grassland_share,
+         shrubland_share_yod = shrubland_share,
+         coniferous_woodland_share_yod = coniferous_woodland_share,
+         broadleaved_woodland_share_yod = broadleaved_woodland_share)  # Rename columns
+
+# Now, join this back with the original data frame
+recovery_all_fractions2 <- recovery_all_fractions1 %>%
+  left_join(post_land_cover_shares, by = "ID")
+
+post_land_cover_shares <- recovery_all_fractions1 %>%
+  filter(year == yod+1) %>%  # Filter for rows where year equals yod
+  select(ID, artifical_land_share, bare_land_share, water_share, 
+         grassland_share, shrubland_share, coniferous_woodland_share, 
+         broadleaved_woodland_share) %>%  # Select necessary columns
+  rename("artifical_land_share_yod+1" = artifical_land_share,
+         "bare_land_share_yod+1" = bare_land_share,
+         "water_share_yod+1" = water_share,
+         "grassland_share_yod+1" = grassland_share,
+         "shrubland_share_yod+1" = shrubland_share,
+         "coniferous_woodland_share_yod+1" = coniferous_woodland_share,
+         "broadleaved_woodland_share_yod+1" = broadleaved_woodland_share)  # Rename columns
+
+# Now, join this back with the original data frame
+recovery_all_fractions2 <- recovery_all_fractions2 %>%
+  left_join(post_land_cover_shares, by = "ID")
+
+
+post_land_cover_shares <- recovery_all_fractions1 %>%
+  filter(year == yod+2) %>%  # Filter for rows where year equals yod
+  select(ID, artifical_land_share, bare_land_share, water_share, 
+         grassland_share, shrubland_share, coniferous_woodland_share, 
+         broadleaved_woodland_share) %>%  # Select necessary columns
+  rename("artifical_land_share_yod+2" = artifical_land_share,
+         "bare_land_share_yod+2" = bare_land_share,
+         "water_share_yod+2" = water_share,
+         "grassland_share_yod+2" = grassland_share,
+         "shrubland_share_yod+2" = shrubland_share,
+         "coniferous_woodland_share_yod+2" = coniferous_woodland_share,
+         "broadleaved_woodland_share_yod+2" = broadleaved_woodland_share)  # Rename columns
+
+# Now, join this back with the original data frame
+recovery_all_fractions2 <- recovery_all_fractions2 %>%
+  left_join(post_land_cover_shares, by = "ID")
+
+
+post_land_cover_shares <- recovery_all_fractions1 %>%
+  filter(year == yod+3) %>%  # Filter for rows where year equals yod
+  select(ID, artifical_land_share, bare_land_share, water_share, 
+         grassland_share, shrubland_share, coniferous_woodland_share, 
+         broadleaved_woodland_share) %>%  # Select necessary columns
+  rename("artifical_land_share_yod+3" = artifical_land_share,
+         "bare_land_share_yod+3" = bare_land_share,
+         "water_share_yod+3" = water_share,
+         "grassland_share_yod+3" = grassland_share,
+         "shrubland_share_yod+3" = shrubland_share,
+         "coniferous_woodland_share_yod+3" = coniferous_woodland_share,
+         "broadleaved_woodland_share_yod+3" = broadleaved_woodland_share)  # Rename columns
+
+# Now, join this back with the original data frame
+recovery_all_fractions2 <- recovery_all_fractions2 %>%
+  left_join(post_land_cover_shares, by = "ID")
+
+
+post_land_cover_shares <- recovery_all_fractions1 %>%
+  filter(year == yod+4) %>%  # Filter for rows where year equals yod
+  select(ID, artifical_land_share, bare_land_share, water_share, 
+         grassland_share, shrubland_share, coniferous_woodland_share, 
+         broadleaved_woodland_share) %>%  # Select necessary columns
+  rename("artifical_land_share_yod+4" = artifical_land_share,
+         "bare_land_share_yod+4" = bare_land_share,
+         "water_share_yod+4" = water_share,
+         "grassland_share_yod+4" = grassland_share,
+         "shrubland_share_yod+4" = shrubland_share,
+         "coniferous_woodland_share_yod+4" = coniferous_woodland_share,
+         "broadleaved_woodland_share_yod+4" = broadleaved_woodland_share)  # Rename columns
+
+# Now, join this back with the original data frame
+recovery_all_fractions2 <- recovery_all_fractions2 %>%
+  left_join(post_land_cover_shares, by = "ID")
+
+
+post_land_cover_shares <- recovery_all_fractions1 %>%
+  filter(year == yod+5) %>%  # Filter for rows where year equals yod
+  select(ID, artifical_land_share, bare_land_share, water_share, 
+         grassland_share, shrubland_share, coniferous_woodland_share, 
+         broadleaved_woodland_share) %>%  # Select necessary columns
+  rename("artifical_land_share_yod+5" = artifical_land_share,
+         "bare_land_share_yod+5" = bare_land_share,
+         "water_share_yod+5" = water_share,
+         "grassland_share_yod+5" = grassland_share,
+         "shrubland_share_yod+5" = shrubland_share,
+         "coniferous_woodland_share_yod+5" = coniferous_woodland_share,
+         "broadleaved_woodland_share_yod+5" = broadleaved_woodland_share)  # Rename columns
+
+# Now, join this back with the original data frame
+recovery_all_fractions2 <- recovery_all_fractions2 %>%
+  left_join(post_land_cover_shares, by = "ID")
+
+# compute spring/summer/autumn atmospheric dryness for yod, yod+1, yod+2
+VPD_season_yod <- recovery_all_fractions %>%
+  filter(year == yod) %>%  # Filter for rows where year equals yod
+  select(ID, VPD_autumn, VPD_spring, VPD_summer) %>%  # Select necessary columns
+  rename(VPD_autumn_yod = VPD_autumn,
+         VPD_spring_yod = VPD_spring,
+         VPD_summer_yod = VPD_summer)  # Rename columns
+
+# Now, join this back with the original data frame
+recovery_all_fractions1 <- recovery_all_fractions %>%
+  left_join(VPD_season_yod, by = "ID")
+
+
+# compute spring/summer/autumn atmospheric dryness for yod, yod+1, yod+2
+VPD_season_yod1 <- recovery_all_fractions %>%
+  filter(year == yod+1) %>%  # Filter for rows where year equals yod
+  select(ID, VPD_autumn, VPD_spring, VPD_summer) %>%  # Select necessary columns
+  rename("VPD_autumn_yod+1" = VPD_autumn,
+         "VPD_spring_yod+1" = VPD_spring,
+         "VPD_summer_yod+1" = VPD_summer)  # Rename columns
+
+# Now, join this back with the original data frame
+recovery_all_fractions1 <- recovery_all_fractions1 %>%
+  left_join(VPD_season_yod1, by = "ID")
+
+
+# compute spring/summer/autumn atmospheric dryness for yod, yod+1, yod+2
+VPD_season_yod2 <- recovery_all_fractions %>%
+  filter(year == yod+2) %>%  # Filter for rows where year equals yod
+  select(ID, VPD_autumn, VPD_spring, VPD_summer) %>%  # Select necessary columns
+  rename("VPD_autumn_yod+2" = VPD_autumn,
+         "VPD_spring_yod+2" = VPD_spring,
+         "VPD_summer_yod+2" = VPD_summer)  # Rename columns
+
+# Now, join this back with the original data frame
+recovery_all_fractions1 <- recovery_all_fractions1 %>%
+  left_join(VPD_season_yod2, by = "ID")
+
+
+# compute spring/summer/autumn atmospheric dryness for yod, yod+1, yod+2
+VPD_season_yod3 <- recovery_all_fractions %>%
+  filter(year == yod+3) %>%  # Filter for rows where year equals yod
+  select(ID, VPD_autumn, VPD_spring, VPD_summer) %>%  # Select necessary columns
+  rename("VPD_autumn_yod+3" = VPD_autumn,
+         "VPD_spring_yod+3" = VPD_spring,
+         "VPD_summer_yod+3" = VPD_summer)  # Rename columns
+
+# Now, join this back with the original data frame
+recovery_all_fractions1 <- recovery_all_fractions1 %>%
+  left_join(VPD_season_yod3, by = "ID")
+
+
+# compute spring/summer/autumn atmospheric dryness for yod, yod+1, yod+2
+VPD_season_yod4 <- recovery_all_fractions %>%
+  filter(year == yod+4) %>%  # Filter for rows where year equals yod
+  select(ID, VPD_autumn, VPD_spring, VPD_summer) %>%  # Select necessary columns
+  rename("VPD_autumn_yod+4" = VPD_autumn,
+         "VPD_spring_yod+4" = VPD_spring,
+         "VPD_summer_yod+4" = VPD_summer)  # Rename columns
+
+# Now, join this back with the original data frame
+recovery_all_fractions1 <- recovery_all_fractions1 %>%
+  left_join(VPD_season_yod4, by = "ID")
+
+
+# compute spring/summer/autumn atmospheric dryness for yod, yod+1, yod+2
+VPD_season_yod5 <- recovery_all_fractions %>%
+  filter(year == yod+5) %>%  # Filter for rows where year equals yod
+  select(ID, VPD_autumn, VPD_spring, VPD_summer) %>%  # Select necessary columns
+  rename("VPD_autumn_yod+5" = VPD_autumn,
+         "VPD_spring_yod+5" = VPD_spring,
+         "VPD_summer_yod+5" = VPD_summer)  # Rename columns
+
+# Now, join this back with the original data frame
+recovery_all_fractions1 <- recovery_all_fractions1 %>%
+  left_join(VPD_season_yod5, by = "ID")
+
+recovery_all_fractions <- recovery_all_fractions1
+
+
+### write
+write.csv(recovery_all_fractions, "~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_all_fractions.csv", row.names=FALSE)
+
+recovery_all_fractions_recov <- recovery_all_fractions %>%
+  filter(recovery_rate != 100)
+
+
+
+# Keep only one observation per ID and year
+recovery_all_fractions_unique <- recovery_all_fractions_recov  %>%
+  distinct(ID, .keep_all = TRUE)
+
+### write
+write.csv(recovery_all_fractions_unique, "~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_all_fractions_unique.csv", row.names=FALSE)
+
+#--------------------------------------------------------------------------------
 
 
 #-------------------------------------------------------------------------------
@@ -344,7 +596,7 @@ model <- lm(recovery_rate ~ severity_relative + slope + height +
               mean_VPD_pre +
               VPD_consecutive_1y +
               VPD_consecutive_2y,
-              data = recovery_long3_unique)
+            data = recovery_long3_unique)
 summary(model)
 
 

@@ -19,13 +19,17 @@ library(randomForest)
 library(broom)
 library(ranger)
 library(doParallel)
+library(reshape2)
+library(corrplot)
+library(caret)
 
-recovery_climate_filt <- read_csv("~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_climate_topo_2.0_filt.csv")
-recovery_climate_unique <- read_csv("~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_climate_topo_2.0_filt_unique.csv")
-
+#recovery_climate_filt <- read_csv("~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_climate_topo_2.0_filt.csv")
+#recovery_climate_unique <- read_csv("~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_climate_topo_2.0_filt_unique.csv")
+recovery_all_fractions <- read_csv("~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_all_fractions.csv")
+recovery_all_fractions_unique <- read_csv("~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_all_fractions_unique.csv")
 
 # Apply mean imputation only to numeric columns
-recovery_imputed <- recovery_climate_unique %>%
+recovery_imputed <- recovery_all_fractions %>%
   mutate(across(where(is.numeric), ~ ifelse(is.na(.), mean(., na.rm = TRUE), .)))
 
 # Compute correlations
@@ -48,10 +52,168 @@ ggplot(recovery_imputed, aes(x = recovery_rate, y = mean_VPD_post_1_year)) +
   theme_minimal()
 
 
+recovery_imputed_recov <- recovery_imputed %>%
+  filter(recovery_rate != 100)
+
+
+# Keep only one observation per ID and year
+recovery_imputed_unique <- recovery_imputed_recov  %>%
+  distinct(ID, .keep_all = TRUE)
+
+### write
+write.csv(recovery_imputed_unique, "~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_all_fractions_imputed_unique.csv", row.names=FALSE)
+
+
+#-------------------------------------------------------------------------------
+### create predictor df
+
+# Let's assume 'ID' and 'Date' are irrelevant and 'y' is the response
+recovery_imputed_filt <- recovery_imputed_unique[, c("ID", "recovery_rate", "severity_relative",
+                                              "avg_tree_share_before", "height", "slope",
+                                              "mean_VPD_pre", "VPD_consecutive_yod", "VPD_consecutive_1y",
+                                              "VPD_consecutive_2y", "VPD_consecutive_3y", "mean_pre_dist_artifical_land_share",
+                                              "mean_pre_dist_bare_land_share", "mean_pre_dist_grassland_share",
+                                              "mean_pre_dist_shrubland_share", "mean_pre_dist_coniferous_woodland_share",
+                                              "mean_pre_dist_broadleaved_woodland_share", "artifical_land_share_yod", 
+                                              "bare_land_share_yod", "grassland_share_yod", "shrubland_share_yod",
+                                              "shrubland_share_yod", "broadleaved_woodland_share_yod", "coniferous_woodland_share_yod",
+                                              "artifical_land_share_yod+1", 
+                                              "bare_land_share_yod+1", "grassland_share_yod+1", "shrubland_share_yod+1",
+                                              "shrubland_share_yod+1", "broadleaved_woodland_share_yod+1", "coniferous_woodland_share_yod+1",
+                                              "artifical_land_share_yod+2", 
+                                              "bare_land_share_yod+2", "grassland_share_yod+2", "shrubland_share_yod+2",
+                                              "shrubland_share_yod+2", "broadleaved_woodland_share_yod+2", "coniferous_woodland_share_yod+2",
+                                              "artifical_land_share_yod+3", 
+                                              "bare_land_share_yod+3", "grassland_share_yod+3", "shrubland_share_yod+3",
+                                              "shrubland_share_yod+3", "broadleaved_woodland_share_yod+3", "coniferous_woodland_share_yod+3",
+                                              "VPD_autumn_yod", "VPD_spring_yod", "VPD_summer_yod", "VPD_autumn_yod+1", "VPD_spring_yod+1", "VPD_summer_yod+1",
+                                              "VPD_autumn_yod+2", "VPD_spring_yod+2", "VPD_summer_yod+2",
+                                              "VPD_autumn_yod+3", "VPD_spring_yod+3", "VPD_summer_yod+3")]
+
+
+# without ID
+# Exclude 'ID' and 'Date' columns, keeping only the relevant predictors and response 'y'
+recovery_imputed_filt_ID <- recovery_imputed_filt[, !(names(recovery_imputed_filt) %in% c("ID"))]
+
+head(recovery_imputed_filt_ID)
+
+
+# compute correlarion
+correlations <- cor(recovery_imputed_filt_ID)
+cor_with_response <- correlations[, "recovery_rate"]
+# Remove the correlation of the response variable with itself (which is 1)
+cor_with_response <- cor_with_response[-which(names(cor_with_response) == "recovery_rate")]
+# Sort the correlations by magnitude
+sorted_correlations <- sort(cor_with_response, decreasing = TRUE)
+# Plotting the bar plot
+barplot(sorted_correlations, 
+            main = "Correlation with Response Variable",
+            xlab = "Predictors",
+            ylab = "Correlation",
+            las = 2, # Rotate labels for better readability
+            col = "steelblue")
+
+
+# Assuming sorted_correlations is a named vector
+data <- data.frame(
+  Predictors = names(sorted_correlations),
+  Correlation = sorted_correlations
+)
+
+
+p <- ggplot(data, aes(x = reorder(Predictors, Correlation), y = Correlation)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  theme_minimal() +
+  labs(title = "",
+       x = "Predictors",
+       y = "Correlation") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
+
+ggsave("~/eo_nas/EO4Alps/figs/coor_with_recovery.png", plot = p, width = 10, height = 7, dpi = 300)
+
+
+# Calculate the correlation matrix for the predictors
+cor_matrix <- cor(recovery_imputed_filt_ID)
+
+# Use corrplot to create a correlogram
+corrplot(cor_matrix, method = "circle", type = "lower", 
+         tl.col = "black", tl.srt = 45,
+         tl.cex = 0.6,  # Reduce the text size of labels
+         addCoef.col = "black", number.cex = 0.2)  # Reduce the size of the correlation coefficient text
+
+
+corrplot(cor_matrix, method = "circle", type = "lower", 
+         order = "hclust", addrect = 2,  # Cluster and add rectangles around clusters
+         tl.col = "black", tl.srt = 45,
+         tl.cex = 0.6,
+         addCoef.col = "black", number.cex = 0.2)
+
+
+#-------------------------------------------------------------------------------
+# Function to calculate VIF manually
+vif <- function(model) {
+  vifs <- numeric(length(coefficients(model)))
+  names(vifs) <- names(coefficients(model))
+  
+  for (i in seq_along(vifs)) {
+    # Exclude the intercept
+    if (names(coefficients(model))[i] != "(Intercept)") {
+      formula <- as.formula(paste(names(coefficients(model))[i], "~ ."))
+      sub_model <- lm(formula, data = model$model)
+      r_squared <- summary(sub_model)$r.squared
+      vifs[i] <- 1 / (1 - r_squared)
+    }
+  }
+  return(vifs)
+}
+
+
+# Find duplicate column names
+duplicated_names <- names(recovery_imputed_filt_ID)[duplicated(names(recovery_imputed_filt_ID))]
+duplicated_names
+
+# Check if these column names are identical or just similar
+unique(names(recovery_imputed_filt_ID))
+
+# Rename columns to avoid issues with special characters
+names(recovery_imputed_filt_ID) <- make.names(names(recovery_imputed_filt_ID), unique = TRUE)
+
+# Calculate correlation matrix
+cor_matrix <- cor(recovery_imputed_filt_ID[, -1])  # Exclude the response variable
+
+# Find highly correlated predictors (e.g., correlation > 0.9)
+high_cor <- findCorrelation(cor_matrix, cutoff = 0.8)
+
+# Remove these predictors from the dataset
+recovery_imputed_reduced <- recovery_imputed_filt_ID[, -c(high_cor + 1)]  # +1 because `df` includes the response variable in the first column
+
+fit <- lm(recovery_rate ~ ., data = recovery_imputed_reduced)
+vif_values <- vif(fit)
+
+while(max(vif_values) > 10) {
+  high_vif <- names(which.max(vif_values))  # Identify predictor with highest VIF
+  recovery_imputed_reduced <- recovery_imputed_reduced[, !names(recovery_imputed_reduced) %in% high_vif]  # Remove the predictor
+  fit <- lm(recovery_rate ~ ., data = recovery_imputed_reduced)  # Refit the model
+  vif_values <- vif(fit)  # Recalculate VIF values
+}
+
+summary(fit)
+
+### write
+write.csv(recovery_imputed_unique, "~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_imputed_unique.csv", row.names=FALSE)
+
+
+
+
+#-------------------------------------------------------------------------------
+
+
 
 # Fit the model
-model <- lm(recovery_rate ~ severity_relative + slope + height +
-              aspect +
+model <- lm(recovery_rate ~ severity_relative +
+            slope + 
+              height +
+               +
               mean_VPD_pre +
               VPD_consecutive_1y +
               VPD_consecutive_2y,
@@ -60,10 +222,13 @@ summary(model)
 
 
 # Standardize the predictors
-recovery_standardized <- recovery_imputed %>%
+recovery_standardized <- recovery_imputed_filt_ID %>%
   mutate(across(c(severity_relative, slope, height, mean_VPD_yod, mean_VPD_pre, mean_VPD_post_1_year,
                   mean_VPD_post_2_year, mean_VPD_post_3_year,
                   VPD_consecutive_yod, VPD_consecutive_1y), scale))
+
+
+
 
 # Fit the standardized model
 model <- lm(recovery_rate ~ severity_relative + slope + height +
@@ -80,7 +245,7 @@ summary(model)
 
 
 # Extract the coefficients, standard errors, and confidence intervals
-model_summary <- broom::tidy(model)
+model_summary <- broom::tidy(fit)
 
 # Exclude the intercept
 model_summary <- model_summary[model_summary$term != "(Intercept)", ]
