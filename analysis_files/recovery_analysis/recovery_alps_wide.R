@@ -7,7 +7,6 @@ library(sf)
 library(ggplot2)
 library(terra)
 library(spatial)
-library(spatialEco)
 library(readr)
 library(spatstat)
 library(pryr)
@@ -34,6 +33,10 @@ for (file in csv_files) {
 
 # Row-bind all dataframes into a single dataframe
 fcover_all <- bind_rows(df_list)
+
+### write
+write.csv(fcover_all, "~/eo_nas/EO4Alps/00_analysis/_recovery/fcover_all.csv", row.names=FALSE)
+
 
 # compute min value of tree share after 5 years after disturbance
 # Step 1: Filter the data for class == "trees"

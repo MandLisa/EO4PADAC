@@ -19,8 +19,8 @@ library(randomForest)
 library(broom)
 
 # load recovery x climate df
-recovery_climate_topo <- read_csv("~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_climate_topo.csv")
-
+recovery_all <- read_csv("~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_all.csv")
+fcover_all <- read_csv("~/eo_nas/EO4Alps/00_analysis/_recovery/fcover_all.csv")
 
 # Convert monthly VPD anomalies to a long format
 # recovery_climate_topo = df
@@ -235,6 +235,71 @@ write.csv(recovery_all_filtered, "~/eo_nas/EO4Alps/00_analysis/_recovery/recover
 write.csv(recovery_all, "~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_all.csv", row.names=FALSE)
 
 
+### add fractions from other endmembers
+str(fcover_all_wide)
+str(recovery_all)
+
+
+# pivot wider
+fcover_all_wide <- fcover_all %>%
+  pivot_wider(names_from = class, values_from = share)
+
+colnames(recovery_all)[colnames(recovery_all) == "GAM_share"] <- "tree_share_GAM"
+colnames(recovery_all)[colnames(recovery_all) == "share"] <- "tree_share"
+
+colnames(fcover_all_wide)[colnames(fcover_all_wide) == "artificial"] <- "artifical_land_share"
+colnames(fcover_all_wide)[colnames(fcover_all_wide) == "bare"] <- "bare_land_share"
+colnames(fcover_all_wide)[colnames(fcover_all_wide) == "water"] <- "water_share"
+colnames(fcover_all_wide)[colnames(fcover_all_wide) == "grassland"] <- "grassland_share"
+colnames(fcover_all_wide)[colnames(fcover_all_wide) == "shrubland"] <- "shrubland_share"
+colnames(fcover_all_wide)[colnames(fcover_all_wide) == "coniferous"] <- "coniferous_woodland_share"
+colnames(fcover_all_wide)[colnames(fcover_all_wide) == "broadleaved"] <- "broadleaved_woodland_share"
+
+# Assuming your data frame is called df and you want to move column "col_name" to position 2
+recovery_all <- recovery_all %>%
+  select(x, y, ID, year, month_num, yod, everything())
+
+
+# Ensure the data is sorted
+recovery_all_sorted <- recovery_all %>%
+  arrange(ID, year, month_num)
+
+# Pivot the data
+recovery_wide <- recovery_all_sorted %>%
+  pivot_wider(
+    id_cols = c(ID, year),         # Keep these columns as identifiers
+    names_from = month_num,        # Spread month numbers into columns
+    values_from = VPD_anomaly,     # Fill the new columns with the corresponding values
+    values_fn = list(VPD_anomaly = ~ first(.))  # Take the first non-null value (if any)
+  )
+
+# Step 1: Remove columns indexed 5 to 11
+recovery_reduced <- recovery_all_wide %>%
+  select(-c(5:11))
+
+# Step 2: Keep only one observation per year and ID
+recovery_reduced1 <- recovery_reduced %>%
+  distinct(ID, year, .keep_all = TRUE)
+
+
+# Perform a left join
+recovery_final <- recovery_reduced1 %>%
+  left_join(recovery_wide, by = c("ID", "year"))
+
+# Rename the columns
+recovery_final <- recovery_final %>%
+  rename(
+    VPD_Apr = `1`,
+    VPD_May = `2`,
+    VPD_Jun = `3`,
+    VPD_Jul = `4`,
+    VPD_Aug = `5`,
+    VPD_Sep = `6`,
+    VPD_Oct = `7`
+  )
+
+### write
+write.csv(recovery_final, "~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_1808.csv", row.names=FALSE)
 
 
 
