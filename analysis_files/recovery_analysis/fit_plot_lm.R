@@ -134,7 +134,43 @@ p <- ggplot(model_summary_by_class, aes(y = term, x = estimate, color = severity
     plot.title = element_text(size = 18, face = "bold")
   )
 
+plot(p)
+
 ggsave("~/eo_nas/EO4Alps/figs/effect_size.png", plot = p, width = 12, height = 6, dpi = 300)
+
+
+#-------------------------------------------------------------------------------
+### stratify model by disturbance agent
+
+# extract agent from agent map
+# extract yod from disturbance map
+
+# import agent map
+agent <- raster("")
+
+# Load the reference raster (assuming the reference raster file path is 'reference_raster.tif')
+reference_raster <- raster("~/eo_nas/EO4Alps/level3_predictions/l2_mask/X0028_Y0028/PREDICTION_l2_1986_v3_HL_ML_MLP.tif")
+
+# Extract the CRS from the reference raster
+target_crs <- crs(reference_raster)
+
+# Assume recovery_df has columns: 'longitude' and 'latitude'
+recovery_sf <- st_as_sf(recovery_climate, coords = c("x", "y"), crs = st_crs(reference_raster))
+
+# reproject raster
+agent <- projectRaster(agent, crs = crs(reference_raster))
+
+fcover_subset$yod <- extract(disturbance_map, fcover_subset[, c("x", "y")])
+gc()
+
+
+
+
+
+#-------------------------------------------------------------------------------
+### stratify model by geographical region
+
+
 
 
 
