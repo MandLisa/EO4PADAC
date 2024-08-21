@@ -77,11 +77,11 @@ writeRaster(agent, "~/eo_nas/EO4Alps/gis/attribution/attribution_aggregated/agen
 
 
 # extract agent
-recovery_standardized$agent <- extract(agent, recovery_standardized[, c("x", "y")])
+recovery_imputed_unique$agent <- extract(agent, recovery_imputed_unique[, c("x", "y")])
 gc()
 
 # Assuming your data frame is named df
-recovery_standardized$agent_num <- round(recovery_standardized$agent)
+recovery_imputed_unique$agent_num <- round(recovery_imputed_unique$agent)
 
 
 
@@ -92,9 +92,9 @@ geoloc <- raster("~/eo_nas/EO4Alps/gis/alps_subdivision/alps_division_100.tif")
 geoloc <- projectRaster(geoloc, crs = crs(reference_raster))
 
 # extract agent
-recovery_standardized$geoloc <- extract(geoloc, recovery_standardized[, c("x", "y")])
+recovery_imputed_unique$geoloc <- extract(geoloc, recovery_imputed_unique[, c("x", "y")])
 
-recovery_standardized <- recovery_standardized %>%
+recovery_imputed_unique <- recovery_imputed_unique %>%
   mutate(geoloc_name = case_when(
     geoloc == 1 ~ "Southern West Alps",
     geoloc == 2 ~ "Northern West Alps",
@@ -105,7 +105,7 @@ recovery_standardized <- recovery_standardized %>%
   ))
 
 
-recovery_standardized <- recovery_standardized %>%
+recovery_imputed_unique <- recovery_imputed_unique %>%
   mutate(agent_name = case_when(
     agent_num == 0 ~ "other",
     agent_num == 1 ~ "Bark Beetle/Wind",
@@ -115,6 +115,7 @@ recovery_standardized <- recovery_standardized %>%
   ))
 
 
-
+### write
+write.csv(recovery_imputed_unique, "~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_unique.csv", row.names=FALSE)
 
 

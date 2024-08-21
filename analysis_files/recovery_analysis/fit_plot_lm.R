@@ -24,7 +24,7 @@ library(corrplot)
 library(caret)
 
 recovery_imputed_unique <- read_csv("~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_imputed_unique.csv")
-
+recovery_standardized <- read_csv("~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_standardized.csv")
 
 # Standardize the predictors
 recovery_standardized <- recovery_imputed_unique %>%
@@ -361,4 +361,7 @@ plot(p)
 
 ggsave("~/eo_nas/EO4Alps/figs/effect_size_geoloc.png", plot = p, width = 12, height = 6, dpi = 300)
 
+
+### write
+write.csv(recovery_standardized, "~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_standardized.csv", row.names=FALSE)
 
