@@ -26,6 +26,7 @@ maxcloud=60
 # define base path
 basepath=/data/eo/
 basepath=/home/lmandl/eo_nas/
+basepath=/home/lmandl/
 #basepath=/data/public/Projects/
 
 #-------------------------------------------------------------------------------
@@ -127,6 +128,17 @@ docker run \
   -v $HOME:/app/credentials \
   davidfrantz/force \
   force-higher-level /path/EO4PADAC/param_files/param_l3_STMs_1998.prm
+  
+
+docker run \
+  -v $basepath/eo_nas:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4Alps/EO4PADAC/param_files/param_l3_STMs_1998_v1.prm
+  
   
 # compute a mosaic (if you want to do so...)  
 docker run \
@@ -878,17 +890,6 @@ docker run \
   -v $HOME:/app/credentials \
   davidfrantz/force \
   force-higher-level /path/EO4PADAC/param_files/prediction_l2_test.prm
-  
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/predictions_l2/prediction_l2_1998.prm
-  
-  
   
 docker run \
   -v $basepath/EO4Alps:/path \

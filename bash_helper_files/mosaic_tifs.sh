@@ -1,10 +1,10 @@
 #!/bin/bash
 
-parent_directory="/home/lmandl/eo_nas/EO4Alps/level3_predictions/l2_mask"
+parent_directory="~/eo_nas/EO4Alps/gis/attribution_v1"
 
 
 # Find tif files with _2021_ in their file name recursively
-tif_files=$(find "$parent_directory" -type f -name "*_2023_v3*.tif")
+tif_files=$(find "$parent_directory" -type f -name "*.tif")
 
 if [[ -z $tif_files ]]; then
 echo "No files found."
@@ -12,7 +12,7 @@ exit 1
 fi
 
 # Merge and write the files to the parent directory
-output_file="$parent_directory/fcover_mosaic_2023.tif"
+output_file="$parent_directory/agents_mosaic.tif"
 gdal_merge.py -o "$output_file" $tif_files
 echo "Merged files and saved as $output_file"
 
@@ -26,3 +26,21 @@ echo "Merged files and saved as $output_file"
 #gdaladdo -r average "$mosaic_file" 2 4 8 16
 
 #echo "Pyramids computed for the mosaic file: $mosaic_file"
+
+parent_directory="/home/lmandl/eo_nas/EO4Alps/gis/number_disturbances"
+
+
+# Find tif files with _2021_ in their file name recursively
+tif_files=$(find "$parent_directory" -type f -name "*.tif")
+
+if [[ -z $tif_files ]]; then
+echo "No files found."
+exit 1
+fi
+
+# Merge and write the files to the parent directory
+output_file="$parent_directory/number_disturbances.tif"
+gdal_merge.py -o "$output_file" $tif_files
+echo "Merged files and saved as $output_file"
+
+
