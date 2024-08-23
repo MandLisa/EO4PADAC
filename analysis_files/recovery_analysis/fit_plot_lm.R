@@ -280,6 +280,9 @@ models <- recovery_standardized %>%
                   severity_relative,
                 data = .))
 
+
+
+
 # Extract coefficients and standard errors
 model_summary_by_class <- models %>%
   rowwise() %>%
@@ -365,3 +368,42 @@ ggsave("~/eo_nas/EO4Alps/figs/effect_size_geoloc.png", plot = p, width = 12, hei
 ### write
 write.csv(recovery_standardized, "~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_standardized.csv", row.names=FALSE)
 
+
+
+  ggplot(
+    data = recovery_unique %>%
+      filter(
+        severity_class == "stand-replacing" &
+          !is.na(geoloc_name)
+        ) %>%
+      filter(
+        yod %in% c(2001, 2002, 2003, 2004)
+      ), 
+    aes(
+      y = recovery_rate, 
+      x =`VPD_summer_yod`
+      )
+    ) +
+  geom_point(
+    aes(
+      color = factor(yod)
+    )
+  ) +
+  facet_wrap(~geoloc_name, scales = "free_y") +
+  geom_smooth(
+    method = "lm",
+    se = FALSE
+  )
+  
+  fit.test <- lm(
+    recovery_rate ~ `VPD_summer_yod`
+  )
+  
+  
+  
+  
+  
+  
+  
+  
+  

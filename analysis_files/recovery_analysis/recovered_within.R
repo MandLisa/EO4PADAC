@@ -22,7 +22,7 @@ recovery_all <- read_csv("~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_all.cs
 ### ysd
 
 # Filter out only the records where ysd is positive and less than or equal to 38
-recovery_filtered <- recovery_all %>%
+recovery_filtered <- recovery_filtered_agent_geoloc %>%
   filter(ysd >= 1 & ysd <= 37)
 
 # Count the number of pixels with each recovery rate
@@ -42,6 +42,8 @@ recovery_cumulative <- recovery_counts %>%
 # Create the final data frame
 recovery_within <- recovery_cumulative %>%
   select(ysd, cumulative_perc)
+
+write.csv(recovery_within, "~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_within.csv", row.names=FALSE)
 
 # plot
 ggplot(recovery_within, aes(x = ysd, y = cumulative_perc)) +
@@ -84,6 +86,8 @@ recovery_within_I <- recovery_cumulative %>%
 recovery_within_I <- recovery_cumulative %>%
   mutate(cumulative_perc = cumulative_perc * 100) %>%
   select(severity_class, ysd, cumulative_perc)
+
+write.csv(recovery_within_I, "~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_within_severity.csv", row.names=FALSE)
 
 
 recovery_within_I <- recovery_within_I %>%
@@ -128,6 +132,7 @@ recovery_counts <- recovery_filtered %>%
   mutate(total_pixels = sum(count)) %>%
   ungroup()
 
+
 # Calculate cumulative count and percentage within each severity class
 recovery_cumulative <- recovery_counts %>%
   arrange(agent_name, ysd) %>%
@@ -146,6 +151,7 @@ recovery_within_I <- recovery_cumulative %>%
   mutate(cumulative_perc = cumulative_perc * 100) %>%
   select(agent_name, ysd, cumulative_perc)
 
+write.csv(recovery_within_I, "~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_within_agent.csv", row.names=FALSE)
 
 recovery_within_I <- recovery_within_I %>%
   filter(!is.na(agent_name))
@@ -204,6 +210,8 @@ recovery_within_I <- recovery_cumulative %>%
 recovery_within_I <- recovery_cumulative %>%
   mutate(cumulative_perc = cumulative_perc * 100) %>%
   select(geoloc, ysd, cumulative_perc)
+
+write.csv(recovery_within_I, "~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_within_geoloc.csv", row.names=FALSE)
 
 
 recovery_within_I <- recovery_within_I %>%

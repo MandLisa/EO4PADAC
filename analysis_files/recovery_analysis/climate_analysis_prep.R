@@ -675,9 +675,6 @@ ggplot(importance_df, aes(y = Feature, x = MeanDecreaseGini)) +
 
 
 
-
-
-
 # Extract feature importance
 importance_scores <- importance(rf_model)
 importance_df <- as.data.frame(importance_scores)
@@ -692,4 +689,56 @@ ggplot(importance_df, aes(x = reorder(Feature, IncMSE), y = IncMSE)) +
        x = "Feature",
        y = "Importance (IncMSE)") +
   theme_minimal()
+
+
+
+#-------------------------------------------------------------------------------
+### add absolute VPD values -> average from June, July, August
+
+
+# Folder containing the .tif files
+tif_folder <- "~/eo_nas/EO4Alps/climate_data/VPD_clip/06"
+
+# Convert the data frame to an sf object
+recvoery_all_sf <- st_as_sf(recovery_all, coords = c("x", "y"), crs = st_crs(reference_raster))
+
+# Reproject the sf object to the target CRS if necessary
+recvoery_all_sf <- st_transform(recvoery_all_sf, crs = target_crs)
+
+
+# List all .tif files in the folder
+tif_files <- list.files(tif_folder, pattern = "\\.tif$", full.names = TRUE)
+
+# Create an empty list to store the extracted values
+extracted_values_list <- list()
+
+# Loop over each tif file
+for (tif_file in tif_files) {
+  # Load the raster
+  raster <- raster(tif_file)
+  
+  # Project the raster to the target CRS
+  raster_proj <- projectRaster(raster, crs = target_crs)
+  
+  # Extract the values at the points using the SpatialPointsDataFrame or coordinates
+  values <- extract(raster_proj, recvoery_all_sf)
+  
+  # Get the raster name (without the file extension)
+  raster_name <- tools::file_path_sans_ext(basename(tif_file))
+  
+  # Store the extracted values in the list with the raster name as the key
+  extracted_values_list[[raster_name]] <- values
+}
+
+# Combine the extracted values into a data frame
+extracted_values_df <- as.data.frame(extracted_values_list)
+
+# Combine the original df with the extracted values
+recovery_all <- cbind(recovery_all@data, extracted_values_df)
+
+
+
+
+
+
 
