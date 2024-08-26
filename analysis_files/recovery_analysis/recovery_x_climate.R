@@ -439,7 +439,11 @@ df_selected <- recovery_2308_unique[, c("ID", "agent", "agent_name", "geoloc")]
 # Merge df1_selected with df2 based on the 'ID' column
 recovery_2608_filt1 <- merge(recovery_2608_filt, df_selected, by = "ID", all.x = TRUE)
 
-### write
+
+
+#-------------------------------------------------------------------
+
+### write --> that is the df for subsequent analysis!
 write.csv(recovery_2608_filt1, "~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_2608_filt_geoloc.csv", row.names=FALSE)
 
 
