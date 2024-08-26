@@ -15,6 +15,12 @@ library(purrr)
 library(readr)
 library(mgcv)
 library(stringr)
+library(data.table)
+
+
+### load recory_climate.csv
+recovery_VPD <- read.csv("~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_VPD.csv")
+
 
 ### load recory_climate.csv
 recovery_climate <- read.csv("~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_climate.csv")
@@ -53,7 +59,7 @@ lapply(raster_files, function(raster_path) {
 ### extract VPD anomalie values
 
 # Assume recovery_df has columns: 'longitude' and 'latitude'
-recovery_sf <- st_as_sf(recovery, coords = c("x", "y"), crs = st_crs(reference_raster))
+recovery_sf <- st_as_sf(recovery_all_fractions, coords = c("x", "y"), crs = st_crs(reference_raster))
 
 
 # Function to extract VPD anomaly values from each raster band
@@ -177,5 +183,160 @@ recovery_climate_long <- recovery_climate %>%
   )
 
 
+
+
+#------------------------------------------------------------------------------
+### do the same for absolute VPD
+
+# convert CRS of climate data
+# Load the reference raster (assuming the reference raster file path is 'reference_raster.tif')
+reference_raster <- raster("~/eo_nas/EO4Alps/level3_predictions/l2_mask/X0028_Y0028/PREDICTION_l2_1986_v3_HL_ML_MLP.tif")
+
+# Extract the CRS from the reference raster
+target_crs <- crs(reference_raster)
+
+# List of raster files to be reprojected (update the paths as needed)
+raster_files <- list.files(path = "~/eo_nas/EO4Alps/climate_data/VPD_summer_averages", pattern = "\\.tif$", full.names = TRUE)
+
+
+# Reproject each raster file and save the results
+output_dir <- "~/eo_nas/EO4Alps/climate_data/VPD_summer_averages"
+lapply(raster_files, function(raster_path) {
+  reprojected_raster <- reproject_raster(raster_path, target_crs)
+  
+  # Create the new filename with _LAEA suffix
+  base_name <- tools::file_path_sans_ext(basename(raster_path))
+  new_filename <- file.path(output_dir, paste0(base_name, "_LAEA.tif"))
+  
+  # Save the reprojected raster
+  writeRaster(reprojected_raster, filename = new_filename, format = "GTiff", overwrite = TRUE)
+})
+
+#-------------------------------------------------------------------------------
+### extract VPD anomalie values
+
+# Assume recovery_df has columns: 'longitude' and 'latitude'
+recovery_sf <- st_as_sf(recovery_all_fractions, coords = c("x", "y"), crs = st_crs(reference_raster))
+
+
+# Function to extract VPD anomaly values from a single-band raster
+extract_vpd_anomalies <- function(raster_path, recovery_sf) {
+  raster_layer <- raster(raster_path)  # Use raster to handle single-band rasters
+  
+  # Extract values for the raster
+  vpd_values <- extract(raster_layer, as(recovery_sf, "Spatial"))
+  
+  return(vpd_values)
+}
+
+# List of reprojected raster files 
+raster_files <- list.files(path = "~/eo_nas/EO4Alps/climate_data/VPD_summer_averages", pattern = "*_LAEA.tif$", full.names = TRUE)
+
+# Extract VPD anomaly values for each reprojected raster
+vpd_anomalies <- lapply(raster_files, extract_vpd_anomalies, recovery_sf = recovery_sf)
+
+# Combine extracted values into a single dataframe
+vpd_df <- do.call(cbind, vpd_anomalies)
+colnames(vpd_df) <- paste0("VPD_absolute", 1:ncol(vpd_df))
+
+# Add VPD anomaly values to recovery_df
+recovery_VPD <- cbind(recovery_all_fractions, vpd_df)
+
+# Count the number of NA values in the 'value' column
+num_na <- sum(is.na(recovery_VPD$VPD_absolute33))
+
+print(num_na)
+
+# Assuming your data frame is named recovery_df
+start_year <- 1986
+end_year <- 2018
+
+# Generate the new column names
+new_column_names <- paste0("VPD_absolute_", seq(start_year, end_year))
+
+# Assign the new names to columns 52 to 84
+colnames(recovery_VPD)[129:161] <- new_column_names
+
+### write
+write.csv(recovery_VPD, "~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_VPD_2608.csv", row.names=FALSE)
+
+# Remove specific columns by name
+recovery_VPD <- recovery_VPD %>% select(-VPD_consecutive, -season, -VPD_Apr, -VPD_May,
+                                          -VPD_Jun, -VPD_Jul, -VPD_Aug, -VPD_Sep, -VPD_Oct)
+
+
+recovery_VPD <- recovery_VPD %>% select(-class, -min_year, -min_tree_share, -severity_absolute,
+                                        -tree_share_80, -month)
+
+recovery_VPD <- recovery_VPD %>% select(-class, -min_year, -min_tree_share, -severity_absolute,
+                                        -tree_share_80, -month)
+
+
+#-------------------------------------------------------------------------------
+# Perform the pivot_longer operation for the year data
+
+# Assuming your original data frame is called recovery_unique
+recovery_VPD <- as.data.frame(recovery_VPD)
+
+recovery_VPD <- recovery_VPD %>%
+  group_by(x, y) %>%
+  mutate(ID_new = cur_group_id()) %>%
+  ungroup()  # Ungroup after assigning IDs
+
+
+recovery_VPD1 <- recovery_VPD  %>%
+  distinct(ID_new, year, .keep_all = TRUE) 
+
+
+
+# Assuming your dataframe is called recovery_VPD
+recovery_VPD_long <- recovery_VPD %>%
+  pivot_longer(
+    cols = starts_with("VPD_absolute_"),     # Select all columns that start with "VPD_absolute_"
+    names_to = "Year",                       # Create a new column "Year"
+    names_prefix = "VPD_absolute_",          # Remove the "VPD_absolute_" prefix to leave just the year
+    values_to = "VPD_absolute"               # Place the VPD values into a new column "VPD_absolute"
+  ) %>%
+  mutate(Year = as.integer(Year)) %>%        # Convert the Year column to integer for proper matching
+  filter(year == Year) %>%                   # Filter rows where the year column matches the Year extracted from the column name
+  select(-Year)                              # Drop the temporary Year column
+
+
+
+### write
+write.csv(recovery_VPD_long, "~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_2608.csv", row.names=FALSE)
+
+# Create a new DataFrame with the filtered values
+recovery_VPD_long1 <- recovery_VPD_long %>%
+  filter(recovery_rate <= 39)
+
+# unique
+recovery_VPD_unique <- recovery_VPD_long1  %>%
+  distinct(ID_new, .keep_all = TRUE) 
+
+# Step 1: Filter out rows where yod is less than 1987
+recovery_VPD_long1_filt <- recovery_VPD_long1  %>%
+  filter(yod >= 1986)
+
+# Step 2: Create the new columns for VPD values corresponding to yod, yod + 1, yod + 2, and yod + 3
+recovery_VPD_long1_filt <- recovery_VPD_long1_filt %>%
+  group_by(ID_new) %>%
+  mutate(
+    VPD_yod = ifelse(year == yod, VPD_value, NA),
+    VPD_yod1 = ifelse(year == yod + 1, VPD_value, NA),
+    VPD_yod2 = ifelse(year == yod + 2, VPD_value, NA),
+    VPD_yod3 = ifelse(year == yod + 3, VPD_value, NA)
+  ) 
+
+
+
+
+# Step 2: Create a scatterplot
+ggplot(recovery_VPD_unique_filt, aes(x = VPD_value, y = recovery_rate)) +
+  geom_point() +
+  labs(title = "",
+       x = "VPD_value",
+       y = "Recovery Rate") +
+  theme_minimal()
 
 
