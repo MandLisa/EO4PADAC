@@ -448,13 +448,32 @@ ggplot(
   data = recovery_2608_filt1 %>%
     filter(
       severity_class == "stand-replacing" &
-        !is.na(severity_class)),
-      aes(x = VPD_summer_yod1, y = recovery_rate)) +
+        !is.na(geoloc)),
+      aes(x = VPD_absolute_yod1, y = recovery_rate,
+          color = cut(temp, c(0, 5, 10, 15)))) +
   geom_point() +
   labs(title = "",
        x = "VPD anomalies 1-year post-disturbance",
        y = "Recovery Rate") +
+  facet_wrap(cut(temp, c(0, 5, 10, 15))~geoloc) +
   theme_minimal()
+
+
+# Create a scatterplot
+ggplot(
+  data = recovery_2608_filt1 %>%
+    filter(
+      severity_class == "stand-replacing" &
+        !is.na(geoloc)),
+  aes(x = VPD_absolute_yod1, y = recovery_rate,
+      color = cut(prec, c(400, 1000, 2000, 3200)))) +
+  geom_point() +
+  labs(title = "",
+       x = "VPD anomalies 1-year post-disturbance",
+       y = "Recovery Rate") +
+  facet_wrap(cut(prec, c(400, 1000, 2000, 3200))~geoloc) +
+  theme_minimal()
+
 
 
 
@@ -503,7 +522,23 @@ ggplot(
   )
 
 
-
+ggplot(
+  data = recovery_2608_filt1 %>%
+    filter(
+      severity_class == "stand-replacing" &
+        !is.na(geoloc)),
+  aes(
+    y = recovery_rate, 
+    x =`VPD_absolute_yod1`, 
+    color = cut(temp, c(0, 5, 10, 20))
+  )
+) +
+  geom_point() +
+  facet_wrap(cut(temp, c(0, 5, 10, 20))~geoloc) +
+  geom_smooth(
+    method = "gam",
+    formula = y ~ s(x)
+  )
 
 
 
