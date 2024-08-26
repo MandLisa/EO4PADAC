@@ -443,6 +443,38 @@ recovery_2608_filt1 <- merge(recovery_2608_filt, df_selected, by = "ID", all.x =
 write.csv(recovery_2608_filt1, "~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_2608_filt_geoloc.csv", row.names=FALSE)
 
 
+ggplot(
+  data = recovery_2608_filt1 %>%
+    filter(
+      severity_class == "stand-replacing" &
+        !is.na(geoloc)),
+  aes(x = VPD_summer_yod1, y = recovery_rate, color = geoloc)) +
+  geom_point() +
+  labs(title = "",
+       x = "VPD anomalies 1-year post-disturbance",
+       y = "Recovery Rate") +
+  facet_wrap(~year) +
+  theme_minimal()
+
+
+
+# Create a scatterplot
+ggplot(
+  data = recovery_2608_filt1 %>%
+    filter(
+      severity_class == "stand-replacing" &
+        !is.na(geoloc)),
+  aes(x = VPD_absolute_yod1, y = recovery_rate,
+      color = cut(temp, c(0, 5, 10, 15)))) +
+  geom_point() +
+  labs(title = "",
+       x = "VPD anomalies 1-year post-disturbance",
+       y = "Recovery Rate") +
+  facet_wrap(cut(temp, c(0, 5, 10, 15))~geoloc) +
+  theme_minimal()
+
+
+
 # Create a scatterplot
 ggplot(
   data = recovery_2608_filt1 %>%
