@@ -22,6 +22,9 @@ library(doParallel)
 library(reshape2)
 library(corrplot)
 library(caret)
+library(terra)
+
+
 
 recovery_imputed_unique <- read_csv("~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_imputed_unique.csv")
 recovery_standardized <- read_csv("~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_standardized.csv")

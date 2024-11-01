@@ -7,7 +7,7 @@
 DIR_LOWER = /path/level3_STMs
 # Higher Level datapool (parent directory of tiled output data)
 # Type: full directory path
-DIR_HIGHER = /path/level3/STMs_samples_l2
+DIR_HIGHER = /path/level3/STMs_samples_l2_Jana
 # This is the directory where provenance files should be saved.
 # Type: full directory path
 DIR_PROVENANCE = /path/level3/temp
@@ -145,18 +145,18 @@ FEATURE_EXCLUDE = FALSE
 # File with coordinates, at which the features should be sampled.
 # 1st column: x-coordinate, 2nd column: y-coordinate, 3rd column: response
 # Type: full file path
-FILE_POINTS = /path/spec_lib/l3/candidates_FORCE.txt
+FILE_POINTS = /path/spec_lib/l3/candidates_FORCE_no_BLshrub.txt
 # File with sampled features. This file should not exist.
 # Type: full file path
-FILE_SAMPLE = /path/level3/STMs_samples_l2/features/features_1994.txt
+FILE_SAMPLE = /path/level3/STMs_samples_l2_Jana/features/features_1994.txt
 # File with the response variable corresponding to the sampled features.
 # This file should not exist.
 # Type: full file path
-FILE_RESPONSE = /path/level3/STMs_samples_l2/response/response_1994.txt
+FILE_RESPONSE = /path/level3/STMs_samples_l2_Jana/response/response_1994.txt
 # File with the coordinates corresponding to the sampled features.
 # This file should not exist.
 # Type: full file path
-FILE_COORDINATES = /path/level3/STMs_samples_l2/coordinates/coordinates_1994.txt
+FILE_COORDINATES = /path/level3/STMs_samples_l2_Jana/coordinates/coordinates_1994.txt
 # Are the coordinates in FILE_POINTS in the projection of the datacube
 # (X/Y: TRUE)? Or are they geographic coordinates (Lon/Lat: FALSE)
 # Type: Logical. Valid values: {TRUE,FALSE}

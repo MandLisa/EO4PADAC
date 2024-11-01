@@ -104,7 +104,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-tabulate-grid -b 45,48,9,15 -f shp /path/level2
+  force-tabulate-grid -b 44,49,4,15 -f shp /path/level2
   
 #-------------------------------------------------------------------------------
 ### Step 6b: Coregistration

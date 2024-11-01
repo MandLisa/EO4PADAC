@@ -7,7 +7,7 @@
 DIR_LOWER = /path/level3_STMs
 # Higher Level datapool (parent directory of tiled output data)
 # Type: full directory path
-DIR_HIGHER = /path/level3_predictions/l2_mask
+DIR_HIGHER = /path/level3_predictions/l2
 # This is the directory where provenance files should be saved.
 # Type: full directory path
 DIR_PROVENANCE = /path/temp
@@ -17,11 +17,13 @@ DIR_PROVENANCE = /path/temp
 # Analysis Mask datapool (parent directory of tiled analysis masks)
 # If no analsys mask should be applied, give NULL.
 # Type: full directory path
-DIR_MASK = /path/gis/proc_mask
+DIR_MASK = NULL
+# DIR_MASK = /path/gis/proc_mask
 # Basename of analysis masks (e.g. WATER-MASK.tif).
 # Masks need to be binary with 0 = off / 1 = on
 # Type: Basename of file
-BASE_MASK = proc_mask.tif
+BASE_MASK = NULL
+# BASE_MASK = proc_mask.tif
 
 # OUTPUT OPTIONS
 # ------------------------------------------------------------------------
@@ -48,9 +50,9 @@ OUTPUT_EXPLODE = FALSE
 # output. Each team can have multiple sub-threads to speed up the work. The
 # number of threads to use for each team is given by following parameters.
 # Type: Integer. Valid range: [1,...
-NTHREAD_READ = 2
-NTHREAD_COMPUTE = 4
-NTHREAD_WRITE = 2
+NTHREAD_READ = 10
+NTHREAD_COMPUTE = 16
+NTHREAD_WRITE = 8
 #10,16,8
 
 # PROCESSING EXTENT AND RESOLUTION

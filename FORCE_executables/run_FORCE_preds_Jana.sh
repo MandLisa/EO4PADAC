@@ -53,7 +53,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_1986.prm  
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2_Jana/sampling_l2_1986.prm  
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -62,7 +62,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_1987.prm  
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2_Jana/sampling_l2_1987.prm  
 
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -71,7 +71,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_1988.prm  
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2_Jana/sampling_l2_1988.prm  
 
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -80,7 +80,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_1989.prm  
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2_Jana/sampling_l2_1989.prm  
 
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -89,7 +89,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_1990.prm 
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2_Jana/sampling_l2_1990.prm 
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -98,7 +98,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_1991.prm  
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2_Jana/sampling_l2_1991.prm  
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -107,7 +107,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_1992.prm  
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2_Jana/sampling_l2_1992.prm  
 
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -116,7 +116,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_1993.prm  
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2_Jana/sampling_l2_1993.prm  
 
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -125,7 +125,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_1994.prm  
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2_Jana/sampling_l2_1994.prm  
 
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -134,7 +134,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_1995.prm  
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2_Jana/sampling_l2_1995.prm  
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -143,7 +143,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_1996.prm  
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2_Jana/sampling_l2_1996.prm  
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -152,7 +152,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_1997.prm  
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2_Jana/sampling_l2_1997.prm  
 
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -161,7 +161,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_1998.prm  
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2_Jana/sampling_l2_1998.prm  
 
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -170,7 +170,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_1999.prm  
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2_Jana/sampling_l2_1999.prm  
 
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -179,7 +179,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2000.prm  
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2_Jana/sampling_l2_2000.prm  
 
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -188,7 +188,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2001.prm  
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2_Jana/sampling_l2_2001.prm  
 
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -197,7 +197,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2002.prm
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2_Jana/sampling_l2_2002.prm
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -206,7 +206,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2003.prm  
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2_Jana/sampling_l2_2003.prm  
 
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -215,7 +215,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2004.prm  
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2_Jana/sampling_l2_2004.prm  
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -224,7 +224,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2005.prm  
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2_Jana/sampling_l2_2005.prm  
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -233,7 +233,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2006.prm  
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2_Jana/sampling_l2_2006.prm  
 
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -242,7 +242,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2007.prm  
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2_Jana/sampling_l2_2007.prm  
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -251,7 +251,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2008.prm  
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2_Jana/sampling_l2_2008.prm  
 
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -260,7 +260,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2009.prm  
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2_Jana/sampling_l2_2009.prm  
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -269,7 +269,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2010.prm
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2_Jana/sampling_l2_2010.prm
 
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -278,7 +278,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2011.prm  
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2_Jana/sampling_l2_2011.prm  
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -287,7 +287,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2012.prm  
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2_Jana/sampling_l2_2012.prm  
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -296,7 +296,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2013.prm
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2_Jana/sampling_l2_2013.prm
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -305,7 +305,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2014.prm 
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2_Jana/sampling_l2_2014.prm 
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -314,7 +314,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2015.prm  
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2_Jana/sampling_l2_2015.prm  
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -323,7 +323,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2016.prm  
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2_Jana/sampling_l2_2016.prm  
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -332,7 +332,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2017.prm  
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2_Jana/sampling_l2_2017.prm  
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -341,7 +341,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2018.prm 
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2_Jana/sampling_l2_2018.prm 
 
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -350,7 +350,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2019.prm  
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2_Jana/sampling_l2_2019.prm  
 
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -359,7 +359,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2020.prm  
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2_Jana/sampling_l2_2020.prm  
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -368,7 +368,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2021.prm  
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2_Jana/sampling_l2_2021.prm  
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -377,7 +377,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2022.prm 
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2_Jana/sampling_l2_2022.prm 
   
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -386,7 +386,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l2/sampling_l2_2023.prm  
+  force-higher-level /path/EO4PADAC/param_files/sampling_l2_Jana/sampling_l2_2023.prm  
   
   
   

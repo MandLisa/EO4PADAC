@@ -1,6 +1,6 @@
 #!/bin/bash
 
-parent_directory="~/eo_nas/EO4Alps/gis/attribution_v1"
+parent_directory="/home/lmandl/eo_nas/EO4Alps/gis/attribution_v1"
 
 
 # Find tif files with _2021_ in their file name recursively
@@ -12,7 +12,7 @@ exit 1
 fi
 
 # Merge and write the files to the parent directory
-output_file="$parent_directory/agents_mosaic.tif"
+output_file="$parent_directory/agents_mosaic1.tif"
 gdal_merge.py -o "$output_file" $tif_files
 echo "Merged files and saved as $output_file"
 
