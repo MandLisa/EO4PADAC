@@ -611,3 +611,10 @@ p4 <- ggplot(new_data_geoloc_topo, aes(x = VPD_summer, y = fit)) +
 ggsave("~/eo_nas/EO4Alps/figs/effect_VPD_recovery_with_topo_grey.png", plot = p4, width = 11, height = 8, dpi = 300)
 
 
+write.csv(recovery_3110_clean_geoloc, "~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_0311_clean.csv", row.names = FALSE)
+write.csv(recovery_3110, "~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_0311.csv", row.names = FALSE)
+
+write.csv(new_data_geoloc_topo, "~/eo_nas/EO4Alps/00_analysis/_recovery/plot_preds_topo.csv", row.names = FALSE)
+write.csv(new_data_geoloc, "~/eo_nas/EO4Alps/00_analysis/_recovery/plot_preds_notopo.csv", row.names = FALSE)
+
+
