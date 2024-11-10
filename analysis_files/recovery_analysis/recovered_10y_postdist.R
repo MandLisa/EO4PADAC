@@ -484,13 +484,13 @@ p2 <- ggplot(new_data_geoloc, aes(x = VPD_summer, y = fit, color = geoloc)) +
     y = "Predicted regrown canopy cover [%]"
   ) +
   facet_wrap(~ geoloc) + 
-  theme_minimal() +  # Set theme_minimal first
+  theme_minimal() + 
   theme(
-    text = element_text(size = 20),           # Increase all text size
-    plot.title = element_text(size = 22),     # Increase title size specifically
-    axis.title = element_text(size = 18),     # Increase axis title size
-    axis.text = element_text(size = 14),      # Increase axis text size
-    legend.position = "none"                  # Remove legend
+    text = element_text(size = 20),          
+    plot.title = element_text(size = 22),     
+    axis.title = element_text(size = 18),    
+    axis.text = element_text(size = 14),     
+    legend.position = "none"                 
   )
 
 
@@ -510,12 +510,32 @@ pp <- ggplot(new_data_geoloc, aes(x = VPD_summer, y = fit)) +
   facet_wrap(~ geoloc) + 
   theme_bw() +  # Set theme_minimal first
   theme(
-    text = element_text(size = 28),           # Increase all text size
-    plot.title = element_text(size = 30),     # Increase title size specifically
-    axis.title = element_text(size = 26),     # Increase axis title size
-    axis.text = element_text(size = 22),      # Increase axis text size
-    legend.position = "none"                  # Remove legend
+    text = element_text(size = 28),           
+    plot.title = element_text(size = 30),     
+    axis.title = element_text(size = 26),    
+    axis.text = element_text(size = 22),     
+    legend.position = "none"                  
   )
+
+
+ggplot(new_data_geoloc, aes(x = VPD_summer, y = fit)) +
+  geom_line(color = "black", linewidth = 1) +  # Set line color to black
+  geom_ribbon(aes(ymin = fit - 1.96 * se.fit, ymax = fit + 1.96 * se.fit), fill = "#8DBBBE", alpha = 0.4) +  # Set ribbon fill to grey
+  labs(
+    title = "",
+    x = "VPD anomalies",
+    y = "Predicted regrown canopy cover [%]"
+  ) +
+  facet_wrap(~ geoloc) + 
+  theme_bw() +  # Set theme_minimal first
+  theme(
+    text = element_text(size = 24),           
+    plot.title = element_text(size = 26),     
+    axis.title = element_text(size = 20),    
+    axis.text = element_text(size = 18),     
+    legend.position = "none"                  
+  )
+
 
 # Save the plot as a PNG file
 ggsave("~/eo_nas/EO4Alps/figs/effect_VPD_recovery_non_topo_grey.png", plot = pp, width = 11, height = 8, dpi = 300)
@@ -541,13 +561,13 @@ model_geoloc_topo <- bam(
 
 ## Define a data frame with a range of VPD_summer values for each geoloc and fixed values for other predictors
 new_data_geoloc_topo <- expand.grid(
-  ysd = mean(recovery_3110_clean_geoloc$ysd, na.rm = TRUE),  # Fixed ysd
+  ysd = mean(recovery_3110_clean_geoloc$ysd, na.rm = TRUE),  
   VPD_summer = seq(min(recovery_3110_clean_geoloc$VPD_summer, na.rm = TRUE), max(recovery_3110_clean_geoloc$VPD_summer, na.rm = TRUE), length.out = 100),
-  geoloc = unique(recovery_3110_clean_geoloc$geoloc),  # All unique geolocations
-  height = mean(recovery_3110_clean_geoloc$height, na.rm = TRUE),  # Fixed sea level
-  slope = mean(recovery_3110_clean_geoloc$slope, na.rm = TRUE),  # Fixed slope
-  aspect = mean(recovery_3110_clean_geoloc$aspect, na.rm = TRUE),  # Fixed aspect
-  bare_land_share_yod3 = mean(recovery_3110_clean_geoloc$bare_land_share_yod3, na.rm = TRUE)  # Fixed bare ground share
+  geoloc = unique(recovery_3110_clean_geoloc$geoloc),  
+  height = mean(recovery_3110_clean_geoloc$height, na.rm = TRUE),  
+  slope = mean(recovery_3110_clean_geoloc$slope, na.rm = TRUE), 
+  aspect = mean(recovery_3110_clean_geoloc$aspect, na.rm = TRUE), 
+  bare_land_share_yod3 = mean(recovery_3110_clean_geoloc$bare_land_share_yod3, na.rm = TRUE) 
 )
 
 # Add a placeholder ID if required by the model
@@ -577,11 +597,11 @@ p3 <- ggplot(new_data_geoloc_topo, aes(x = VPD_summer, y = fit, color = geoloc))
   facet_wrap(~ geoloc) + 
   theme_minimal() +  # Set theme_minimal first
   theme(
-    text = element_text(size = 20),           # Increase all text size
-    plot.title = element_text(size = 22),     # Increase title size specifically
-    axis.title = element_text(size = 18),     # Increase axis title size
-    axis.text = element_text(size = 14),      # Increase axis text size
-    legend.position = "none"                  # Remove legend
+    text = element_text(size = 20),           
+    plot.title = element_text(size = 22),    
+    axis.title = element_text(size = 18),    
+    axis.text = element_text(size = 14),      
+    legend.position = "none"                 
   )
 
 # Save the plot as a PNG file
@@ -599,11 +619,11 @@ p4 <- ggplot(new_data_geoloc_topo, aes(x = VPD_summer, y = fit)) +
   facet_wrap(~ geoloc) + 
   theme_bw() +  # Set theme_minimal first
   theme(
-    text = element_text(size = 20),           # Increase all text size
-    plot.title = element_text(size = 22),     # Increase title size specifically
-    axis.title = element_text(size = 18),     # Increase axis title size
-    axis.text = element_text(size = 14),      # Increase axis text size
-    legend.position = "none"                  # Remove legend
+    text = element_text(size = 20),           
+    plot.title = element_text(size = 22),    
+    axis.title = element_text(size = 18),     
+    axis.text = element_text(size = 14),     
+    legend.position = "none"                
   )
 
 

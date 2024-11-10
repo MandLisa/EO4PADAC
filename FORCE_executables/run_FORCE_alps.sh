@@ -891,6 +891,19 @@ docker run \
   davidfrantz/force \
   force-higher-level /path/EO4PADAC/param_files/prediction_l2_test.prm
   
+
+
+### Run
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/prediction_l2_walltowall.prm
+  
+  
 docker run \
   -v $basepath/EO4Alps:/path \
   --user "$(id -u):10000514" \

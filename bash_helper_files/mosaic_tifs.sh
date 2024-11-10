@@ -1,6 +1,6 @@
 #!/bin/bash
 
-parent_directory="/home/lmandl/eo_nas/EO4Alps/gis/attribution_v1"
+parent_directory="~/eo_nas/EO4Alps/level3_predictions/l2"
 
 
 # Find tif files with _2021_ in their file name recursively
@@ -12,7 +12,7 @@ exit 1
 fi
 
 # Merge and write the files to the parent directory
-output_file="$parent_directory/agents_mosaic1.tif"
+output_file="$parent_directory/mosaic_2023.tif"
 gdal_merge.py -o "$output_file" $tif_files
 echo "Merged files and saved as $output_file"
 
@@ -27,7 +27,7 @@ echo "Merged files and saved as $output_file"
 
 #echo "Pyramids computed for the mosaic file: $mosaic_file"
 
-parent_directory="/home/lmandl/eo_nas/EO4Alps/gis/number_disturbances"
+parent_directory="~/eo_nas/EO4Alps/level3_predictions/l2"
 
 
 # Find tif files with _2021_ in their file name recursively
@@ -39,8 +39,25 @@ exit 1
 fi
 
 # Merge and write the files to the parent directory
-output_file="$parent_directory/number_disturbances.tif"
+output_file="$parent_directory/mosaic_2023.tif"
 gdal_merge.py -o "$output_file" $tif_files
 echo "Merged files and saved as $output_file"
+
+
+
+
+
+#!/bin/bash
+
+# Set the parent directory path
+PARENT_DIR="/home/lmandl/eo_nas/EO4Alps/level3_predictions/l2"
+OUTPUT_MOSAIC="$PARENT_DIR/mosaic_output.tif"
+
+# Find all .tif files in subdirectories and merge them into a single mosaic
+find "$PARENT_DIR" -type f -name "*.tif" | xargs gdal_merge.py -o "$OUTPUT_MOSAIC"
+
+echo "Mosaic created at $OUTPUT_MOSAIC"
+
+
 
 
