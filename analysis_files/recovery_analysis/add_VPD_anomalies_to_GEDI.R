@@ -904,6 +904,14 @@ recovery_filt_lm_2013 <- recovery_filt_lm_2013 %>%
 
 
 
+recovery_summary_geoloc <- recovery_summary_geoloc %>%
+  mutate(geoloc_reclass = case_when(
+    geoloc_reclass == "eastern alps - central" ~ "eastern alps - north",
+    geoloc_reclass == "eastern alps - north" ~ "eastern alps - central",
+    TRUE ~ geoloc_reclass  # Keeps any values not explicitly reclassified
+  ))
+
+
 
 recovery_filt_lm_2013 <- recovery_filt_lm_2013 %>%
   group_by(ID) %>%

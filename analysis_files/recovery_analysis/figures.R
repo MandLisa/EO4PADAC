@@ -5,7 +5,12 @@ library(facefuns)
 library(introdataviz)
 library(sf)
 
+# general df
 GEDI_all <- read.csv("~/eo_nas/EO4Alps/00_analysis/_recovery/GEDI_recov_all.csv")
+
+# df for recovery rate density plot
+GEDI_unique_weibull <- read.csv("~/eo_nas/EO4Alps/00_analysis/_recovery/GEDI_unique_weibull.csv")
+
 
 # Filter the data to exclude recovery_rate >= 100
 GEDI_recovered <- GEDI_forest_types %>%
@@ -18,6 +23,9 @@ GEDI_unique <- GEDI_recovered %>%
 
 # Save to a specific directory
 write.csv(GEDI_unique, "~/eo_nas/EO4Alps/00_analysis/_recovery/GEDI_unique_recov.csv", row.names = FALSE)
+write.csv(GEDI_unique_weibull, "~/eo_nas/EO4Alps/00_analysis/_recovery/GEDI_unique_weibull.csv", row.names = FALSE)
+
+
 
 # Replace negative values in severity_relative with random values between 0 and 30
 GEDI_unique <- GEDI_unique %>%
@@ -62,7 +70,7 @@ GEDI_unique <- GEDI_recovered %>%
 set.seed(123)
 
 # Replace NA in severity_class with "non stand-replacing" and adjust recovery_rate for "stand-replacing" using Weibull distribution
-GEDI_unique <- GEDI_unique %>%
+GEDI_unique_weibull <- GEDI_unique %>%
   mutate(
     severity_class = ifelse(is.na(severity_class), "non stand-replacing", severity_class),
     recovery_rate = ifelse(
@@ -75,7 +83,7 @@ GEDI_unique <- GEDI_unique %>%
 
 
 # plot
-ggplot(GEDI_unique, aes(x = recovery_rate, fill = severity_class)) +
+ggplot(GEDI_unique_weibull, aes(x = recovery_rate, fill = severity_class)) +
   geom_density(alpha = 0.7) + # Density plot with transparency
   scale_fill_manual(values = c("non stand-replacing" = "#458C91", "stand-replacing" = "#E2A800")) +
   labs(
