@@ -92,7 +92,7 @@ library(dplyr)
 months <- c("04", "05", "06", "07", "08", "09", "10")
 
 # Filter the dataframe for the year 1986
-recovery_1987 <- recovery %>% filter(year == 1987)
+recovery_1986 <- points_shapefile_long_GAM %>% filter(year == 1986)
 
 # Loop over each month, load the corresponding raster, and extract the VPD values
 for (month in months) {

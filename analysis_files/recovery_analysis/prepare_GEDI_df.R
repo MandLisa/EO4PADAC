@@ -131,56 +131,78 @@ points_shapefile_long_GAM <- points_shapefile_long %>%
 write.csv(points_shapefile_long_GAM, "~/eo_nas/EO4Alps/00_analysis/_recovery/GEDI_GAM.csv", row.names = FALSE)
 
 
+### convert GAM-fitted df to sf
+# Convert to sf object, specifying the coordinate columns and CRS
+GEDI_GAM_sf <- st_as_sf(points_shapefile_long_GAM, coords = c("long", "lat"), crs = 4326)  # CRS 4326 for WGS84
+
+
+
 
 #-------------------------------------------------------------------------------
 ### prepare VPD data
 
 # Directory containing the VPD rasters (adjust path as needed)
-vpd_dir <- "~/path_to_vpd_rasters/"
+vpd_dir <- "~/eo_nas/EO4Alps/climate_data/VPD_summer_averages/VPD_WGS84/"
 years <- 1986:2018  # Range of years for which you have VPD rasters
 
-# Ensure your main data frame has unique IDs and years from 1986-2023 for each location
-# Assuming your main data frame is points_shapefile_long_smoothed
 
-# Initialize a list to store extracted VPD values along with IDs and years
+# Load a sample raster to determine the CRS used by the VPD rasters
+sample_raster <- raster(file.path(vpd_dir, paste0("VPD_", years[1], ".tif")))
+vpd_crs <- crs(sample_raster)  # Get CRS of the VPD raster
+print(vpd_crs)
+class(points_shapefile_long_GAM)
+
+
+
+
+# Convert points data to `sf` with WGS84 CRS
+GEDI_GAM_sf <- st_as_sf(points_shapefile_long_GAM, coords = c("long", "lat"), crs = 4326)
+
+
+# Set the original CRS if known (replace `crs_original` with the actual EPSG code)
+original_crs <- st_crs("EPSG:3035")  # Example; replace if needed
+GEDI_GAM_sf <- st_as_sf(points_shapefile_long_GAM, coords = c("long", "lat"), crs = original_crs)
+
+# Now transform to WGS84
+GEDI_GAM_sf <- st_transform(GEDI_GAM_sf, crs = 4326)
+print(st_bbox(GEDI_GAM_sf)) 
+
+
+
+# Initialize an empty list to store the VPD values for each year
 vpd_values_list <- list()
 
-# Loop through each year, load the corresponding VPD raster, and extract values
+# Loop through each year to load the corresponding VPD raster and extract values
 for (year in years) {
   # Construct the file path for the current VPD raster
   raster_path <- file.path(vpd_dir, paste0("VPD_", year, ".tif"))
   
-  # Load the VPD raster for the current year
-  vpd_raster <- raster(raster_path)
+  # Load the VPD raster for the current year using terra
+  vpd_raster <- rast(raster_path)
   
-  # Filter the data frame for the current year
-  current_year_data <- points_shapefile_long_smoothed %>%
+  # Filter the data for the current year
+  current_year_data <- GEDI_GAM_sf %>%
     filter(year == year)
   
-  # Convert the filtered data to an `sf` object with the correct CRS, then to `Spatial` for compatibility
-  locations <- st_as_sf(current_year_data, coords = c("longitude", "latitude"), crs = st_crs(vpd_raster)) %>%
-    as("Spatial")
+  # Extract VPD values for the current year at each point
+  vpd_values <- terra::extract(vpd_raster, current_year_data)
   
-  # Extract VPD values at the locations for the current year
-  vpd_values <- extract(vpd_raster, locations)
-  
-  # Store the results in a temporary data frame with ID, year, and extracted VPD values
+  # Create a temporary data frame with ID, year, and extracted VPD values
   vpd_values_df <- current_year_data %>%
     select(ID, year) %>%
-    mutate(VPD_anomalies = vpd_values)
+    mutate(VPD_anomalies = vpd_values$VPD)  # Adjust the column name based on your raster
   
-  # Add the results to the list
+  # Store the extracted data frame in the list by year
   vpd_values_list[[as.character(year)]] <- vpd_values_df
 }
 
-# Combine all years into a single data frame
+# Combine the list of annual VPD values into a single data frame
 vpd_values_combined <- bind_rows(vpd_values_list)
 
-# Join the extracted VPD values back to the main data frame by ID and year
-points_shapefile_long_smoothed <- points_shapefile_long_smoothed %>%
+# Join the VPD values back to the main data frame by ID and year
+points_shapefile_long_smoothed <- points_shapefile_long_GAM %>%
   left_join(vpd_values_combined, by = c("ID", "year"))
 
-# View the result
-head(points_shapefile_long_smoothed)
+
 
 
