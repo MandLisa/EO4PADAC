@@ -279,7 +279,7 @@ temp_min <- min(mean_temperature$mean_temp, na.rm = TRUE)
 temp_max <- max(mean_temperature$mean_temp, na.rm = TRUE)
 
 # Define the maximum recovery value (70 in your case)
-recovery_max <- 70
+recovery_max <- 85
 
 # Define a scaling function to map temperature to recovery scale
 scale_to_recovery <- function(temp) {
@@ -395,11 +395,11 @@ barplot <- ggplot() +
   # Bar plot for recovery trends (filtered for stand-replacing)
   geom_bar(data = recovery_summary_geoloc %>% 
              filter(severity_class == "stand-replacing"), 
-           aes(x = yod, y = adjusted_11*0.8), 
+           aes(x = yod, y = adjusted_11*0.8, fill = severity_class), 
            stat = "identity", position = "identity", alpha =1) +
   # Set geom_smooth line to black
   geom_smooth(data = recovery_summary_geoloc %>% filter(severity_class == "stand-replacing"), 
-              aes(x = yod, y = adjusted_10y*0.8), 
+              aes(x = yod, y = adjusted_11 * 0.8), 
               method = "lm", linetype = "dashed", color = "black", fill = "#65A0A7", se = TRUE, size = 0.4) +
   # Line plot for mean temperature trends (colored by normalized temperature for independent scaling)
   geom_line(data = mean_temperature, 

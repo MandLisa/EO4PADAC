@@ -1,0 +1,165 @@
+++PARAM_SMP_START++
+
+# INPUT/OUTPUT DIRECTORIES
+# ------------------------------------------------------------------------
+# Lower Level datapool (parent directory of tiled input data)
+# Type: full directory path
+DIR_LOWER = /path/level3_STMs
+# Higher Level datapool (parent directory of tiled output data)
+# Type: full directory path
+DIR_HIGHER = /path/level3/STM_samples_l1_nov
+# This is the directory where provenance files should be saved.
+# Type: full directory path
+DIR_PROVENANCE = /path/level3/temp
+
+# MASKING
+# ------------------------------------------------------------------------
+# Analysis Mask datapool (parent directory of tiled analysis masks)
+# If no analysis mask should be applied, give NULL.
+# Type: full directory path
+DIR_MASK = NULL
+# Basename of analysis masks (e.g. WATER-MASK.tif).
+# Masks need to be binary with 0 = off / 1 = on
+# Type: Basename of file
+BASE_MASK = NULL
+
+# OUTPUT OPTIONS
+# ------------------------------------------------------------------------
+# Output format, which is either uncompressed flat binary image format aka
+# ENVI Standard, GeoTiff, or COG. GeoTiff images are compressed with LZW and hori-
+# zontal differencing; BigTiff support is enabled; the Tiff is structured
+# with striped blocks according to the TILE_SIZE (X) and BLOCK_SIZE (Y) speci-
+# fications. Metadata are written to the ENVI header or directly into the Tiff
+# to the FORCE domain. If the size of the metadata exceeds the Tiff's limit,
+# an external .aux.xml file is additionally generated.
+# Type: Character. Valid values: {ENVI,GTiff,COG,CUSTOM}
+OUTPUT_FORMAT = GTiff
+# File that contains custom GDAL output options. This is only used if
+# OUTPUT_FORMAT = CUSTOM. If OUTPUT_FORMAT = CUSTOM, this file is mandatory.
+# The file should be written in tag and value notation. The first two lines
+# are mandatory and specify GDAL driver and file extension, e.g. DRIVER = GTiff
+# and EXTENSION = tif. The driver name refers to the GDAL short driver names.
+# Lines 3ff can hold a variable number of GDAL options (up to 32 are allowed).
+# Please note: with opening output options up to the user, it is now possible to
+# give invalid or conflicting options that result in the failure of creating files.
+# Type: full file path
+FILE_OUTPUT_OPTIONS = NULL
+# This parameter controls whether the output is written as multi-band image, or
+# if the stack will be exploded into single-band files.
+# Type: Logical. Valid values: {TRUE,FALSE}
+OUTPUT_EXPLODE = FALSE
+# This parameter controls whether the output is written in one folder,
+# or whether several subfolders per product type will be generated to better
+# structure the output.
+# Type: Logical. Valid values: {TRUE,FALSE}
+OUTPUT_SUBFOLDERS = TRUE
+
+# PARALLEL PROCESSING
+# ------------------------------------------------------------------------
+# This module is using a streaming mechanism to speed up processing. There
+# are three processing teams (3 Threads) that simultaneously handle Input,
+# Processing, and Output. Example: when Block 2 is being processed, data
+# from Block 3 are already being input and results from Block 1 are being
+# output. Each team can have multiple sub-threads to speed up the work. The
+# number of threads to use for each team is given by following parameters.
+# Type: Integer. Valid range: [1,...
+NTHREAD_READ = 12
+NTHREAD_COMPUTE = 22
+NTHREAD_WRITE = 6
+# Use STREAMING = FALSE to disable streaming. This will perform reading,
+# computing and writing after one another in sequential mode.
+# Each operation will still be parallelized with above settings.
+# Disabling streaming might be necessary for some UDFs that otherwise
+# produce threading conflicts with the internally used OpenMP functionality.
+# Type: Logical. Valid values: {TRUE,FALSE}
+STREAMING = TRUE
+# This module will display progress information on screen. By default, the
+# progress information overwrites itself to produce a pretty displayal.
+# However, this can cause error messages (or printing in UDFs) to be overwritten.
+# If disabled (FALSE), the progress information will be simply be appended
+# on screen (stdout).
+# Type: Logical. Valid values: {TRUE,FALSE}
+PRETTY_PROGRESS = TRUE
+
+# PROCESSING EXTENT AND RESOLUTION
+# ------------------------------------------------------------------------
+# Analysis extent, given in tile numbers (see tile naming)
+# Each existing tile falling into this square extent will be processed
+# A shapefile of the tiles can be generated with force-tabulate-grid
+# Type: Integer list. Valid range: [-999,9999]
+X_TILE_RANGE = 28 34
+Y_TILE_RANGE = 27 30
+# Allow-list of tiles. Can be used to further limit the analysis extent to
+# non-square extents. The allow-list is intersected with the analysis extent,
+# i.e. only tiles included in both the analysis extent AND the allow-list will
+# be processed.
+# Optional. If NULL, the complete analysis extent is processed
+# Type: full file path
+FILE_TILE = /path/lib/tile_allow_alps.txt
+# This parameter can be used to override the default blocksize of the input
+# images (as specified in the datacube-definition.prj file). This can be
+# necessary if the default blocksize is too large for your system and you
+# cannot fit all necessary data into RAM. Note that processing of larger
+# blocksizes is more efficient. The tilesize must be dividable by the blocksize
+# without remainder. Set to 0, to use the default blocksize
+# Type: Double. Valid range: 0 or [RESOLUTION,TILE_SIZE]
+BLOCK_SIZE = 0
+# Analysis resolution. The tile (and block) size must be dividable by this
+# resolution without remainder, e.g. 30m resolution with 100km tiles is not possible
+# Type: Double. Valid range: ]0,BLOCK_SIZE]
+RESOLUTION = 30
+
+# FEATURES
+# ------------------------------------------------------------------------
+# This parameter specifies the feature(s) used for the analysis. The base-
+# name of a tiled dataset needs to be given, followed by an integer list that
+# specifies the bands that are to be used. This parameter can be given
+# multiple times if multiple features are to be used. The features are used
+# in the same order as given here, thus keep this in mind when training
+# machine learning models with force-train.
+# Type: Basename of file, followed by Integer list
+INPUT_FEATURE = 2015-2015_001-365_HL_TSA_LNDLG_BLU_STM.tif 11 12 13
+INPUT_FEATURE = 2015-2015_001-365_HL_TSA_LNDLG_GRN_STM.tif 11 12 13
+INPUT_FEATURE = 2015-2015_001-365_HL_TSA_LNDLG_RED_STM.tif 11 12 13
+INPUT_FEATURE = 2015-2015_001-365_HL_TSA_LNDLG_NIR_STM.tif 11 12 13 
+INPUT_FEATURE = 2015-2015_001-365_HL_TSA_LNDLG_SW1_STM.tif 11 12 13
+INPUT_FEATURE = 2015-2015_001-365_HL_TSA_LNDLG_SW2_STM.tif 11 12 13
+INPUT_FEATURE = 2015-2015_001-365_HL_TSA_LNDLG_NBR_STM.tif 10 11 12 13 14
+INPUT_FEATURE = 2015-2015_001-365_HL_TSA_LNDLG_NDV_STM.tif 10 11 12 13 14
+INPUT_FEATURE = 2015-2015_001-365_HL_TSA_LNDLG_EVI_STM.tif 10 11 12 13 14 
+INPUT_FEATURE = 2015-2015_001-365_HL_TSA_LNDLG_NDM_STM.tif 10 11 12 13 14
+INPUT_FEATURE = 2015-2015_001-365_HL_TSA_LNDLG_NDS_STM.tif 10 11 12 13 14
+INPUT_FEATURE = 2015-2015_001-365_HL_TSA_LNDLG_NDW_STM.tif 10 11 12 13 14 
+INPUT_FEATURE = 2015-2015_001-365_HL_TSA_LNDLG_SAV_STM.tif 10 11 12 13 14
+# 4 = STD, 5 = RANGE, 6 = IQR, 7 = SKW, 10 = Q10, 11= Q25, 12= Q50, 13 = Q75, 14 = Q90
+# Nodata value of the features.
+# Type: Integer. Valid values: [-32768,32767]
+FEATURE_NODATA = -9999
+# Should nodata values be excluded if any feature is nodata (TRUE). Or just
+# proceed (FALSE)?
+# Type: Logical. Valid values: {TRUE,FALSE}
+FEATURE_EXCLUDE = FALSE
+
+# SAMPLING
+# ------------------------------------------------------------------------
+# File with coordinates, at which the features should be sampled.
+# 1st column: x-coordinate, 2nd column: y-coordinate, 3rd column: response
+# Type: full file path
+FILE_POINTS = /path/spec_lib/l1/candidates_FORCE_l1_2811.txt
+# File with sampled features. This file should not exist.
+# Type: full file path
+FILE_SAMPLE = /path/level3/STM_samples_l1_nov/features/features_2015.txt
+# File with the response variable corresponding to the sampled features.
+# This file should not exist.
+# Type: full file path
+FILE_RESPONSE = /path/level3/STM_samples_l1_nov/response/response_2015.txt
+# File with the coordinates corresponding to the sampled features.
+# This file should not exist.
+# Type: full file path
+FILE_COORDINATES = /path/level3/STM_samples_l1_nov/coordinates/coordinates_2015.txt
+# Are the coordinates in FILE_POINTS in the projection of the datacube
+# (X/Y: TRUE)? Or are they geographic coordinates (Lon/Lat: FALSE)
+# Type: Logical. Valid values: {TRUE,FALSE}
+PROJECTED = FALSE
+
+++PARAM_SMP_END++

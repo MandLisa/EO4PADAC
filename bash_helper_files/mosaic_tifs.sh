@@ -1,6 +1,7 @@
 #!/bin/bash
 
-parent_directory="~/eo_nas/EO4Alps/level3_predictions/l2"
+parent_directory="$HOME/eo_nas/EO4Alps/level2/level2_mosaic"
+parent_directory="$HOME/eo_nas/EO4Alps/level3_STMs/mosaic"
 
 
 # Find tif files with _2021_ in their file name recursively
@@ -12,7 +13,7 @@ exit 1
 fi
 
 # Merge and write the files to the parent directory
-output_file="$parent_directory/mosaic_2023.tif"
+output_file="$parent_directory/mosaic_l2.tif"
 gdal_merge.py -o "$output_file" $tif_files
 echo "Merged files and saved as $output_file"
 

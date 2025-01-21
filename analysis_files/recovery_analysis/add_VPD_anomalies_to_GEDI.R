@@ -2,8 +2,6 @@ library(raster)
 library(tidyverse)
 library(sf)
 library(terra)
-
-# Load necessary libraries
 library(raster)
 library(dplyr)
 
@@ -969,7 +967,7 @@ for (year in 1986:2019) {
 library(terra)
 
 # Define the path to your parent folder
-parent_folder <- "~/eo_nas/EO4Alps/climate_data/temperature"
+parent_folder <- "~/eo_nas/EO4Alps/climate_data/temp"
 
 # List all the folders (1986 - 2018) within the parent folder
 folders <- list.dirs(parent_folder, recursive = FALSE)
@@ -980,8 +978,9 @@ for (folder in folders) {
   # Extract the year from the folder name to use in the output filename
   folder_name <- basename(folder)
   
-  # List all raster files in the current folder that match the pattern (m06, m07, m08)
-  rasters <- list.files(folder, pattern = "^m0[678]_", full.names = TRUE)
+  # List all raster files for months 06, 07, and 08
+  rasters <- list.files(folder, pattern = "^CHELSA_tas_0(6|7|8)_", full.names = TRUE)
+  
   
   # Read the rasters
   r1 <- rast(rasters[1])

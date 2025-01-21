@@ -1,11 +1,11 @@
 library(terra)
 
 # Set the path to the parent directory
-parent_dir <- "~/eo_nas/EO4Alps/level3_predictions/l2_mask"
-output_mosaic <- file.path(parent_dir, "mosaic_2012.tif")
+parent_dir <- "~/eo_nas/EO4Alps/level3_predictions/l1_walltowall"
+output_mosaic <- file.path(parent_dir, "mosaic_2022.tif")
 
 # Find all .tif files in the parent directory and its subdirectories
-tif_files <- list.files(parent_dir, pattern = "2012.*\\.tif$", recursive = TRUE, full.names = TRUE)
+tif_files <- list.files(parent_dir, pattern = "2022.*\\.tif$", recursive = TRUE, full.names = TRUE)
 
 # Read all rasters and merge them
 rasters <- lapply(tif_files, rast)
@@ -13,7 +13,13 @@ mosaic <- do.call(merge, rasters)
 
 
 # Write the SpatRaster to a file
-writeRaster(mosaic, "~/eo_nas/EO4Alps/level3_predictions/l2_mask/mosaic_2012.tif", overwrite=TRUE)
+writeRaster(mosaic, "~/eo_nas/EO4Alps/level3_predictions/l1_walltowall/mosaic_2022.tif", overwrite=TRUE)
+
+mask_raster <- rast("~/eo_nas/EO4Alps/level3_predictions/l2/mosaic_2023_crop.tif")
+cropped_raster <- crop(mosaic, mask_raster)
+masked_raster <- mask(cropped_raster, mask_raster)
+writeRaster(masked_raster, "~/eo_nas/EO4Alps/level3_predictions/l1_walltowall/mosaic_2022_crop.tif", overwrite = TRUE)
+
 
 
 library(terra)

@@ -95,6 +95,38 @@ plot(band7, col = colors_band7, main = "Broadleaved share [%]",
 dev.off()
 
 
+### visualise VPD anomalies
+# Step 1: Load the mosaic raster
+raster_file <- "~/eo_nas/EO4Alps/climate_data/VPD_anomalies_08_crop.tif" # Replace with the path to your raster
+raster <- rast(raster_file)
+plot(raster)
+
+# Step 3: Select bands 6 and 7 for plotting
+band18 <- raster[[18]]
+plot(band18)
+
+# define color ramp
+colors_band18 <- hcl.colors(100, "Geyser", rev = FALSE) 
+# Define a transparency mask for values to be excluded (e.g., values <= 0)
+values(band18)[values(band18) <= 0] <- NA
+
+# Set up the file path and dimensions for saving the plot
+png(filename = "~/eo_nas/EO4Alps/figs/map_VPD_anomalies.png", width = 8, height = 6, units = "in", res = 300)
+# Plot with axes for lat/long coordinates
+plot(band18, col = colors_band18, main = "VPD anomalies",
+     cex.main = 1.5,                # Main title size
+     plg = list(title = "", cex = 1.5),  # Legend text size
+     mar = c(4, 4, 2, 5), axes = TRUE)  # Suppress default axes
+
+lat_lines <- seq(44, 48, by = 2)  # Adjust the sequence to match lat labels
+lon_lines <- seq(4, 16, by = 2)   # Adjust the sequence to match lon labels
+
+# Draw grid lines
+abline(h = lat_lines, col = "gray", lty = "dotted", lwd = 0.5)  # Horizontal grid lines
+abline(v = lon_lines, col = "gray", lty = "dotted", lwd = 0.5)  # Vertical grid lines
+
+dev.off()
+
 
 ##############
 # Step 2: Project to Lat/Long (EPSG:4326)
@@ -178,3 +210,6 @@ dev.off()
 
 
 
+
+
+#-------------------------------------------------------------------------------
