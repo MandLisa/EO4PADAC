@@ -27,6 +27,7 @@ maxcloud=60
 basepath=/data/eo/
 basepath=/home/lmandl/eo_nas/
 basepath=/home/lmandl/
+basepath=/home/
 #basepath=/data/public/Projects/
 
 #-------------------------------------------------------------------------------
@@ -53,8 +54,8 @@ docker run \
   --memory 128GB \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials davidfrantz/force \
-  force-level1-landsat search /path/gis/AOI_alps.gpkg /path/level1 -s TM,ETM,OLI 
-  -d 19860101,20231231 -c 0,60 --secret /path/lib/m2m_new.txt
+  force-level1-landsat search /path/gis/AOI_alps.gpkg /path/level1 -s OLI -d 20120101,20161231 -c 0,60 --secret /path/lib/m2m_2025.txt
+
 
 # Landsat download
 docker run \
@@ -63,8 +64,12 @@ docker run \
   --memory 128GB \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
-  davidfrantz/force:3.7.11 \
-  force-level1-landsat download /path/level1/urls_landsat_TM_ETM_OLI_missing.txt /path/level1 
+  davidfrantz/force \
+  force-level1-landsat download /path/level1/urls_LC08.txt /path/level1/LC08 
+  
+
+  
+  #davidfrantz/force:3.7.11 \
   
 #-------------------------------------------------------------------------------
 ### Step 5: de-tar Copernicus DEM
@@ -87,6 +92,18 @@ docker run \
   davidfrantz/force \
   force-level2 /path/EO4PADAC/param_files/param_l2_alps.prm
   
+# run FORCE level 2 processing using the param file
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-level2 /path/EO4PADAC/param_files/param_l2_LC08.prm
+  
+dforce force-level2 /home/lmandl/eo_nas/EO4Alps/EO4PADAC/param_files/param_l2_LC08_cmd.prm
+  
 # Create report based on log files
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -96,6 +113,8 @@ docker run \
   -v $HOME:/app/credentials \
   davidfrantz/force \
   force-level2-report /path/log
+  
+dforce force-level2-report /home/lmandl/eo_nas/EO4Alps/log1
   
 # Export tiles as grid; either as KML or shp, format: bottom top left right
 docker run \
@@ -118,8 +137,18 @@ docker run \
 ### Step 7: Level 3 processing
 #-------------------------------------------------------------------------------
 
-# Compute spectral-temporal-metrics from Level 2 data using the setting given
-# in param file
+# # Compute spectral-temporal-metrics from Level 2 data using the setting given
+# # in param file
+docker run \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /home/lmandl/eo_nas/EO4Alps/EO4PADAC/param_files/param_STM_1203.prm
+
+dforce force-higher-level /home/lmandl/eo_nas/EO4Alps/EO4PADAC/param_files/param_STM_1203.prm
+
 docker run \
   -v $basepath/EO4Alps:/path \
   --user "$(id -u):10000514" \
@@ -127,28 +156,9 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/param_l3_STMs_1998.prm
+  force-higher-level /path/EO4PADAC/param_files/param_l3_STMs_1998_v1.prm
   
 
-docker run \
-  -v $basepath/eo_nas:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-higher-level /path/EO4Alps/EO4PADAC/param_files/param_l3_STMs_1998_v1.prm
-  
-  
-# compute a mosaic (if you want to do so...)  
-docker run \
-  -v $basepath/EO4Alps:/path 
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \  
-  force-mosaic /path/projects/foreco/alps/level3/l3_STMs/1990
   
 #-------------------------------------------------------------------------------
 ### Step 8: Sampling for creating synthetic training data
@@ -1250,7 +1260,16 @@ docker run \
   
   
   
-  
+
+### Create parameter files
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-parameter /path/EO4PADAC/param_files/param_STM_1203.prm TSA
 
   
   

@@ -61,6 +61,13 @@ recovery_unique <- recovery_unique %>%
     mean_prec_total1 > q2 ~ paste0("> ", round(q2, 1))
   ))
 
+# Create temp_class with actual threshold values
+recovery_unique <- recovery_unique %>%
+  mutate(temp_class = case_when(
+    mean_temp_total <= q1 ~ paste0("≤ ", round(q1, 1)), 
+    mean_temp_total > q1 & mean_temp_total1 <= q2 ~ paste0(round(q1, 1), " - ", round(q2, 1)),
+    mean_temp_total > q2 ~ paste0("> ", round(q2, 1))
+  ))
 
 
 ### or with all other variables as well
@@ -96,9 +103,9 @@ all <- all %>%
                               "≤ 14.3" = "≤14°C",
                               "14.3 - 16.8" = "14-17°C",
                               "> 16.8" = ">17°C",
-                              "≤ 1163.7" = "≤1164mm",
-                              "1163.7 - 1514.8" = "1164-1515mm",
-                              "> 1514.8" = ">1515mm"
+                              "≤1164" = "≤1164mm",
+                              "1164-1515" = "1164-1515mm",
+                              ">1515" = ">1515mm"
   ))
 
 
@@ -108,7 +115,6 @@ all <- all %>%
 
 # Define the desired order of x-axis categories
 all$category <- factor(all$category, levels = c("height_class", "severity_class", "temp_class", "prec_class"))
-
 
 # Create the boxplot
 p1 <- ggplot(all, aes(x = category, y = percent_recovered, fill = class_level)) +
@@ -394,7 +400,7 @@ p1 <- ggplot(east_south, aes(x = category, y = percent_recovered, fill = class_l
 
 
 # Save a specific plot object
-ggsave("~/eo_nas/EO4Alps/figs/boxplot_easternalps_south_prec.png", plot = p1, width = 8.9, height = 8.3, dpi = 300)
+ggsave("~/eo_nas/EO4Alps/figs/boxplot_easternalps_south_prec.png", plot = p1, width = 9, height = 6, dpi = 300)
 
 
 
@@ -485,7 +491,7 @@ western_south <- recovery_unique_boxplot %>%
     height_class = factor(height_class, levels = c("<800m", ">800-1200m", ">1200m")),
     severity_class = factor(severity_class, levels = c("NSR", "SR")),
     temp_class = factor(temp_class, levels = c("≤ 14.3", "14.3 - 16.8", "> 16.8")),
-    prec_class = factor(prec_class, levels = c("≤ 1163.7", "1163.7 - 1514.8", "> 1514.8"))
+    prec_class = factor(prec_class, levels = c("> 1514.8", "1163.7 - 1514.8", "≤ 1163.7"))
   ) %>%
   pivot_longer(cols = c(height_class, severity_class, temp_class, prec_class),
                names_to = "category",
@@ -501,9 +507,9 @@ western_south <- western_south %>%
                               "≤ 14.3" = "≤14°C",
                               "14.3 - 16.8" = "14-17°C",
                               "> 16.8" = ">17°C",
-                              "≤ 1163.7" = "≤1164mm",
+                              "≤ 1163.7" = ">1515mm",
                               "1163.7 - 1514.8" = "1164-1515mm",
-                              "> 1514.8" = ">1515mm"
+                              "> 1514.8" = "≤1164mm"
   ))
 
 
@@ -513,6 +519,10 @@ western_south <- western_south %>%
 # Define the desired order of x-axis categories
 western_south$category <- factor(western_south$category, levels = c("height_class", "severity_class", "temp_class", "prec_class"))
 
+western_south <- western_south %>%
+  mutate(class_level = ifelse(category == "prec_class",
+                              factor(class_level, levels = c("≤1164mm", "1164-1515mm", ">1515mm")), 
+                              class_level))
 # Create the boxplot
 p1 <- ggplot(western_south, aes(x = category, y = percent_recovered, fill = class_level)) +
   geom_boxplot() +
@@ -552,11 +562,7 @@ p1 <- ggplot(western_south, aes(x = category, y = percent_recovered, fill = clas
 
 
 # Save a specific plot object
-ggsave("~/eo_nas/EO4Alps/figs/boxplot_westernalps_south_prec.png", plot = p1, width = 8.9, height = 8.3, dpi = 300)
-
-
-
-
+ggsave("~/boxplot_westernalps_south_prec.png", plot = p1, width = 8.9, height = 8.3, dpi = 300)
 
 
 

@@ -4,13 +4,13 @@
 # ------------------------------------------------------------------------
 # Lower Level datapool (parent directory of tiled input data)
 # Type: full directory path
-DIR_LOWER = /home/lmandl/eo_nas/EO4Alps/level2
+DIR_LOWER = /path/level2
 # Higher Level datapool (parent directory of tiled output data)
 # Type: full directory path
-DIR_HIGHER = /mnt/dss_project/lmandl/STMs
+DIR_HIGHER = /path/STMs_1203
 # This is the directory where provenance files should be saved.
 # Type: full directory path
-DIR_PROVENANCE = /mnt/dss_project/lmandl/prov
+DIR_PROVENANCE = /path/prov
 # MASKING
 # ------------------------------------------------------------------------
 # Analysis Mask datapool (parent directory of tiled analysis masks)
@@ -57,6 +57,9 @@ OUTPUT_EXPLODE = FALSE
 # output. Each team can have multiple sub-threads to speed up the work. The
 # number of threads to use for each team is given by following parameters.
 # Type: Integer. Valid range: [1,...
+#NTHREAD_READ = 6
+#NTHREAD_COMPUTE = 10
+#NTHREAD_WRITE = 6
 NTHREAD_READ = 6
 NTHREAD_COMPUTE = 10
 NTHREAD_WRITE = 3
@@ -67,8 +70,10 @@ NTHREAD_WRITE = 3
 # Each existing tile falling into this square extent will be processed
 # A shapefile of the tiles can be generated with force-tabulate-grid
 # Type: Integer list. Valid range: [-999,9999]
-X_TILE_RANGE = 28 34
-Y_TILE_RANGE = 27 30
+#X_TILE_RANGE = 28 34
+#Y_TILE_RANGE = 27 30
+X_TILE_RANGE = 28 28
+Y_TILE_RANGE = 27 27
 # Allow-list of tiles. Can be used to further limit the analysis extent to
 # non-square extents. The allow-list is intersected with the analysis extent,
 # i.e. only tiles included in both the analysis extent AND the allow-list will
@@ -220,11 +225,12 @@ OUTPUT_RMS = FALSE
 # Radial Basis Function or harmonic Interpolation.
 # Harmonic interpolation can be used as a simple near-real time monitoring component.
 # Type: Character. Valid values: {NONE,LINEAR,MOVING,RBF,HARMONIC}
-INTERPOLATE = RBF
+INTERPOLATE = NONE
 # Max temporal distance for the moving average filter in days. For each
 # interpolation date, MOVING_MAX days before and after are considered.
 # Type: Integer. Valid range: [1,365]
-MOVING_MAX = 16
+MOVING_MAX = 36
+#MOVING_MAX = 16
 # Sigma (width of the Gaussian bell) for the RBF filter in days. For each
 # interpolation date, a Gaussian kernel is used to smooth the observations.
 # The smoothing effect is stronger with larger kernels and the chance of
@@ -234,7 +240,8 @@ MOVING_MAX = 16
 # sizes. The kernels are weighted according to the data density within each
 # kernel.
 # Type: Integer list. Valid range: [1,365]
-RBF_SIGMA = 8 16 32
+RBF_SIGMA = 18 36 54
+#RBF_SIGMA = 8 16 32
 # Cutoff density for the RBF filter. The Gaussian kernels have infinite width,
 # which is computationally slow, and doesn't make much sense as observations
 # that are way too distant (in terms of time) are considered. Thus, the
@@ -260,7 +267,7 @@ HARMONIC_FIT_RANGE = 2015-01-01 2020-12-31
 OUTPUT_NRT = FALSE
 # This parameter gives the interpolation step in days.
 # Type: Integer. Valid range: [1,...
-INT_DAY = 16
+INT_DAY = 36
 # Standardize the TSI time series with pixel mean and/or standard deviation?
 # Type: Logical. Valid values: {NONE,NORMALIZE,CENTER}
 STANDARDIZE_TSI = NONE
@@ -308,7 +315,7 @@ OUTPUT_STM = TRUE
 # mum, maximum, range, skewness, kurtosis, any quantile from 1-99%, and
 # interquartile range. Note that median is Q50.
 # Type: Character list. Valid values: {MIN,Q01-Q99,MAX,AVG,STD,RNG,IQR,SKW,KRT,NUM}
-STM = MIN MAX AVG STD RNG IQR SKW KRT NUM Q10 Q25 Q50 Q75 Q90
+STM = AVG STD Q10 Q25 Q50 Q75 Q90
 #STM = Q25 Q50 Q75 AVG STD
 
 # FOLDING PARAMETERS

@@ -66,7 +66,7 @@ recovery_unique <- recovery_unique %>%
 ### or with all other variables as well
 # Calculate percentage of recovered disturbances per GRID_ID
 recovery_unique_boxplot <- recovery_unique %>%
-  group_by(temp_class, geoloc, height_class, severity_class, prec_class) %>%
+  group_by(temp_class, geoloc, height_class, prec_class) %>%
   mutate(
     total_observations = n(),  # Total number of observations per GRID_ID
     total_recovered = sum(recov_10, na.rm = TRUE),  # Total recovered (recovery_10yn == 1)
@@ -103,17 +103,20 @@ all <- all %>%
 
 
 
+
 all <- all %>%
   filter(!is.na(class_level))  # Removes rows where class_level is NA
 
 # Define the desired order of x-axis categories
 all$category <- factor(all$category, levels = c("height_class", "severity_class", "temp_class", "prec_class"))
-
+all$category <- factor(all$category, levels = c("height_class", "temp_class", "prec_class"))
+all <- all %>%
+  filter(!is.na(category))  # Removes rows where class_level is NA
 
 # Create the boxplot
 p1 <- ggplot(all, aes(x = category, y = percent_recovered, fill = class_level)) +
   geom_boxplot() +
-  theme_bw(base_size = 26) +
+  theme_bw(base_size = 28) +
   labs(title = "",
        x = "",
        y = "Recovery success") +
@@ -139,16 +142,18 @@ p1 <- ggplot(all, aes(x = category, y = percent_recovered, fill = class_level)) 
       ">1515mm" = "#1F618D"
     )
   ) +
-theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   theme(
     axis.title.y = element_blank(),   # Removes y-axis title
-    axis.text.y = element_blank(),    # Removes y-axis labels
-    axis.ticks.y = element_blank()    # Removes y-axis ticks
-  )
+    #axis.text.y = element_blank(),    # Removes y-axis labels
+    #axis.ticks.y = element_blank(),
+    legend.position = "none")# Removes y-axis ticks
+  
+
 
 
 # Save a specific plot object
-ggsave("~/eo_nas/EO4Alps/figs/boxplot_all_prec.png", plot = p1, width = 9, height = 6.5, dpi = 300)
+ggsave("~/eo_nas/EO4Alps/figs/boxplot_all_1903_1.png", plot = p1, width = 8, height = 7.5, dpi = 300)
 
 
 
@@ -187,6 +192,9 @@ north_east <- north_east %>%
 
 # Define the desired order of x-axis categories
 north_east$category <- factor(north_east$category, levels = c("height_class", "severity_class", "temp_class", "prec_class"))
+north_east$category <- factor(north_east$category, levels = c("height_class", "temp_class", "prec_class"))
+north_east <- north_east %>%
+  filter(!is.na(category))  # Removes rows where class_level is NA
 
 # Create the boxplot
 p1 <- ggplot(north_east, aes(x = category, y = percent_recovered, fill = class_level)) +
@@ -227,7 +235,7 @@ p1 <- ggplot(north_east, aes(x = category, y = percent_recovered, fill = class_l
 
 
 # Save a specific plot object
-ggsave("~/eo_nas/EO4Alps/figs/boxplot_easternalps_north_prec.png", plot = p1, width = 9, height = 6, dpi = 300)
+ggsave("~/eo_nas/EO4Alps/figs/boxplot_northeast_1803.png", plot = p1, width = 8, height = 6.5, dpi = 300)
 
 
 
@@ -267,6 +275,10 @@ central <- central %>%
 
 # Define the desired order of x-axis categories
 central$category <- factor(central$category, levels = c("height_class", "severity_class", "temp_class", "prec_class"))
+central$category <- factor(central$category, levels = c("height_class", "temp_class", "prec_class"))
+central <- central %>%
+  filter(!is.na(category))  # Removes rows where class_level is NA
+
 
 # Create the boxplot
 p1 <- ggplot(central, aes(x = category, y = percent_recovered, fill = class_level)) +
@@ -306,7 +318,7 @@ p1 <- ggplot(central, aes(x = category, y = percent_recovered, fill = class_leve
 
 
 # Save a specific plot object
-ggsave("~/eo_nas/EO4Alps/figs/boxplot_centralnalps_north_prec.png", plot = p1, width = 9, height = 6, dpi = 300)
+ggsave("~/eo_nas/EO4Alps/figs/boxplot_north_central_1803.png", plot = p1, width = 8, height = 6.5, dpi = 300)
 
 
 
@@ -346,15 +358,16 @@ east_south <- east_south %>%
 
 # Define the desired order of x-axis categories
 east_south$category <- factor(east_south$category, levels = c("height_class", "severity_class", "temp_class", "prec_class"))
-
 east_south$class_level <- factor(east_south$class_level, 
                                  levels = c("≤800m", ">800-1200m", ">1200m",
                                             "NSR", "SR",
                                             ">17°C", "14-17°C", "≤14°C",
                                             "≤1164mm", "1164-1515mm", ">1515mm"
-                                            ))
+                                 ))
+east_south$category <- factor(east_south$category, levels = c("height_class", "temp_class", "prec_class"))
+east_south <- east_south %>%
+  filter(!is.na(category))  # Removes rows where class_level is NA
 
- 
 
 # Create the boxplot
 p1 <- ggplot(east_south, aes(x = category, y = percent_recovered, fill = class_level)) +
@@ -392,9 +405,9 @@ p1 <- ggplot(east_south, aes(x = category, y = percent_recovered, fill = class_l
     axis.ticks.x = element_blank(),
     legend.position = "none")
 
-
 # Save a specific plot object
-ggsave("~/eo_nas/EO4Alps/figs/boxplot_easternalps_south_prec.png", plot = p1, width = 8.9, height = 8.3, dpi = 300)
+ggsave("~/eo_nas/EO4Alps/figs/boxplot_east_south_1803.png", plot = p1, width = 8, height = 6.5, dpi = 300)
+
 
 
 
@@ -433,6 +446,9 @@ western_north <- western_north %>%
 
 # Define the desired order of x-axis categories
 western_north$category <- factor(western_north$category, levels = c("height_class", "severity_class", "temp_class", "prec_class"))
+western_north$category <- factor(western_north$category, levels = c("height_class", "temp_class", "prec_class"))
+western_north <-western_north %>%
+  filter(!is.na(category))  # Removes rows where class_level is NA
 
 # Create the boxplot
 p1 <- ggplot(western_north, aes(x = category, y = percent_recovered, fill = class_level)) +
@@ -465,15 +481,15 @@ p1 <- ggplot(western_north, aes(x = category, y = percent_recovered, fill = clas
   ) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   theme(
-    #axis.title.x = element_blank(),   # Removes y-axis title
-    #axis.text.x = element_blank(),    # Removes y-axis labels
-    #axis.ticks.x = element_blank(),
+    axis.title.x = element_blank(),   # Removes y-axis title
+    axis.text.x = element_blank(),    # Removes y-axis labels
+    axis.ticks.x = element_blank(),
     legend.position = "none")
 
 
 
 # Save a specific plot object
-ggsave("~/eo_nas/EO4Alps/figs/boxplot_westernalps_north_prec.png", plot = p1, width = 8.9, height = 8.3, dpi = 300)
+ggsave("~/eo_nas/EO4Alps/figs/boxplot_western_north_1803.png", plot = p1, width = 8, height = 6.5, dpi = 300)
 
 
 
@@ -512,6 +528,17 @@ western_south <- western_south %>%
 
 # Define the desired order of x-axis categories
 western_south$category <- factor(western_south$category, levels = c("height_class", "severity_class", "temp_class", "prec_class"))
+western_south$category <- factor(western_south$category, levels = c("height_class", "temp_class", "prec_class"))
+western_south <-western_south %>%
+  filter(!is.na(category))  # Removes rows where class_level is NA
+
+# Adjust the order for height_class
+western_south <- western_south %>%
+  mutate(class_level = case_when(
+    category == "height_class" ~ fct_relevel(class_level, ">1200m", ">800-1200m", "≤800m"),
+    TRUE ~ class_level
+  ))
+
 
 # Create the boxplot
 p1 <- ggplot(western_south, aes(x = category, y = percent_recovered, fill = class_level)) +
@@ -529,9 +556,9 @@ p1 <- ggplot(western_south, aes(x = category, y = percent_recovered, fill = clas
   ylim(0,85) +
   scale_fill_manual(
     values = c(
-      "≤800m" = "#A9F5A9",       # Greenish
+      "≤800m" = "#0B610B",      # Greenish
       ">800-1200m" = "#01DF01",   # Orange
-      ">1200m" = "#0B610B",       # Blue
+      ">1200m" = "#A9F5A9",       # Blue
       "NSR" = "#F78181",          # Pink
       "SR" = "#8A0808",           # Light Green
       "≤14°C" = "#F5CBA7",    # Yellow
@@ -544,15 +571,15 @@ p1 <- ggplot(western_south, aes(x = category, y = percent_recovered, fill = clas
   ) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   theme(
-    #axis.title.x = element_blank(),   # Removes y-axis title
-    #axis.text.x = element_blank(),    # Removes y-axis labels
-    #axis.ticks.x = element_blank(),
+    axis.title.x = element_blank(),   # Removes y-axis title
+    axis.text.x = element_blank(),    # Removes y-axis labels
+    axis.ticks.x = element_blank(),
     legend.position = "none")
 
 
 
 # Save a specific plot object
-ggsave("~/eo_nas/EO4Alps/figs/boxplot_westernalps_south_prec.png", plot = p1, width = 8.9, height = 8.3, dpi = 300)
+ggsave("~/eo_nas/EO4Alps/figs/boxplot_westernalps_south_1903.png", plot = p1, width = 8, height = 6.5, dpi = 300)
 
 
 

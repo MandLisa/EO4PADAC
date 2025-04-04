@@ -7,10 +7,11 @@
 DIR_LOWER = /home/lmandl/eo_nas/EO4Alps/level2
 # Higher Level datapool (parent directory of tiled output data)
 # Type: full directory path
-DIR_HIGHER = /mnt/dss_project/lmandl/STMs
+DIR_HIGHER = /mnt/dss/Alps/STMs
 # This is the directory where provenance files should be saved.
 # Type: full directory path
-DIR_PROVENANCE = /mnt/dss_project/lmandl/prov
+DIR_PROVENANCE = /mnt/dss/Alps/prov
+
 # MASKING
 # ------------------------------------------------------------------------
 # Analysis Mask datapool (parent directory of tiled analysis masks)
@@ -26,18 +27,18 @@ BASE_MASK = NULL
 # ------------------------------------------------------------------------
 # Output format, which is either uncompressed flat binary image format aka
 # ENVI Standard, GeoTiff, or COG. GeoTiff images are compressed with LZW and hori-
-# zontal differencing; BigTiff support is enabled; the Tiff is structured
+# zontal differencing; BigTiff support is enabled; the Tiff is structured 
 # with striped blocks according to the TILE_SIZE (X) and BLOCK_SIZE (Y) speci-
 # fications. Metadata are written to the ENVI header or directly into the Tiff
 # to the FORCE domain. If the size of the metadata exceeds the Tiff's limit,
 # an external .aux.xml file is additionally generated.
 # Type: Character. Valid values: {ENVI,GTiff,COG,CUSTOM}
 OUTPUT_FORMAT = GTiff
-# File that contains custom GDAL output options. This is only used if
+# File that contains custom GDAL output options. This is only used if 
 # OUTPUT_FORMAT = CUSTOM. If OUTPUT_FORMAT = CUSTOM, this file is mandatory.
-# The file should be written in tag and value notation. The first two lines
+# The file should be written in tag and value notation. The first two lines 
 # are mandatory and specify GDAL driver and file extension, e.g. DRIVER = GTiff
-# and EXTENSION = tif. The driver name refers to the GDAL short driver names.
+# and EXTENSION = tif. The driver name refers to the GDAL short driver names. 
 # Lines 3ff can hold a variable number of GDAL options (up to 32 are allowed).
 # Please note: with opening output options up to the user, it is now possible to
 # give invalid or conflicting options that result in the failure of creating files.
@@ -57,9 +58,9 @@ OUTPUT_EXPLODE = FALSE
 # output. Each team can have multiple sub-threads to speed up the work. The
 # number of threads to use for each team is given by following parameters.
 # Type: Integer. Valid range: [1,...
-NTHREAD_READ = 6
-NTHREAD_COMPUTE = 10
-NTHREAD_WRITE = 3
+NTHREAD_READ = 10
+NTHREAD_COMPUTE = 22
+NTHREAD_WRITE = 8
 
 # PROCESSING EXTENT AND RESOLUTION
 # ------------------------------------------------------------------------
@@ -75,7 +76,7 @@ Y_TILE_RANGE = 27 30
 # be processed.
 # Optional. If NULL, the complete analysis extent is processed
 # Type: full file path
-FILE_TILE = NULL
+FILE_TILE = /home/lmandl/eo_nas/EO4Alps/lib/tile_allow_alps.txt
 # This parameter can be used to override the default blocksize of the input
 # images (as specified in the datacube-definition.prj file). This can be
 # necessary if the default blocksize is too large for your system and you
@@ -94,7 +95,7 @@ RESOLUTION = 30
 # lowpass with FWHM = analysis resolution) is used to approximate the acquisition
 # of data at lower spatial resolution
 # Type: Logical. Valid values: {TRUE,FALSE}
-REDUCE_PSF = TRUE
+REDUCE_PSF = FALSE
 # If you have spatially enhanced some Level 2 ARD using the FORCE Level 2 ImproPhe
 # module, this switch specifies whether the data are used at original (FALSE) or
 # enhanced spatial resolution (TRUE). If there are no improphe'd products, this
@@ -113,20 +114,20 @@ USE_L2_IMPROPHE = FALSE
 # nel-1B IW ascending), S1AID (2-band VV-VH Sentinel-1A IW descending), S1BID
 # (2-band VV-VH Sentinel-1B IW descending), MOD01 (7-band Terra MODIS), MOD02.
 # (7-band Aqua MODIS).
-# The resulting outputs are named according to their band designation, i.e.
+# The resulting outputs are named according to their band designation, i.e. 
 # LNDLG ((6-band Landsat legacy bands), SEN2L (10-band Sentinel-2 land surface
 # bands), SEN2H (4-band Sentinel-2 high-res bands), R-G-B (3-band visual) or
 # VVVHP (VV/VH polarized), MODIS (7-band MODIS).
-# BAP Composites with such a band designation can be input again (e.g.
+# BAP Composites with such a band designation can be input again (e.g. 
 # SENSORS = LNDLG).
 # Type: Character list. Valid values: {LND04,LND05,LND07,LND08,LND09,SEN2A,
 #   SEN2B,sen2a,sen2b,S1AIA,S1BIA,S1AID,S1BID,MOD01,MOD02,LNDLG,SEN2L,SEN2H,R-G-B,VVVHP,MODIS}
-SENSORS = LND04 LND05 LND07 LND08 LND09 
+SENSORS = LND04 LND05 LND07 LND08 LND09
 # Perform a spectral adjustment to Sentinel-2?
 # This method can only be used with following sensors: SEN2A, SEN2B, LND04, LND05, LND07,
 # LND08, LND09, MOD01, MOD02.
-# A material-specific spectral harmonization will be performed, which will convert the
-# spectral response of any of these sensors to Sentinel-2A. Non-existent bands will be
+# A material-specific spectral harmonization will be performed, which will convert the 
+# spectral response of any of these sensors to Sentinel-2A. Non-existent bands will be 
 # predicted, too.
 # Type: Logical. Valid values: {TRUE,FALSE}
 SPECTRAL_ADJUST = FALSE
@@ -157,13 +158,13 @@ BELOW_NOISE = 1
 # Time extent for the analysis. All data between these dates will be used in
 # the analysis.
 # Type: Date list. Format: YYYY-MM-DD
-DATE_RANGE = 2023-01-01 2023-12-31
+DATE_RANGE = 2002-01-01 2002-12-31
 # DOY range for filtering the time extent. Day-of-Years that are outside of
-# the given interval will be ignored. Example: DATE_RANGE = 1990-01-01
-# 1990-12-31, DOY_RANGE = 91 273 will use all April-Sepember observations from
-# 1990-1990. If you want to extend this window over years give DOY min >
-# DOY max. Example: DATE_RANGE = 1990-01-01 1990-12-31, DOY_RANGE = 274 90
-# will use all October-March observations from 1990-1990.
+# the given interval will be ignored. Example: DATE_RANGE = 2010-01-01 
+# 2019-12-31, DOY_RANGE = 91 273 will use all April-Sepember observations from
+# 2010-2019. If you want to extend this window over years give DOY min > 
+# DOY max. Example: DATE_RANGE = 2010-01-01 2019-12-31, DOY_RANGE = 274 90 
+# will use all October-March observations from 2010-2019.
 # Type: Integer list. Valid values: [1,365]
 DOY_RANGE = 1 365
 
@@ -179,7 +180,7 @@ DOY_RANGE = 1 365
 #   RE2,RE3,BNIR,NDVI,EVI,NBR,NDTI,ARVI,SAVI,SARVI,TC-BRIGHT,TC-GREEN,TC-WET,
 #   TC-DI,NDBI,NDWI,MNDWI,NDMI,NDSI,SMA,kNDVI,NDRE1,NDRE2,CIre,NDVIre1,NDVIre2,
 #   NDVIre3,NDVIre1n,NDVIre2n,NDVIre3n,MSRre,MSRren,CCI}
-INDEX = BLUE GREEN RED NIR SWIR1 SWIR2 NDVI EVI NBR NDMI SAVI NDWI NDSI 
+INDEX = BLUE GREEN RED NIR SWIR1 SWIR2 NDVI EVI NBR NDMI SAVI NDWI NDSI
 # Standardize the TSS time series with pixel mean and/or standard deviation?
 # Type: Logical. Valid values: {NONE,NORMALIZE,CENTER}
 STANDARDIZE_TSS = NONE
@@ -220,7 +221,7 @@ OUTPUT_RMS = FALSE
 # Radial Basis Function or harmonic Interpolation.
 # Harmonic interpolation can be used as a simple near-real time monitoring component.
 # Type: Character. Valid values: {NONE,LINEAR,MOVING,RBF,HARMONIC}
-INTERPOLATE = RBF
+INTERPOLATE = NONE
 # Max temporal distance for the moving average filter in days. For each
 # interpolation date, MOVING_MAX days before and after are considered.
 # Type: Integer. Valid range: [1,365]
@@ -247,8 +248,8 @@ RBF_CUTOFF = 0.95
 # Type: Integer. Valid range: {1,2,3}
 HARMONIC_MODES = 3
 # Subset of the time period to which the harmonic should be fitted.
-# For example, if the analysis timeframe is DATE_RANGE = 1990-01-01 2022-06-20,
-# all data from 1990-2022 will be considered. If HARMONIC_FIT_RANGE = 1990-01-01 1990-12-31
+# For example, if the analysis timeframe is DATE_RANGE = 2015-01-01 2020-06-20,
+# all data from 2015-2020 will be considered. If HARMONIC_FIT_RANGE = 2015-01-01 2017-12-31,
 # the harmonic will only be fitted to the first 3 years of data.
 # Type: Date list. Format: YYYY-MM-DD
 HARMONIC_FIT_RANGE = 2015-01-01 2020-12-31
@@ -281,13 +282,13 @@ OUTPUT_TSI = FALSE
 # 2) A function that implements the user-defined functionality, see ``PYTHON_TYPE``
 # Type: full file path
 FILE_PYTHON = NULL
-# Type of user-defined function.
+# Type of user-defined function. 
 # 1) ``PIXEL`` expects a pixel-function that receives the time series of a single pixel
-# as 4D-nd.array [nDates, nBands, nrows, ncols]. A multi-processing pool is spawned to
+# as 4D-nd.array [nDates, nBands, nrows, ncols]. A multi-processing pool is spawned to 
 # parallely execute this function with ``NTHREAD_COMPUTE`` workers.
 #     ``def forcepy_pixel(inarray, outarray, dates, sensors, bandnames, nodata, nproc):``
-# 2) ``BLOCK`` expects a pixel-function that receives the time series of a complete
-# processing unit as 4D-nd.array [nDates, nBands, nrows, ncols]. No parallelization is
+# 2) ``BLOCK`` expects a pixel-function that receives the time series of a complete 
+# processing unit as 4D-nd.array [nDates, nBands, nrows, ncols]. No parallelization is  
 # done on FORCE's end.
 #     ``def forcepy_block(inblock, outblock, dates, sensors, bandnames, nodata, nproc):``
 # Type: Character. Valid values: {PIXEL,BLOCK}
@@ -308,8 +309,7 @@ OUTPUT_STM = TRUE
 # mum, maximum, range, skewness, kurtosis, any quantile from 1-99%, and
 # interquartile range. Note that median is Q50.
 # Type: Character list. Valid values: {MIN,Q01-Q99,MAX,AVG,STD,RNG,IQR,SKW,KRT,NUM}
-STM = MIN MAX AVG STD RNG IQR SKW KRT NUM Q10 Q25 Q50 Q75 Q90
-#STM = Q25 Q50 Q75 AVG STD
+STM = AVG STD Q10 Q25 Q50 Q75 Q90
 
 # FOLDING PARAMETERS
 # ------------------------------------------------------------------------
@@ -359,7 +359,7 @@ OUTPUT_CAD = FALSE
 # ------------------------------------------------------------------------
 # For estimating LSP for one year, some data from the previous/next year
 # need to be considered to find the seasonal minima, which define a season.
-# The parameters are given in DOY, i.e. LSP_DOY_PREV_YEAR = 273, and
+# The parameters are given in DOY, i.e. LSP_DOY_PREV_YEAR = 273, and 
 # LSP_DOY_NEXT_YEAR = 91 will use all observations from October (Year-1)
 # to March (Year+1)
 # Type: Integer. Valid range: [1,365]
@@ -391,7 +391,7 @@ LSP_MIN_AMPLITUDE = 500
 # Currently available are the dates of the early minimum, start of season,
 # rising inflection, peak of season, falling inflection, end of season, late
 # minimum; lengths of the total season, green season; values of the early
-# minimum, start of season, rising inflection, peak of season, falling
+# minimum, start of season, rising inflection, peak of season, falling 
 # inflection, end of season, late minimum, base level, seasonal amplitude;
 # integrals of the total season, base level, base+total, green season; rates
 # of averahe rising, average falling, maximum rising, maximum falling.
@@ -490,7 +490,7 @@ TREND_TAIL = TWO
 # Confidence level for significance testing of the slope in the trend analysis
 # Type: Float. Valid range: [0,1]
 TREND_CONF = 0.95
-# In the Change, Aftereffect, Trend (CAT) analysis: do you want to
+# In the Change, Aftereffect, Trend (CAT) analysis: do you want to 
 # put a penalty on non-permanent change for the change detection?
 # This can help to reduce the effect of outliers.
 # Type: Logical. Valid values: {TRUE,FALSE}

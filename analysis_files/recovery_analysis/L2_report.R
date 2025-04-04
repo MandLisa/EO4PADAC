@@ -4,7 +4,7 @@ library(dplyr)
 
 
 metadata_sensor <- read_delim("eo_nas/EO4Alps/metadata_sensor.csv", 
-                              delim = ";", escape_double = FALSE, trim_ws = TRUE)
+                              delim = ",", escape_double = FALSE, trim_ws = TRUE)
 
 # Reorder the sensor factor levels
 metadata_sensor$sensor <- factor(metadata_sensor$sensor, levels = c("LT04", "LT05", "LE07", "LC08", "LC09", "S2A", "S2B"))
