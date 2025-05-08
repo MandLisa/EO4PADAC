@@ -1,0 +1,24 @@
+# 🧠 Highlight Python
+*.py linguist-language=Python
+*.ipynb linguist-language=Jupyter Notebook
+*.ipynb linguist-detectable=true
+
+# 🐚 Highlight Bash
+*.sh linguist-language=Shell
+*.bash linguist-language=Shell
+
+# 🚫 Exclude R and related files from GitHub language stats
+*.R linguist-detectable=false
+*.r linguist-detectable=false
+*.Rmd linguist-detectable=false
+*.rmd linguist-detectable=false
+*.Rproj linguist-detectable=false
+*.Rhistory linguist-detectable=false
+*.RData linguist-detectable=false
+
+# Optional: Exclude R folders (adjust folder names as needed)
+R_scripts/* linguist-detectable=false
+r_analysis/* linguist-detectable=false
+
+# Explicitly include shell scripts
+scripts/*.sh linguist-detectable=true
