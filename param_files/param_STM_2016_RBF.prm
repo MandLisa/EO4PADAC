@@ -4,13 +4,16 @@
 # ------------------------------------------------------------------------
 # Lower Level datapool (parent directory of tiled input data)
 # Type: full directory path
-DIR_LOWER = /home/lmandl/eo_nas/EO4Alps/level2
+#DIR_LOWER = /home/lmandl/eo_nas/EO4Alps/level2
+DIR_LOWER = /path/level2
 # Higher Level datapool (parent directory of tiled output data)
 # Type: full directory path
-DIR_HIGHER = /mnt/dss/Alps/STMs
+#DIR_HIGHER = /mnt/dss/Alps/STMs
+DIR_HIGHER = /path/STMs_new
 # This is the directory where provenance files should be saved.
 # Type: full directory path
-DIR_PROVENANCE = /mnt/dss/Alps/prov
+#DIR_PROVENANCE = /mnt/dss/Alps/prov
+DIR_PROVENANCE = /path/prov
 
 # MASKING
 # ------------------------------------------------------------------------
@@ -76,7 +79,8 @@ Y_TILE_RANGE = 27 30
 # be processed.
 # Optional. If NULL, the complete analysis extent is processed
 # Type: full file path
-FILE_TILE = /home/lmandl/eo_nas/EO4Alps/lib/tile_allow_alps.txt
+#FILE_TILE = /home/lmandl/eo_nas/EO4Alps/lib/tile_allow_alps.txt
+FILE_TILE = /path/lib/tile_allow_alps.txt
 # This parameter can be used to override the default blocksize of the input
 # images (as specified in the datacube-definition.prj file). This can be
 # necessary if the default blocksize is too large for your system and you
@@ -158,7 +162,7 @@ BELOW_NOISE = 1
 # Time extent for the analysis. All data between these dates will be used in
 # the analysis.
 # Type: Date list. Format: YYYY-MM-DD
-DATE_RANGE = 2017-01-01 2017-12-31
+DATE_RANGE = 2016-01-01 2016-12-31
 # DOY range for filtering the time extent. Day-of-Years that are outside of
 # the given interval will be ignored. Example: DATE_RANGE = 2010-01-01 
 # 2019-12-31, DOY_RANGE = 91 273 will use all April-Sepember observations from
@@ -221,7 +225,7 @@ OUTPUT_RMS = FALSE
 # Radial Basis Function or harmonic Interpolation.
 # Harmonic interpolation can be used as a simple near-real time monitoring component.
 # Type: Character. Valid values: {NONE,LINEAR,MOVING,RBF,HARMONIC}
-INTERPOLATE = NONE
+INTERPOLATE = RBF
 # Max temporal distance for the moving average filter in days. For each
 # interpolation date, MOVING_MAX days before and after are considered.
 # Type: Integer. Valid range: [1,365]

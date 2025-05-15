@@ -75,4 +75,4 @@ dforce force-level1-landsat download /home/lmandl/eo_nas/EO4Alps/level1/urls_lan
 
 dforce force-higher-level /home/lmandl/eo_nas/EO4Alps/EO4PADAC/param_files/param_STMs/param_STM_2017.prm
 
-dforce force-higher-level /mnt/eo/EO4Alps/param_STM_2015.prm
+dforce force-higher-level /mnt/eo/EO4Alps/EO4PADAC/param_files/param_STM_2016_RBF.prm
