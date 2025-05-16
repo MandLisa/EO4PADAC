@@ -182,7 +182,10 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/param_STMs_LS_S2/param_STM_2023_RBF.prm
+  force-higher-level /path/EO4PADAC/param_files/param_STMs_LS_S2/param_STM_2020_RBF.prm
+
+
+
 
 dforce force-higher-level /home/lmandl/eo_nas/EO4Alps/EO4PADAC/param_files/param_STM_1203.prm
 force-higher-level /home/lmandl/eo_nas/EO4Alps/EO4PADAC/param_files/param_STM_1203.prm
