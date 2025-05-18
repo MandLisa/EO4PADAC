@@ -125,8 +125,7 @@ docker run \
   davidfrantz/force \
   force-level2 /path/EO4PADAC/param_files/param_l2_S2.prm
   
-<<<<<<< HEAD
-=======
+
 docker run -it \
   -v $basepath/EO4Alps:/path \
   -v $HOME:/app/credentials \
@@ -135,10 +134,8 @@ docker run -it \
   davidfrantz/force \
   force-level2 /path/EO4PADAC/param_files/param_l2_S2.prm
 
-
->>>>>>> 276de7e (add scripts)
   
-dforce force-level2 /home/lmandl/eo_nas/EO4Alps/EO4PADAC/param_files/param_l2_LC08_cmd.prm
+#dforce force-level2 /home/lmandl/eo_nas/EO4Alps/EO4PADAC/param_files/param_l2_LC08_cmd.prm
   
 # Create report based on log files
 docker run \
@@ -150,7 +147,7 @@ docker run \
   davidfrantz/force \
   force-level2-report /path/log_S2
   
-dforce force-level2-report /home/lmandl/eo_nas/EO4Alps/log1
+#dforce force-level2-report /home/lmandl/eo_nas/EO4Alps/log1
   
 # Export tiles as grid; either as KML or shp, format: bottom top left right
 docker run \
@@ -175,19 +172,7 @@ docker run \
 
 # # Compute spectral-temporal-metrics from Level 2 data using the setting given
 # # in param file
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/param_STMs_LS_S2/param_STM_2018_RBF.prm
-
-
-
-dforce force-higher-level /home/lmandl/eo_nas/EO4Alps/EO4PADAC/param_files/param_STM_1203.prm
-force-higher-level /home/lmandl/eo_nas/EO4Alps/EO4PADAC/param_files/param_STM_1203.prm
+basepath=/mnt/eo/
 
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -196,10 +181,14 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/param_l3_STMs_1998_v1.prm
-  
+  force-higher-level /path/EO4PADAC/param_files/param_STMs_LS_S2/param_STM_2023_RBF.prm
 
-  
+
+
+#dforce force-higher-level /home/lmandl/eo_nas/EO4Alps/EO4PADAC/param_files/param_STM_1203.prm
+#force-higher-level /home/lmandl/eo_nas/EO4Alps/EO4PADAC/param_files/param_STM_1203.prm
+
+
 #-------------------------------------------------------------------------------
 ### Step 8: Sampling for creating synthetic training data
 #-------------------------------------------------------------------------------

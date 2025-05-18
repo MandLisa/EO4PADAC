@@ -76,7 +76,7 @@ Y_TILE_RANGE = 27 30
 # be processed.
 # Optional. If NULL, the complete analysis extent is processed
 # Type: full file path
-FILE_TILE = /home/lmandl/eo_nas/EO4Alps/lib/tile_allow_alps.txt
+FILE_TILE = /home/lmandl/eo_nas/EO4Alps/lib/tile_allow_alps_1805.txt
 # This parameter can be used to override the default blocksize of the input
 # images (as specified in the datacube-definition.prj file). This can be
 # necessary if the default blocksize is too large for your system and you
