@@ -61,9 +61,9 @@ OUTPUT_EXPLODE = FALSE
 # output. Each team can have multiple sub-threads to speed up the work. The
 # number of threads to use for each team is given by following parameters.
 # Type: Integer. Valid range: [1,...
-NTHREAD_READ = 10
-NTHREAD_COMPUTE = 30
-NTHREAD_WRITE = 8
+NTHREAD_READ = 18
+NTHREAD_COMPUTE = 60
+NTHREAD_WRITE = 18
 
 # PROCESSING EXTENT AND RESOLUTION
 # ------------------------------------------------------------------------
@@ -79,7 +79,7 @@ Y_TILE_RANGE = 27 30
 # be processed.
 # Optional. If NULL, the complete analysis extent is processed
 # Type: full file path
-#FILE_TILE = /home/lmandl/eo_nas/EO4Alps/lib/tile_allow_alps.txt
+#FILE_TILE = /home/lmandl/eo_nas/EO4Alps/lib/tile_allow_alps_1805.txt
 FILE_TILE = /path/lib/tile_allow_alps.txt
 # This parameter can be used to override the default blocksize of the input
 # images (as specified in the datacube-definition.prj file). This can be
