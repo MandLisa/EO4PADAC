@@ -9,7 +9,7 @@ DIR_LOWER = /path/level2
 # Higher Level datapool (parent directory of tiled output data)
 # Type: full directory path
 #DIR_HIGHER = /mnt/dss/Alps/STMs
-DIR_HIGHER = /path/STMs_2
+DIR_HIGHER = /path/STMs_3
 # This is the directory where provenance files should be saved.
 # Type: full directory path
 #DIR_PROVENANCE = /mnt/dss/Alps/prov
@@ -126,7 +126,7 @@ USE_L2_IMPROPHE = FALSE
 # SENSORS = LNDLG).
 # Type: Character list. Valid values: {LND04,LND05,LND07,LND08,LND09,SEN2A,
 #   SEN2B,sen2a,sen2b,S1AIA,S1BIA,S1AID,S1BID,MOD01,MOD02,LNDLG,SEN2L,SEN2H,R-G-B,VVVHP,MODIS}
-SENSORS = LND04 LND05 LND07 LND08 LND09
+SENSORS = LND04 LND05 LND08 LND09
 # Perform a spectral adjustment to Sentinel-2?
 # This method can only be used with following sensors: SEN2A, SEN2B, LND04, LND05, LND07,
 # LND08, LND09, MOD01, MOD02.
