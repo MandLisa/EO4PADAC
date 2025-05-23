@@ -126,7 +126,7 @@ USE_L2_IMPROPHE = FALSE
 # SENSORS = LNDLG).
 # Type: Character list. Valid values: {LND04,LND05,LND07,LND08,LND09,SEN2A,
 #   SEN2B,sen2a,sen2b,S1AIA,S1BIA,S1AID,S1BID,MOD01,MOD02,LNDLG,SEN2L,SEN2H,R-G-B,VVVHP,MODIS}
-SENSORS = LND04 LND05 LND08 LND09
+SENSORS = LND04 LND05 LND07 LND08 LND09
 # Perform a spectral adjustment to Sentinel-2?
 # This method can only be used with following sensors: SEN2A, SEN2B, LND04, LND05, LND07,
 # LND08, LND09, MOD01, MOD02.
@@ -162,7 +162,7 @@ BELOW_NOISE = 1
 # Time extent for the analysis. All data between these dates will be used in
 # the analysis.
 # Type: Date list. Format: YYYY-MM-DD
-DATE_RANGE = 2013-01-01 2013-12-31
+DATE_RANGE = 2011-01-01 2011-12-31
 # DOY range for filtering the time extent. Day-of-Years that are outside of
 # the given interval will be ignored. Example: DATE_RANGE = 2010-01-01 
 # 2019-12-31, DOY_RANGE = 91 273 will use all April-Sepember observations from
