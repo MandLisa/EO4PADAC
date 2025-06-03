@@ -324,7 +324,7 @@ for (idx in indices) {
 
 # ----- CONFIGURATION ----- #
 tile_dir <- "/mnt/eo/EO4Alps/STMs/X0029_Y0030"
-indices <- c("NBR", "NDV", "NDW", "BLU", "EVI", "GRN", "NDM", "NDS", "NIR", "RED", "SAV", "SW1", "SW2")
+indices <- c("SAV", "SW1", "SW2")
 output_folder_name <- "filled"
 fill_range <- 35
 na_value <- -10000

@@ -7,7 +7,7 @@ library(tictoc)
 
 # ----- CONFIGURATION ----- #
 tile_dir <- "/mnt/eo/EO4Alps/STMs/X0029_Y0028"  # Set this to the specific tile you want to process
-indices <- c("NBR", "NDV", "NDW", "BLU", "EVI", "GRN", "NDM", "NDS", "NIR", "RED", "SAV", "SW1", "SW2")
+indices <- c("NIR", "RED", "SAV", "SW1", "SW2")
 output_folder_name <- "filled"                     # Subfolder for output within the tile
 fill_range <- 5                                     # +/- years for gap filling
 na_value <- -10000                                  # NA placeholder in input data
