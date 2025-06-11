@@ -5,7 +5,7 @@ library(stringr)
 library(dplyr)
 library(tictoc)
 library(dpyr)
-
+library(dplyr)
 #-------------------------------------------------------------------------------
 
 # ----- CONFIGURATION ----- #
