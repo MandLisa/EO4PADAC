@@ -473,7 +473,8 @@ docker run \
   -v $HOME:/app/credentials \
   davidfrantz/force \
   force-higher-level /path/EO4PADAC/param_files/sampling_l1_nov/sampling_l2_1986.prm  
-  
+
+# run  
 docker run \
   -v $basepath/EO4Alps:/path \
   --user "$(id -u):10000514" \
