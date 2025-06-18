@@ -8,7 +8,7 @@ library(tidyverse)
 library(future.apply)
 plan(multisession, workers = 40)  # adjust number of cores
 
-
+###
 
 # --------------------------- #
 #        CONFIGURATION        #
