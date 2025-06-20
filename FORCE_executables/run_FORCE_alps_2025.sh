@@ -557,7 +557,7 @@ docker run \
   force-train /path/EO4PADAC/param_files/train_para_jun25_SVR/train_SVR_jun2025_00001.prm
   
 ### loop
-for i in $(seq -f "%05g" 1 60); do
+for i in $(seq -f "%05g" 2 60); do
   docker run \
     -v $basepath/EO4Alps:/path \
     --user "$(id -u):10000514" \
