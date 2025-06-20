@@ -463,7 +463,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l1_nov.prm
+  force-higher-level /path/EO4PADAC/param_files/sampling_Jun2025/samcdpling_l2_1986.prm
 
 docker run \
   -v $basepath/EO4Alps:/path \
