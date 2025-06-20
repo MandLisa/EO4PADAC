@@ -463,7 +463,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_Jun2025/samcdpling_l2_1986.prm
+  force-higher-level /path/EO4PADAC/param_files/sampling_Jun2025/sampling_l2_1986.prm
 
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -472,17 +472,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l1_nov/sampling_l2_1986.prm  
-
-# run  
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l1_nov/sampling_l2_1987.prm  
+  force-higher-level /path/EO4PADAC/param_files/sampling_Jun2025/sampling_l2_1987.prm 
 
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -491,334 +481,32 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l1_nov/sampling_l2_1988.prm  
+  force-higher-level /path/EO4PADAC/param_files/sampling_Jun2025/sampling_l2_1988.prm
+  
+  
+  for year in {1987..2023}; do
+  docker run \
+    -v $basepath/EO4Alps:/path \
+    --user "$(id -u):10000514" \
+    --memory 128GB \
+    --env FORCE_CREDENTIALS=/app/credentials \
+    -v $HOME:/app/credentials \
+    davidfrantz/force \
+    force-higher-level /path/EO4PADAC/param_files/sampling_Jun2025/sampling_l2_${year}.prm
+done
 
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l1_nov/sampling_l2_1989.prm  
 
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l1_nov/sampling_l2_1990.prm 
-  
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l1_nov/sampling_l2_1991.prm  
-  
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l1_nov/sampling_l2_1992.prm  
 
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l1_nov/sampling_l2_1993.prm  
-
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l1_nov/sampling_l2_1994.prm  
-
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l1_nov/sampling_l2_1995.prm  
-  
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l1_nov/sampling_l2_1996.prm  
-  
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l1_nov/sampling_l2_1997.prm  
-
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l1_nov/sampling_l2_1998.prm  
-
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l1_nov/sampling_l2_1999.prm  
-
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l1_nov/sampling_l2_2000.prm  
-
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l1_nov/sampling_l2_2001.prm  
-
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l1_nov/sampling_l2_2002.prm
-  
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l1_nov/sampling_l2_2003.prm  
-
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l1_nov/sampling_l2_2004.prm  
-  
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l1_nov/sampling_l2_2005.prm  
-  
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l1_nov/sampling_l2_2006.prm  
-
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l1_nov/sampling_l2_2007.prm  
-  
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l1_nov/sampling_l2_2008.prm  
-
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l1_nov/sampling_l2_2009.prm  
-  
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l1_nov/sampling_l2_2010.prm
-
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l1_nov/sampling_l2_2011.prm  
-  
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l1_nov/sampling_l2_2012.prm  
-  
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l1_nov/sampling_l2_2013.prm
-  
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l1_nov/sampling_l2_2014.prm 
-  
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l1_nov/sampling_l2_2015.prm  
-  
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l1_nov/sampling_l2_2016.prm  
-  
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l1_nov/sampling_l2_2017.prm  
-  
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l1_nov/sampling_l2_2018.prm 
-
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l1_nov/sampling_l2_2019.prm  
-
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l1_nov/sampling_l2_2020.prm  
-  
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l1_nov/sampling_l2_2021.prm  
-  
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l1_nov/sampling_l2_2022.prm 
-  
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l1_nov/sampling_l2_2023.prm  
-  
-  
   
 # extract NDVI time serie
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/sampling_l3_NDVI.prm
+#docker run \
+  #-v $basepath/EO4Alps:/path \
+  #--user "$(id -u):10000514" \
+  #--memory 128GB \
+  #--env FORCE_CREDENTIALS=/app/credentials \
+  #-v $HOME:/app/credentials \
+  #davidfrantz/force \
+  #force-higher-level /path/EO4PADAC/param_files/sampling_l3_NDVI.prm
   
   
 ### Create parameter files
@@ -829,7 +517,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-parameter /path/EO4PADAC/param_files/param_synthmix_l1_nov.prm SYNTHMIX
+  force-parameter /path/EO4PADAC/param_files/param_synthmix_Jun25.prm SYNTHMIX
   
 
 ### run synthmix
@@ -840,11 +528,13 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-synthmix /path/EO4PADAC/param_files/param_synthmix_l1_nov.prm
+  force-synthmix /path/EO4PADAC/param_files/param_synthmix_Jun25.prm
 
 #-------------------------------------------------------------------------------
 ### Step 8: Model training
 #-------------------------------------------------------------------------------
+
+basepath=/mnt/eo/
 
 ### Create trianing files (5 per end member)
 docker run \
@@ -854,7 +544,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-magic-parameters -o /path/EO4PADAC/param_files/train_param_l1_nov /path/EO4PADAC/param_files/train_SVM_l1_nov.prm
+  force-magic-parameters -o /path/EO4PADAC/param_files/train_para_jun25_SVR /path/EO4PADAC/param_files/train_SVR_jun2025.prm
   
 # train 5 models per endmember by calling all 40 (5*8) parameter files
 docker run \
@@ -864,311 +554,36 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l1_nov/train_SVM_l1_nov_00001.prm
+  force-train /path/EO4PADAC/param_files/train_para_jun25_SVR/train_SVR_jun2025_00001.prm
+  
+### loop
+for i in $(seq -f "%05g" 1 60); do
+  docker run \
+    -v $basepath/EO4Alps:/path \
+    --user "$(id -u):10000514" \
+    --memory 128GB \
+    --env FORCE_CREDENTIALS=/app/credentials \
+    -v $HOME:/app/credentials \
+    davidfrantz/force \
+    force-train /path/EO4PADAC/param_files/train_para_jun25_SVR/train_SVR_jun2025_${i}.prm
+done
 
-# train 5 models per endmember by calling all 40 (5*8) parameter files
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l1_nov/train_SVM_l1_nov_00002.prm
-  
-# train 5 models per endmember by calling all 40 (5*8) parameter files
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l1_nov/train_SVM_l1_nov_00003.prm
-  
-  
-# train 5 models per endmember by calling all 40 (5*8) parameter files
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l1_nov/train_SVM_l1_nov_00004.prm
 
-# train 5 models per endmember by calling all 40 (5*8) parameter files
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l1_nov/train_SVM_l1_nov_00005.prm
-
-# train 5 models per endmember by calling all 40 (5*8) parameter files
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l1_nov/train_SVM_l1_nov_00006.prm
-  
-# train 5 models per endmember by calling all 40 (5*8) parameter files
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l1_nov/train_SVM_l1_nov_00007.prm
-  
-  
-# train 5 models per endmember by calling all 40 (5*8) parameter files
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l1_nov/train_SVM_l1_nov_00008.prm
-  
-  
-# train 5 models per endmember by calling all 40 (5*8) parameter files
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l1_nov/train_SVM_l1_nov_00009.prm
-  
-# train 5 models per endmember by calling all 40 (5*8) parameter files
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l1_nov/train_SVM_l1_nov_00010.prm
-  
-# train 5 models per endmember by calling all 40 (5*8) parameter files
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l1_nov/train_SVM_l1_nov_00011.prm
-  
-# train 5 models per endmember by calling all 40 (5*8) parameter files
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l1_nov/train_SVM_l1_nov_00012.prm
-  
-# train 5 models per endmember by calling all 40 (5*8) parameter files
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l1_nov/train_SVM_l1_nov_00013.prm
-  
-# train 5 models per endmember by calling all 40 (5*8) parameter files
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l1_nov/train_SVM_l1_nov_00014.prm
-  
-# train 5 models per endmember by calling all 40 (5*8) parameter files
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l1_nov/train_SVM_l1_nov_00015.prm
-  
-# train 5 models per endmember by calling all 40 (5*8) parameter files
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l1_nov/train_SVM_l1_nov_00016.prm
-  
-# train 5 models per endmember by calling all 40 (5*8) parameter files
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l1_nov/train_SVM_l1_nov_00017.prm
-  
-# train 5 models per endmember by calling all 40 (5*8) parameter files
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l1_nov/train_SVM_l1_nov_00018.prm
-  
-# train 5 models per endmember by calling all 40 (5*8) parameter files
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l1_nov/train_SVM_l1_nov_00019.prm
-  
-# train 5 models per endmember by calling all 40 (5*8) parameter files
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l1_nov/train_SVM_l1_nov_00020.prm
-  
-# train 5 models per endmember by calling all 40 (5*8) parameter files
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l1_nov/train_SVM_l1_nov_00021.prm
-  
-# train 5 models per endmember by calling all 40 (5*8) parameter files
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l1_nov/train_SVM_l1_nov_00022.prm
-  
-# train 5 models per endmember by calling all 40 (5*8) parameter files
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l1_nov/train_SVM_l1_nov_00023.prm
-  
-# train 5 models per endmember by calling all 40 (5*8) parameter files
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l1_nov/train_SVM_l1_nov_00024.prm
-  
-# train 5 models per endmember by calling all 40 (5*8) parameter files
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l1_nov/train_SVM_l1_nov_00025.prm
-  
-# train 5 models per endmember by calling all 40 (5*8) parameter files
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l1_nov/train_SVM_l1_nov_00026.prm
-  
-# train 5 models per endmember by calling all 40 (5*8) parameter files
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l1_nov/train_SVM_l1_nov_00027.prm
-  
-# train 5 models per endmember by calling all 40 (5*8) parameter files
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l1_nov/train_SVM_l1_nov_00028.prm
-  
-# train 5 models per endmember by calling all 40 (5*8) parameter files
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l1_nov/train_SVM_l1_nov_00029.prm
-  
-# train 5 models per endmember by calling all 40 (5*8) parameter files
-docker run \
-  -v $basepath/EO4Alps:/path \
-  --user "$(id -u):10000514" \
-  --memory 128GB \
-  --env FORCE_CREDENTIALS=/app/credentials \
-  -v $HOME:/app/credentials \
-  davidfrantz/force \
-  force-train /path/EO4PADAC/param_files/train_param_l1_nov/train_SVM_l1_nov_00030.prm
-  
-  
-  
-  
-  
-#for f in /path/projects/foreco/alps/param/train_param/*.prm; do dforce force-train $f; done
 
 #-------------------------------------------------------------------------------
 ### Step 9: Apply all previously trained models
 #-------------------------------------------------------------------------------
-
+### Create parameter files
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-parameter /path/EO4PADAC/param_files/param_predictions_jun25.prm ML
+  
+  
 ### Run
 docker run \
   -v $basepath/EO4Alps:/path \
