@@ -583,7 +583,8 @@ docker run \
   davidfrantz/force \
   force-parameter /path/EO4PADAC/param_files/param_predictions_jun25.prm ML
   
-  
+basepath=/mnt/eo/
+
 ### Run
 docker run \
   -v $basepath/EO4Alps:/path \
@@ -592,8 +593,22 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/prediction_l2_test.prm
+  force-higher-level /path/EO4PADAC/param_files/preds_jun25/prediction_1986.prm
   
+
+### loop over years
+for year in $(seq 1986 2023); do
+  docker run \
+    -v $basepath/EO4Alps:/path \
+    --user "$(id -u):10000514" \
+    --memory 128GB \
+    --env FORCE_CREDENTIALS=/app/credentials \
+    -v $HOME:/app/credentials \
+    davidfrantz/force \
+    force-higher-level /path/EO4PADAC/param_files/preds_jun25/prediction_${year}.prm
+done
+
+
 
 
 ### Run
