@@ -596,7 +596,7 @@ docker run \
   force-higher-level /path/EO4PADAC/param_files/preds_jun25/prediction_1986.prm
   
 
-### loop over yearsss
+### loop over years
 for year in $(seq 1986 2023); do
   docker run \
     -v $basepath/EO4Alps:/path \

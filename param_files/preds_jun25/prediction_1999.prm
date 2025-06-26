@@ -59,7 +59,7 @@ OUTPUT_EXPLODE = FALSE
 # number of threads to use for each team is given by following parameters.
 # Type: Integer. Valid range: [1,...
 NTHREAD_READ = 25
-NTHREAD_COMPUTE = 40
+NTHREAD_COMPUTE = 60
 NTHREAD_WRITE = 20
 
 # PROCESSING EXTENT AND RESOLUTION
