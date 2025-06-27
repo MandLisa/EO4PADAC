@@ -58,9 +58,9 @@ OUTPUT_EXPLODE = FALSE
 # output. Each team can have multiple sub-threads to speed up the work. The
 # number of threads to use for each team is given by following parameters.
 # Type: Integer. Valid range: [1,...
-NTHREAD_READ = 25
-NTHREAD_COMPUTE = 40
-NTHREAD_WRITE = 20
+NTHREAD_READ = 30
+NTHREAD_COMPUTE = 75
+NTHREAD_WRITE = 25
 
 # PROCESSING EXTENT AND RESOLUTION
 # ------------------------------------------------------------------------
