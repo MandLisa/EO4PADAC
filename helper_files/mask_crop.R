@@ -3,14 +3,14 @@ library(terra)
 library(sf)
 
 # Define file paths
-mosaic_raster_path <- "~/eo_nas/EO4Alps/level2/level2_mosaic/mosaic_l2.tif"
+mosaic_raster_path <- "/mnt/eo/EO4Alps/level4_fcover/mosaic_1995.tif"
 mosaic_raster_path <- "~/eo_nas/EO4Alps/level3_STMs/mosaic/mosaic_STMs_l2.tif"
-shapefile_path <- "~/eo_nas/EO4Alps/gis/Alpine_Convention_Perimeter_2018_v2/perimeter_LAEA.shp"
-output_cropped_raster <- "~/eo_nas/EO4Alps/level2/level2_mosaic/mosaic_crop.tif"
+shapefile_path <- "/mnt/eo/EO4Alps/gis/Alpine_Convention_Perimeter_2018_v2/perimeter_LAEA.shp"
+output_cropped_raster <- "/mnt/eo/EO4Alps/level4_fcover/mosaic_1995_crop.tif"
 output_cropped_raster <- "~/eo_nas/EO4Alps/level3_STMs/mosaic/mosaic_crop.tif"
 
-mosaic_raster <- rast("~/eo_nas/EO4Alps/dist_data/forestcover_alps.tif")
-output_cropped_raster <- "~/eo_nas/EO4Alps/dist_data/forest_alps_crop.tif"
+mosaic_raster <- rast("/mnt/eo/EO4Alps/level4_fcover/mosaic_1995.tif")
+output_cropped_raster <- "/mnt/eo/EO4Alps/level4_fcover/mosaic_1995_crop.tif"
 
 # Load the raster mosaic
 mosaic_raster <- rast(mosaic_raster_path)
