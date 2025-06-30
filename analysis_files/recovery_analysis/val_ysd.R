@@ -6,11 +6,11 @@ val_ysd <- read_csv("/mnt/eo/EO4Alps/00_analysis/_recovery/val_ysd.csv")
 
 # rename
 val_ysd$class <- fct_recode(val_ysd$class,
-                            "Broadleaved forest" = "broadleaved",
-                            "Coniferous forest" = "coniferous",
-                            "Bare ground" = "bare_ground",
-                            "Grassland" = "grassland",
-                            "Shrubland" = "shrubland"
+                       "Broadleaved forest" = "broadleaved",
+                       "Coniferous forest" = "coniferous",
+                       "Bare ground" = "bare_ground",
+                       "Grassland" = "grassland",
+                       "Shrubland" = "shrubland"
 )
 
 

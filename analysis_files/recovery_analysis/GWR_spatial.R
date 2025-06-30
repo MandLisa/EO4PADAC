@@ -21,6 +21,9 @@ library(spgwr)
 library(kableExtra)
 library(dplyr)
 
+
+
+
 recovery <- read_csv("~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_GWR.csv")
 
 # Filter the dataset and compute the new column

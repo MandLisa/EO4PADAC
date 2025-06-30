@@ -267,10 +267,11 @@ fit.gam <- gam(mean_percent_recovered ~
                  s(long, lat, bs = "tp") +  
                  s(mean_elevation) +
                  s(mean_severity) + 
-                 s(mean_VPD_yod1) + 
+                 s(mean_sd_VPD) +
+                 #s(mean_VPD_yod1) + 
                  s(mean_prec_total) +
                  s(mean_temp_total) +
-                 s(mean_pre_dist_tree_cover) +
+                 s(mean_pre_dist_tree_cover),
                  s(mean_bare),
                data = hexagons_recov10_centros, method = "REML")
 
