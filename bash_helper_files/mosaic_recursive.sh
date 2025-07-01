@@ -1,3 +1,5 @@
+#!/bin/bash
+
 parent_directory="/mnt/eo/EO4Alps/level4_fcover"
 
 # Find all .tif files with "1995" in the filename recursively
