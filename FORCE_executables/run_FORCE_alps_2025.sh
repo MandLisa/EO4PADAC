@@ -581,7 +581,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-parameter /path/EO4PADAC/param_files/param_predictions_jun25.prm ML
+  force-parameter /path/EO4PADAC/param_files/param_predictions_jun25_v2.prm ML
   
 basepath=/mnt/eo/
 
@@ -593,7 +593,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/preds_jun25/prediction_1986.prm
+  force-higher-level /path/EO4PADAC/param_files/preds_jun25/prediction_2014.prm
   
 
 ### loop over years
