@@ -51,16 +51,16 @@ df_heatmap <- tibble(
 # Plot
 ggplot(df_heatmap, aes(x = month, y = factor(year), fill = n)) +
   geom_tile(color = "white") +
-  scale_fill_viridis_c(name = "Observations", option = "F") +
+  scale_fill_viridis_c(name = "Observations", option = "D") +
   scale_y_discrete(breaks = function(x) x[as.integer(x) %% 5 == 0]) +
   labs(
-    title = "Monthly distribution of BOA observations per year",
+    title = "Monthly number of BOA observations per year",
     x = "Month", y = "Year"
   ) +
-  theme_minimal(base_size = 14)
+  theme_minimal(base_size = 17)
 
 ggsave(
-  filename = "/mnt/eo/EO4Alps/figs/data_distribution.png",           
+  filename = "/mnt/eo/EO4Alps/figs/data_distribution_viridis.png",           
   width    = 8,                    
   height   = 6,               
   dpi      = 300               

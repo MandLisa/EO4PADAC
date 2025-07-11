@@ -589,15 +589,15 @@ basepath=/mnt/eo/
 docker run \
   -v $basepath/EO4Alps:/path \
   --user "$(id -u):10000514" \
-  --memory 128GB \
+  --memory 256GB \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/preds_jun25/prediction_2014.prm
+  force-higher-level /path/EO4PADAC/param_files/preds_jun25/prediction_2015.prm
   
 
 ### loop over years
-for year in $(seq 1986 2023); do
+for year in $(seq 2015 2023); do
   docker run \
     -v $basepath/EO4Alps:/path \
     --user "$(id -u):10000514" \
