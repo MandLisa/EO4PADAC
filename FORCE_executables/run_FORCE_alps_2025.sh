@@ -597,11 +597,11 @@ docker run \
   
 
 ### loop over years
-for year in $(seq 2015 2023); do
+for year in $(seq 2016 2023); do
   docker run \
     -v $basepath/EO4Alps:/path \
     --user "$(id -u):10000514" \
-    --memory 128GB \
+    --memory 300GB \
     --env FORCE_CREDENTIALS=/app/credentials \
     -v $HOME:/app/credentials \
     davidfrantz/force \
