@@ -26,7 +26,7 @@ echo "Merged files and saved as $output_file"
 parent_directory="/mnt/eo/EO4Alps/level4_fcover"
 
 # Loop over the years from 1988 to 2023
-for year in $(seq 2009 2023); do
+for year in $(seq 2020 2023); do
   echo "Processing year $year..."
 
   # Find all matching .tif files for the current year

@@ -3,14 +3,10 @@ library(terra)
 library(sf)
 
 # Define file paths
-mosaic_raster_path <- "/mnt/eo/EO4Alps/level4_fcover/mosaic_1995.tif"
-mosaic_raster_path <- "~/eo_nas/EO4Alps/level3_STMs/mosaic/mosaic_STMs_l2.tif"
-shapefile_path <- "/mnt/eo/EO4Alps/gis/Alpine_Convention_Perimeter_2018_v2/perimeter_LAEA.shp"
-output_cropped_raster <- "/mnt/eo/EO4Alps/level4_fcover/mosaic_1995_crop.tif"
-output_cropped_raster <- "~/eo_nas/EO4Alps/level3_STMs/mosaic/mosaic_crop.tif"
+mosaic_raster_path <- "/mnt/eo/EO4Alps/level4_fcover/mosaic_1986.tif"
+shapefile_path <- "/mnt/eo/EO4Alps/gis/alps_boundary_GMBA.shp"
+output_cropped_raster <- "/mnt/eo/EO4Alps/level4_fcover/mosaic_1986_crop.tif"
 
-mosaic_raster <- rast("/mnt/eo/EO4Alps/level4_fcover/mosaic_1995.tif")
-output_cropped_raster <- "/mnt/eo/EO4Alps/level4_fcover/mosaic_1995_crop.tif"
 
 # Load the raster mosaic
 mosaic_raster <- rast(mosaic_raster_path)
@@ -29,6 +25,13 @@ cropped_raster <- crop(mosaic_raster, shapefile)
 # Mask the raster to include only the shapefile area
 masked_raster <- mask(cropped_raster, shapefile)
 
+# Clip values: set all values > 10000 to 10000 and < 0 to 0
+masked_raster <- clamp(masked_raster, lower = 0, upper = 10000, values = TRUE)
+
+# Divide all bands by 100
+masked_raster <- masked_raster / 100
+
+
 # Save the cropped and masked raster
 writeRaster(
   masked_raster,
@@ -42,4 +45,4 @@ writeRaster(
 cat("Cropped and masked raster saved to:", output_cropped_raster, "\n")
 
 
-plot(masked_raster)
+
