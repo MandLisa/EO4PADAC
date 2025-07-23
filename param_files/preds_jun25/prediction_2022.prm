@@ -63,9 +63,9 @@ OUTPUT_SUBFOLDERS = FALSE
 # output. Each team can have multiple sub-threads to speed up the work. The
 # number of threads to use for each team is given by following parameters.
 # Type: Integer. Valid range: [1,...
-NTHREAD_READ = 20
-NTHREAD_COMPUTE = 35
-NTHREAD_WRITE = 15
+NTHREAD_READ = 40
+NTHREAD_COMPUTE = 75
+NTHREAD_WRITE = 30
 # Use STREAMING = FALSE to disable streaming. This will perform reading, 
 # computing and writing after one another in sequential mode.
 # Each operation will still be parallelized with above settings.
