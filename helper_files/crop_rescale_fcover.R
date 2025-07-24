@@ -454,9 +454,9 @@ gc()
 
 
 # Define file paths
-mosaic_raster_path <- "/mnt/eo/EO4Alps/level4_fcover/mosaic_2013.tif"
+mosaic_raster_path <- "/mnt/eo/EO4Alps/level4_fcover/mosaic_2022.tif"
 shapefile_path <- "/mnt/eo/EO4Alps/gis/alps_boundary_GMBA.shp"
-output_cropped_raster <- "/mnt/eo/EO4Alps/level4_fcover/mosaic_2013_crop.tif"
+output_cropped_raster <- "/mnt/eo/EO4Alps/level4_fcover/mosaics/mosaic_2022_crop.tif"
 
 
 # Load the raster mosaic

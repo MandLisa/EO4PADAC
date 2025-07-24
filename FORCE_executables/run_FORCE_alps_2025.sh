@@ -590,7 +590,7 @@ basepath=/mnt/eo/
 docker run \
   -v $basepath/EO4Alps:/path \
   --user "$(id -u):10000514" \
-  --memory 256GB \
+  --memory 356GB \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \

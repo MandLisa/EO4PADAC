@@ -50,3 +50,30 @@ echo "All mosaics created."
 
 
 
+
+
+
+parent_directory="/mnt/eo/EO4Alps/level4_fcover"
+year=2022
+
+echo "Processing year $year..."
+
+# Find all matching .tif files for the year
+tif_files=$(find "$parent_directory" -type f -name "*${year}_HL_ML_MLP.tif")
+
+if [[ -z $tif_files ]]; then
+  echo "No files found for year $year."
+else
+  # Define output file name
+  output_file="$parent_directory/mosaic_${year}.tif"
+
+  # Merge the files
+  gdal_merge.py -o "$output_file" $tif_files
+
+  echo "Merged files for year $year into $output_file"
+fi
+
+echo "Mosaic for $year completed."
+
+
+
