@@ -435,6 +435,7 @@ docker run \
 
 basepath=/mnt/eo/
 
+
 docker run \
   -v $basepath/EO4Alps:/path \
   --user "$(id -u):10000514" \
@@ -442,7 +443,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/param_STMs_LS_S2/param_STM_1986_RBF.prm
+  force-higher-level /path/EO4PADAC/param_files/param_STMs_LS_S2/param_STM_2022_RBF.prm
 
 
 
@@ -593,7 +594,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-higher-level /path/EO4PADAC/param_files/preds_jun25/prediction_2015.prm
+  force-higher-level /path/EO4PADAC/param_files/preds_jun25/prediction_2022.prm
   
 
 ### loop over years
@@ -994,7 +995,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-parameter /path/EO4PADAC/param_files/param_STM_1203.prm TSA
+  force-parameter /path/EO4PADAC/param_files/preds_jun25/prediction_2022_1.prm ML
 
   
   
