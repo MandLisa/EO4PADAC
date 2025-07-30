@@ -20,7 +20,7 @@ library(readr)
 library(spgwr)
 library(kableExtra)
 library(dplyr)
-
+install.packages(c("scales", "GWmodel", "spdep", "pheatmap", "kableExtra"))
 
 recovery <- read_csv("~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_GWR.csv")
 
@@ -225,8 +225,8 @@ fit.gam <- gam(mean_percent_recovered ~
                  s(long, lat, bs = "tp") +  
                  s(mean_elevation) +
                  s(mean_severity) + 
-                 #s(mean_VPD_yod1) + 
-                 s(mean_sd_VPD) +
+                 s(mean_VPD_yod1) + 
+                 #s(mean_sd_VPD) +
                  s(mean_prec_total) +
                  s(mean_temp_total) +
                  s(mean_pre_dist_tree_cover) +
@@ -236,8 +236,8 @@ fit.gam <- gam(mean_percent_recovered ~
 fit.gam_geoloc <- gam(mean_percent_recovered ~ 
                         s(long, lat, bs = "tp") +  
                         s(mean_severity) + 
-                        #s(mean_VPD_yod1, by = geolocation) +
-                        s(mean_sd_VPD, by = geolocation) +
+                        s(mean_VPD_yod1, by = geolocation) +
+                        #s(mean_sd_VPD, by = geolocation) +
                         s(mean_temp_total) +
                         s(mean_prec_total) +
                         s(mean_elevation) +
@@ -248,7 +248,7 @@ fit.gam_geoloc <- gam(mean_percent_recovered ~
 # prediction df
 # Create a new data frame for predictions
 new_data <- hexagons_recov10_centros %>%
-  select(long, lat, mean_elevation, mean_severity, mean_sd_VPD, 
+  select(long, lat, mean_elevation, mean_severity, mean_VPD_yod1, 
          mean_prec_total, mean_temp_total, mean_pre_dist_tree_cover, mean_bare, geolocation)
 
 # Add predicted values to the new dataset
@@ -256,14 +256,14 @@ new_data$predicted <- predict(fit.gam_geoloc, newdata = new_data, type = "respon
 
 # Convert data to long format for plotting
 smooth_data <- new_data %>%
-  pivot_longer(cols = c(mean_elevation, mean_severity, mean_sd_VPD, 
+  pivot_longer(cols = c(mean_elevation, mean_severity, mean_VPD_yod1, 
                         mean_prec_total, mean_temp_total, 
                         mean_pre_dist_tree_cover, mean_bare),
                names_to = "predictor", values_to = "value")
 
 # Define new facet labels with line breaks
 facet_labels <- c(
-  "mean_sd_VPD" = "SD of VPD anomalies",
+  "mean_VPD_yod1" = "VPD anomalies",
   "mean_temp_total" = "Temperature",
   "mean_prec_total" = "Precipitation",
   "mean_severity" = "Severity",
@@ -278,11 +278,11 @@ smooth_data <- smooth_data %>%
 
 # Define desired order based on the RENAMED facet labels
 custom_order <- c(
-  "SD of VPD anomalies",
+  "VPD anomalies",
   "Elevation", 
-  "Severity",
   "Temperature",
   "Precipitation",
+  "Severity",
   "Pre-disturbance\ntree cover",
   "Post-disturbance\nbare ground share"
 )
@@ -301,6 +301,36 @@ ggplot(smooth_data, aes(x = value, y = predicted)) +
 
 ggsave("~/predictors_effect_sd.png", width = 11, height = 6, dpi = 300)
 
+
+# Filter out VPD anomalies
+df_filtered <- smooth_data %>% 
+  filter(predictor != "VPD anomalies")
+
+# Recreate the plot without VPD anomalies
+# Plot without VPD anomalies
+ggplot(df_filtered, aes(x = value, y = predicted)) +
+  geom_smooth(method = "gam", formula = y ~ s(x, bs = "tp"), color = "#11828A") +
+  facet_wrap(~ predictor, scales = "free_x", nrow = 2) +
+  scale_y_continuous(limits = c(0, 100)) +
+  theme_bw(base_size = 18) +
+  labs(y = "Predicted recovery success [%]", x = "Predictor values")
+
+ggsave("/mnt/eo/EO4Alps/figs/predictors_effect_wo_VPD.png", width = 8.5, height = 6, dpi = 300)
+
+
+# Keep only VPD anomalies
+smooth_data_vpd <- smooth_data %>% 
+  filter(predictor == "VPD anomalies")
+
+# Plot only VPD anomalies
+ggplot(smooth_data_vpd, aes(x = value, y = predicted)) +
+  geom_smooth(method = "gam", formula = y ~ s(x, bs = "tp"), color = "#11828A") +
+  scale_y_continuous(limits = c(0, 100)) +
+  geom_vline(xintercept = 0, color = "#4B004F", linetype = "dashed", size = 0.5) +
+  theme_bw(base_size = 18) +
+  labs(y = "Predicted recovery success [%]", x = "VPD anomalies")
+
+ggsave("/mnt/eo/EO4Alps/figs/predictors_effect_VPD.png", width = 7, height = 6, dpi = 300)
 
 #-------------------------------------------------------------------------------
 
@@ -451,7 +481,7 @@ ggsave("~/predictors_effect_max.png", width = 11, height = 6, dpi = 300)
 fit.gam_interaction <- gam(mean_percent_recovered ~ 
                              s(long, lat, bs = "tp") +  
                              s(mean_severity) + 
-                             s(mean_max_VPD, by = geolocation) +
+                             s(mean_VPD_yod1, by = geolocation) +
                              s(mean_temp_total) +
                              s(mean_prec_total) +
                              s(mean_elevation) +
@@ -468,13 +498,13 @@ fixed_values <- hexagons_recov10_centros %>%
                    ~ median(., na.rm = TRUE)))  # Use median to avoid outliers
 
 # Create a new dataset varying only VPD across its observed range
-VPD_range <- seq(min(hexagons_recov10_centros$mean_max_VPD, na.rm = TRUE),
-                 max(hexagons_recov10_centros$mean_max_VPD, na.rm = TRUE), 
+VPD_range <- seq(min(hexagons_recov10_centros$mean_VPD_yod1, na.rm = TRUE),
+                 max(hexagons_recov10_centros$mean_VPD_yod1, na.rm = TRUE), 
                  length.out = 100)  # 100 evenly spaced points
 
 # Expand grid of VPD values and geolocation categories
 new_VPD_data <- expand.grid(
-  mean_max_VPD = VPD_range,
+  mean_VPD_yod1 = VPD_range,
   geolocation = unique(hexagons_recov10_centros$geolocation)  # Keep geolocations
 ) %>%
   cross_join(fixed_values)  # Attach fixed predictor values, including long & lat
@@ -523,8 +553,11 @@ new_VPD_data <- new_VPD_data %>%
     "Western Alps - south"
   )))
 
+plot_data <- new_VPD_data %>%
+  filter(!is.na(geolocation))
+
 # Plot the isolated VPD effect with geom_ribbon() for confidence intervals
-ggplot(new_VPD_data, aes(x = mean_max_VPD, y = predicted, color = geolocation)) +
+ggplot(plot_data, aes(x = mean_VPD_yod1, y = predicted, color = geolocation)) +
   geom_ribbon(aes(ymin = lower, ymax = upper, fill = geolocation), alpha = 0.2, color = NA) +  # Confidence interval
   geom_line(size = 1.2) +  # Main effect line
   facet_wrap(~ geolocation, scales = "free_x") +  # One subplot per geolocation
@@ -535,7 +568,20 @@ ggplot(new_VPD_data, aes(x = mean_max_VPD, y = predicted, color = geolocation)) 
   ggtitle("") +
   theme(legend.position = "none") 
 
-ggsave("~/eo_nas/EO4Alps/figs/predicted_VPD_1803.png", width = 11, height = 6, dpi = 300)
+
+ggplot(plot_data, aes(x = mean_VPD_yod1, y = predicted)) +
+  geom_ribbon(aes(ymin = lower, ymax = upper), fill = "#11828A", alpha = 0.2) +  # Confidence interval
+  geom_line(color = "#11828A", size = 1) +  # Main effect line
+  geom_vline(xintercept = 0, color = "#4B004F", linetype = "dashed", size = 0.5) + # Vertical line at VPD = 0
+  facet_wrap(~ geolocation, scales = "free_x") +  # One subplot per geolocation
+  theme_bw(base_size = 18) +
+  ylim(0, 100) +
+  labs(y = "", x = "VPD anomalies") +
+  theme(legend.position = "none")
+
+
+
+ggsave("/mnt/eo/EO4Alps/figs/predicted_VPD_per_ecoregion.png", width = 9, height = 6.2, dpi = 300)
 
 
 
