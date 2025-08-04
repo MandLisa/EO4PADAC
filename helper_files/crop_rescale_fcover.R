@@ -1343,7 +1343,7 @@ gc()
 # Define file paths
 mosaic_raster_path <- "/mnt/eo/EO4Alps/level4_fcover/mosaic_2015.tif"
 shapefile_path <- "/mnt/eo/EO4Alps/gis/Alpine_Convention_Perimeter_2018_v2/perimeter_LAEA.shp"
-output_cropped_raster <- "/mnt/eo/EO4Alps/level4_fcover/mosaics/mosaic_2015_crop.tif"
+output_cropped_raster <- "/mnt/eo/EO4Alps/level4_fcover/mosaic_2015_crop.tif"
 
 
 # Load the raster mosaic
@@ -1389,7 +1389,7 @@ gc()
 # Define file paths
 mosaic_raster_path <- "/mnt/eo/EO4Alps/level4_fcover/mosaic_2016.tif"
 shapefile_path <- "/mnt/eo/EO4Alps/gis/Alpine_Convention_Perimeter_2018_v2/perimeter_LAEA.shp"
-output_cropped_raster <- "/mnt/eo/EO4Alps/level4_fcover/mosaics/mosaic_2016_crop.tif"
+output_cropped_raster <- "/mnt/eo/EO4Alps/level4_fcover/mosaic_2016_crop.tif"
 
 
 # Load the raster mosaic
@@ -1435,7 +1435,7 @@ gc()
 # Define file paths
 mosaic_raster_path <- "/mnt/eo/EO4Alps/level4_fcover/mosaic_2017.tif"
 shapefile_path <- "/mnt/eo/EO4Alps/gis/Alpine_Convention_Perimeter_2018_v2/perimeter_LAEA.shp"
-output_cropped_raster <- "/mnt/eo/EO4Alps/level4_fcover/mosaics/mosaic_2017_crop.tif"
+output_cropped_raster <- "/mnt/eo/EO4Alps/level4_fcover/mosaic_2017_crop.tif"
 
 
 # Load the raster mosaic
@@ -1481,7 +1481,7 @@ gc()
 # Define file paths
 mosaic_raster_path <- "/mnt/eo/EO4Alps/level4_fcover/mosaic_2018.tif"
 shapefile_path <- "/mnt/eo/EO4Alps/gis/Alpine_Convention_Perimeter_2018_v2/perimeter_LAEA.shp"
-output_cropped_raster <- "/mnt/eo/EO4Alps/level4_fcover/mosaics/mosaic_2018_crop.tif"
+output_cropped_raster <- "/mnt/eo/EO4Alps/level4_fcover/mosaic_2018_crop.tif"
 
 
 # Load the raster mosaic
@@ -1527,7 +1527,7 @@ gc()
 # Define file paths
 mosaic_raster_path <- "/mnt/eo/EO4Alps/level4_fcover/mosaic_2019.tif"
 shapefile_path <- "/mnt/eo/EO4Alps/gis/Alpine_Convention_Perimeter_2018_v2/perimeter_LAEA.shp"
-output_cropped_raster <- "/mnt/eo/EO4Alps/level4_fcover/mosaics/mosaic_2019_crop.tif"
+output_cropped_raster <- "/mnt/eo/EO4Alps/level4_fcover/mosaic_2019_crop.tif"
 
 
 # Load the raster mosaic
@@ -1573,7 +1573,7 @@ gc()
 # Define file paths
 mosaic_raster_path <- "/mnt/eo/EO4Alps/level4_fcover/mosaic_2020.tif"
 shapefile_path <- "/mnt/eo/EO4Alps/gis/Alpine_Convention_Perimeter_2018_v2/perimeter_LAEA.shp"
-output_cropped_raster <- "/mnt/eo/EO4Alps/level4_fcover/mosaics/mosaic_2020_crop.tif"
+output_cropped_raster <- "/mnt/eo/EO4Alps/level4_fcover/mosaic_2020_crop.tif"
 
 
 # Load the raster mosaic
@@ -1619,7 +1619,7 @@ gc()
 # Define file paths
 mosaic_raster_path <- "/mnt/eo/EO4Alps/level4_fcover/mosaic_2021.tif"
 shapefile_path <- "/mnt/eo/EO4Alps/gis/Alpine_Convention_Perimeter_2018_v2/perimeter_LAEA.shp"
-output_cropped_raster <- "/mnt/eo/EO4Alps/level4_fcover/mosaics/mosaic_2021_crop.tif"
+output_cropped_raster <- "/mnt/eo/EO4Alps/level4_fcover/mosaic_2021_crop.tif"
 
 
 # Load the raster mosaic
@@ -1665,7 +1665,7 @@ gc()
 # Define file paths
 mosaic_raster_path <- "/mnt/eo/EO4Alps/level4_fcover/mosaic_2023.tif"
 shapefile_path <- "/mnt/eo/EO4Alps/gis/Alpine_Convention_Perimeter_2018_v2/perimeter_LAEA.shp"
-output_cropped_raster <- "/mnt/eo/EO4Alps/level4_fcover/mosaics/mosaic_2023_crop.tif"
+output_cropped_raster <- "/mnt/eo/EO4Alps/level4_fcover/mosaic_2023_crop.tif"
 
 
 # Load the raster mosaic
@@ -1711,7 +1711,7 @@ gc()
 # Define file paths
 mosaic_raster_path <- "/mnt/eo/EO4Alps/level4_fcover/mosaic_2021.tif"
 shapefile_path <- "/mnt/eo/EO4Alps/gis/Alpine_Convention_Perimeter_2018_v2/perimeter_LAEA.shp"
-output_cropped_raster <- "/mnt/eo/EO4Alps/level4_fcover/mosaics/mosaic_2021_crop.tif"
+output_cropped_raster <- "/mnt/eo/EO4Alps/level4_fcover/mosaic_2021_crop.tif"
 
 
 # Load the raster mosaic
