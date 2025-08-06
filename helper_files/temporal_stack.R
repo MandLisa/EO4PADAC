@@ -9,8 +9,8 @@ library(stringr)
 # -------------------------------
 # 1. Define input and output paths
 # -------------------------------
-input_dir <- "/mnt/eo/EO4Alps/level4_fcover/mosaics_smoothed"
-output_dir <- "/mnt/eo/EO4Alps/level4_fcover/final_stacks"
+input_dir <- "/mnt/eo/EO4Alps/level4_fcover/mosaics_Alps_convention/smoothed"
+output_dir <- "/mnt/eo/EO4Alps/level4_fcover/mosaics_Alps_convention/smoothed/final_stacks"
 dir.create(output_dir, showWarnings = FALSE)
 
 # -------------------------------

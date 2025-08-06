@@ -148,10 +148,10 @@ batch_smoothing <- function(
 # RUN ALL
 # --------------------------
 batch_smoothing(
-  input_dir = "/mnt/eo/EO4Alps/level4_fcover/mosaics",
-  output_dir = "/mnt/eo/EO4Alps/level4_fcover/mosaics_smoothed",
+  input_dir = "/mnt/eo/EO4Alps/level4_fcover/mosaics_Alps_convention",
+  output_dir = "/mnt/eo/EO4Alps/level4_fcover/mosaics_Alps_convention/smoothed",
   start_year = 1986,
   end_year = 2023,
-  window = 3,
+  window = 5,
   chunk_size = 3   # 3 years at a time
 )
