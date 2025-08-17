@@ -5,7 +5,7 @@
 # Description:     This script executes all FORCE sub-programs
 # Author:          Lisa Mandl
 # Created Date:    November 2, 2022
-# Last Modified:   August 8, 2025
+# Last Modified:   August 17, 2025
 # Version:         3.2.15
 #################################################################################
 
@@ -21,7 +21,7 @@ gcloud auth login
 
 startdate=0101
 enddate=1231
-maxcloud=50
+maxcloud=80
 
 # define base path
 basepath=/data/eo/
@@ -55,7 +55,7 @@ docker run \
   --memory 128GB \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials davidfrantz/force \
-  force-level1-landsat search /path/gis/AOI_alps.gpkg /path/level1 -s OLI -d 20120101,20161231 -c 0,60 --secret /path/lib/m2m_2025.txt
+  force-level1-landsat search /path/gis/AOI_alps.gpkg /path/level1 -s OLI -d 20240101,20241231 -c 0,80 --secret /path/lib/m2m_2025.txt
 
 
 # Landsat download
@@ -66,7 +66,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-level1-landsat download /path/level1/urls_LC08.txt /path/level1/LC08 
+  force-level1-landsat download /path/level1/urls_landsat_OLI_20250814T115931.txt /path/level1
   
 
 # Sentinel-2 download
@@ -77,7 +77,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-level1-csd -c 0,50 -d 20150101,20231231 -s S2A,S2B /path/metadata /path/level1_S2 /path/level1_S2/l1_pool_S2.txt T31TFJ,T31TFK,T31TFL,T31TGJ,T31TGK,T31TGL,T31TGM,T32TLP,T32TLQ,T32TLR,T32TLS,T32TLT,T32TMP,T32TMQ,T32TMR,T32TMS,T32TMT,T32TNR,T32TNS,T32TNT,T32TPR,T32TPS,T32TPT,T32TQR,T32TQS,T32TQT,T32UNU,T32UPU,T32UQU,T33TUL,T33TUM,T33TUN,T33TVL,T33TVM,T33TVN,T33TWM,T33TWN,T33TXN,T33UUP,T33UVP,T33UWP,T33UXP
+  force-level1-csd -c 0,80 -d 20240101,20241231 -s S2A,S2B /path/metadata /path/level1_S2 /path/level1_S2/l1_pool_S2.txt T31TFJ,T31TFK,T31TFL,T31TGJ,T31TGK,T31TGL,T31TGM,T32TLP,T32TLQ,T32TLR,T32TLS,T32TLT,T32TMP,T32TMQ,T32TMR,T32TMS,T32TMT,T32TNR,T32TNS,T32TNT,T32TPR,T32TPS,T32TPT,T32TQR,T32TQS,T32TQT,T32UNU,T32UPU,T32UQU,T33TUL,T33TUM,T33TUN,T33TVL,T33TVM,T33TVN,T33TWM,T33TWN,T33TXN,T33UUP,T33UVP,T33UWP,T33UXP
   
   
   
