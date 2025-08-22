@@ -104,7 +104,7 @@ docker run \
   davidfrantz/force \
   force-level2 /path/EO4PADAC/param_files/param_l2_alps.prm
   
-  # run FORCE level 2 processing using the param file
+# run FORCE level 2 processing using the param file
 docker run \
   -v $basepath/EO4Alps:/path \
   --user "$(id -u):10000514" \

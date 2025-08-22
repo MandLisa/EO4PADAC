@@ -7,7 +7,7 @@
 # into the parameter file. The file queue is mandatory for force-level2, but
 # may be NULL for force-l2ps.
 # Type: full file path
-FILE_QUEUE = /path/level1_S2/l1_pool_1985_2024.txt
+FILE_QUEUE = /path/level1/tile_pool_1985_2024.txt
 # This is the output directory where the Level 2 data will be stored. Note
 # that data will be overwritten/mosaicked if you reprocess images. It is
 # safe and recommended to use a single Level 2 data pool for different
