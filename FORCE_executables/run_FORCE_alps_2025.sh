@@ -104,6 +104,16 @@ docker run \
   davidfrantz/force \
   force-level2 /path/EO4PADAC/param_files/param_l2_alps.prm
   
+  # run FORCE level 2 processing using the param file
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 256GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-level2 /path/EO4PADAC/param_files/param_l2_1985_2024.prm
+  
 # run FORCE level 2 processing using the param file
 docker run \
   -v $basepath/EO4Alps:/path \
