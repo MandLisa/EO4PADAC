@@ -55,7 +55,7 @@ docker run \
   --memory 128GB \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials davidfrantz/force \
-  force-level1-landsat search /path/gis/AOI_alps.gpkg /path/level1 -s OLI -d 20240101,20241231 -c 0,80 --secret /path/lib/m2m_2025.txt
+  force-level1-landsat search /path/gis/AOI_alps.gpkg /path/level1 -s TM -d 19850101,19851231 -c 0,80 --secret /path/lib/m2m_2025.txt
 
 
 # Landsat download
@@ -66,7 +66,7 @@ docker run \
   --env FORCE_CREDENTIALS=/app/credentials \
   -v $HOME:/app/credentials \
   davidfrantz/force \
-  force-level1-landsat download /path/level1/urls_landsat_OLI_20250814T115931.txt /path/level1
+  force-level1-landsat download /path/level1/urls_landsat_TM_20250822T091149.txt /path/level1
   
 
 # Sentinel-2 download
