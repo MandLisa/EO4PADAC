@@ -650,7 +650,7 @@ done
 
 
 
-### Run
+### Run.
 docker run \
   -v $basepath/EO4Alps:/path \
   --user "$(id -u):10000514" \
