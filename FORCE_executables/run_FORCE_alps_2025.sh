@@ -624,7 +624,17 @@ docker run \
   davidfrantz/force \
   force-higher-level /path/EO4PADAC/param_files/preds_jun25/prediction_2022_2.prm
   
-
+### Run
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 356GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/preds_jun25/prediction_2024.prm
+  
+  
 ### loop over years
 for year in $(seq 2022 2022); do
   docker run \
