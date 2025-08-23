@@ -105,7 +105,7 @@ docker run \
   force-level2 /path/EO4PADAC/param_files/param_l2_alps.prm
   
 # run FORCE level 2 processing using the param file
-docker run \
+docker run -it \
   -v $basepath/EO4Alps:/path \
   --user "$(id -u):10000514" \
   --memory 256GB \
@@ -456,6 +456,24 @@ docker run \
   force-higher-level /path/EO4PADAC/param_files/param_STMs_LS_S2/param_STM_2022_RBF.prm
 
 
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/param_STMs_LS_S2/param_STM_2024_RBF.prm
+  
+docker run \
+  -v $basepath/EO4Alps:/path \
+  --user "$(id -u):10000514" \
+  --memory 128GB \
+  --env FORCE_CREDENTIALS=/app/credentials \
+  -v $HOME:/app/credentials \
+  davidfrantz/force \
+  force-higher-level /path/EO4PADAC/param_files/param_STMs_LS_S2/param_STM_1985_RBF.prm
+  
 
 #dforce force-higher-level /home/lmandl/eo_nas/EO4Alps/EO4PADAC/param_files/param_STM_1203.prm
 #force-higher-level /home/lmandl/eo_nas/EO4Alps/EO4PADAC/param_files/param_STM_1203.prm
