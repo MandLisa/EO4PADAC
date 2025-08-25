@@ -1,51 +1,49 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# --- CONFIG -------------------------------------------------------------------
-IN_DIR="/mnt/eo/eu_mosaics"          # contains NDVI_2000.tif ... NDVI_2024.tif
-OUT_A="/mnt/eo/eu_mosaics/NDVI_2000_2012"      # will be created if missing
-OUT_B="/mnt/eo/eu_mosaics/NDVI_2013_2024"      # will be created if missing
+IN_DIR="/mnt/eo/eu_mosaics"                   # NDVI_2000.tif ... NDVI_2024.tif
+OUT_A="/mnt/eo/eu_mosaics/NDVI_2000_2012"
+OUT_B="/mnt/eo/eu_mosaics/NDVI_2013_2024"
+PREFIX="NDVI_"; EXT=".tif"
 
-# If your files use a different prefix or extension, adjust these:
-PREFIX="NDVI_"
-EXT=".tif"
-
-# --- PREP ---------------------------------------------------------------------
+# If your source has a coded NoData (e.g., -9999), set SRC_NODATA accordingly.
+SRC_NODATA="nan"      # or "-9999"
+DST_NODATA="-32768"   # Int16 sentinel (outside [-10000,10000])
 
 
-compress_one () {
-  local in="$1"
-  local out="$2"
-  echo "[info] compressing: $(basename "$in") -> $(basename "$out")"
-  gdal_translate "$in" "$out" \
-  -of GTiff \
-  -co TILED=YES -co BIGTIFF=YES -co BLOCKXSIZE=512 -co BLOCKYSIZE=512 \
-  -co COMPRESS=ZSTD -co ZSTD_LEVEL=19 \
-  -co PREDICTOR=3 \
-  -co NUM_THREADS=ALL_CPUS
+pack_i16 () {
+  local in="$1" out="$2" tmp="__tmp_i16.tif"
+  echo "[info] $(basename "$in") -> $(basename "$out") (Int16 + ZSTD)"
+
+  # 1) Float [-1,1] -> Int16 [-10000,10000]
+  gdal_translate "$in" "$tmp" -of GTiff -ot Int16 \
+    -scale -1 1 -10000 10000 \
+    -srcnodata "$SRC_NODATA" -dstnodata "$DST_NODATA" \
+    -co TILED=YES -co BIGTIFF=YES \
+    -co BLOCKXSIZE=512 -co BLOCKYSIZE=512 \
+    -co COMPRESS=ZSTD -co ZSTD_LEVEL=19 \
+    -co PREDICTOR=2 -co NUM_THREADS=ALL_CPUS
+
+  # 2) Add scaling metadata so readers auto-rescale to NDVI
+  gdal_translate "$tmp" "$out" -of GTiff -a_nodata "$DST_NODATA" \
+    -co TILED=YES -co BIGTIFF=YES \
+    -co BLOCKXSIZE=512 -co BLOCKYSIZE=512 \
+    -co COMPRESS=ZSTD -co ZSTD_LEVEL=19 \
+    -co PREDICTOR=2 -co NUM_THREADS=ALL_CPUS \
+    -mo SCALE=0.0001 -mo OFFSET=0
+  rm -f "$tmp"
 }
 
-# --- LOOP: 2000–2012 ----------------------------------------------------------
-for year in $(seq 2000 2012); do
-in="${IN_DIR}/${PREFIX}${year}${EXT}"
-out="${OUT_A}/${PREFIX}${year}${EXT}"
-if [[ -f "$in" ]]; then
-compress_one "$in" "$out"
-else
-  echo "[warn] missing input: $in" >&2
-fi
+for y in $(seq 2000 2012); do
+  in="${IN_DIR}/${PREFIX}${y}${EXT}"
+  out="${OUT_A}/${PREFIX}${y}${EXT}"
+  [[ -f "$in" ]] && pack_i16 "$in" "$out" || echo "[warn] missing: $in" >&2
 done
 
-# --- LOOP: 2013–2024 ----------------------------------------------------------
-for year in $(seq 2013 2024); do
-in="${IN_DIR}/${PREFIX}${year}${EXT}"
-out="${OUT_B}/${PREFIX}${year}${EXT}"
-if [[ -f "$in" ]]; then
-compress_one "$in" "$out"
-else
-  echo "[warn] missing input: $in" >&2
-fi
+for y in $(seq 2013 2024); do
+  in="${IN_DIR}/${PREFIX}${y}${EXT}"
+  out="${OUT_B}/${PREFIX}${y}${EXT}"
+  [[ -f "$in" ]] && pack_i16 "$in" "$out" || echo "[warn] missing: $in" >&2
 done
 
-echo "[done] All available years processed."
- 
+echo "[done] Int16 fixed-point compression finished."
