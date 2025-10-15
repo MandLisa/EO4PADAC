@@ -520,3 +520,21 @@ cat("\nFailures (if any):\n")
 print(subset(results, !ok))
 
 
+### apply scale factor of 0.1 and include offset of -273
+
+years <- 1986:2019
+tags  <- c("spring","summer","all")
+
+for (y in years) for (tg in tags) {
+  fin <- file.path(root_dir, y, sprintf("mean_temp_%d_%s.tif", y, tg))
+  if (!file.exists(fin)) next
+  r   <- rast(fin)
+  if (terra::global(r, "min", na.rm = TRUE)[1,1] > 1000) {  # raw K×10 heuristic
+    writeRaster(r/10 - 273.15,
+                sub("\\.tif$", "_degC.tif", fin),
+                overwrite = TRUE,
+                wopt = list(datatype="FLT4S",
+                            gdal=c("TILED=YES","BLOCKXSIZE=512","BLOCKYSIZE=512",
+                                   "COMPRESS=DEFLATE","PREDICTOR=2","ZLEVEL=6")))
+  }
+}
