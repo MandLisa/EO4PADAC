@@ -182,3 +182,117 @@ cat("\nMove summary:\n")
 print(table(summary_df$moved, useNA = "ifany"))
 
 
+### extract temp anomalies
+
+library(readr)
+
+recovery <- read_csv("~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_GWR.csv")
+
+# Packages
+library(terra)
+
+# --- CONFIG ---
+root_dir <- "/mnt/eo/EO4Alps/climate_data/temp"   # years live under here
+seasons  <- c("spring", "summer", "all")
+
+# Helper to build anomaly path per year/season
+anom_path <- function(y, season) {
+  file.path(root_dir, as.character(y), "anomalies",
+            sprintf("temp_anom_%d_%s.tif", y, season))
+}
+
+# --- SANITY: ensure we have a 'year' column (long format) ---
+stopifnot(all(c("x","y","year") %in% names(recovery)))
+
+# Prepare output columns
+for (s in seasons) recovery[[paste0("temp_anom_", s)]] <- NA_real_
+
+# Split row indices by year (fast to iterate)
+idx_by_year <- split(seq_len(nrow(recovery)), recovery$year)
+
+# Main loop: load each year's raster(s) once, extract for that year's rows
+for (y in names(idx_by_year)) {
+  y_num <- as.integer(y)
+  idx   <- idx_by_year[[y]]
+  
+  # (Optional) skip years with no anomaly rasters
+  paths <- setNames(vapply(seasons, \(s) anom_path(y_num, s), character(1)), seasons)
+  if (!any(file.exists(paths))) next
+  
+  # Take CRS from the first existing raster for correct alignment
+  f_ref <- paths[which(file.exists(paths))][1]
+  r_ref <- rast(f_ref)
+  
+  # Build points for this year's rows (assumes x/y are already in the same CRS as rasters)
+  pts <- vect(recovery[idx, c("x","y")], geom = c("x","y"), crs = crs(r_ref))
+  
+  # Extract per season (only if file exists)
+  for (s in seasons) {
+    f <- paths[[s]]
+    if (!file.exists(f)) next
+    r <- rast(f)
+    # Reproject points if needed (rare if everything is LAEA)
+    if (!same.crs(r, r_ref)) pts_use <- project(pts, crs(r)) else pts_use <- pts
+    vals <- terra::extract(r, pts_use, ID = FALSE)[,1]
+    recovery[[paste0("temp_anom_", s)]][idx] <- vals
+  }
+}
+
+# Quick QA
+sapply(paste0("temp_anom_", seasons), \(col) {
+  c(nonNA = sum(!is.na(recovery[[col]])), NA = sum(is.na(recovery[[col]])))
+})
+
+
+# compute temp anomalies for yod,... yod+10
+install.packages("data.table")  # if needed
+library(data.table)
+
+# --- INPUT ---
+setDT(recovery)
+stopifnot(all(c("ID","year","yod",
+                "temp_anom_spring","temp_anom_summer","temp_anom_all") %in% names(recovery)))
+
+# relative year since disturbance
+recovery[, rel := year - yod]
+
+# Helper: for a given anomaly column, compute per-ID cumulative means over rel=0..10
+# and attach as wide columns named: <prefix>_yod, <prefix>_yod1, ..., <prefix>_yod10
+add_cummean_windows <- function(dt, anom_col, prefix_out) {
+  tmp <- dt[rel >= 0 & rel <= 10, .(ID, rel, val = get(anom_col))]
+  
+  # order by ID, then rel
+  setorder(tmp, ID, rel)
+  
+  # NA-safe cumulative mean: cum(sum) / cum(count of non-NA)
+  tmp[, `:=`(
+    csum = cumsum(fifelse(is.na(val), 0, val)),
+    n    = cumsum(!is.na(val))
+  ), by = ID]
+  tmp[, cm := fifelse(n > 0, csum / n, NA_real_)]
+  
+  # one column per rel (0..10)
+  wide <- dcast(tmp, ID ~ rel, value.var = "cm")
+  
+  # rename rel columns to requested names
+  rel_cols <- setdiff(names(wide), "ID")
+  setnames(
+    wide, rel_cols,
+    paste0(prefix_out, "_yod", fifelse(rel_cols == "0", "", rel_cols))
+  )
+  
+  # merge back to recovery by ID (columns repeat per-ID across years; that’s intended)
+  setkey(wide, ID); setkey(dt, ID)
+  dt <- wide[dt]  # left join (adds the columns)
+  dt
+}
+
+# Add for all three seasons; user requested "temp_ano_*" as prefix in new columns
+recovery <- add_cummean_windows(recovery, "temp_anom_spring", "temp_ano_spring")
+recovery <- add_cummean_windows(recovery, "temp_anom_summer", "temp_ano_summer")
+recovery <- add_cummean_windows(recovery, "temp_anom_all",    "temp_ano_all")
+
+
+
+
+
