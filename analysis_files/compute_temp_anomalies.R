@@ -300,7 +300,7 @@ out_file <- file.path(out_dir, "recovery_temp_anomalies.csv")
 
 if (!dir.exists(out_dir)) dir.create(out_dir, recursive = TRUE)
 
-# write everything
+# write 
 write.csv(recovery, file = out_file, row.names = FALSE, na = "NA")
 
 
