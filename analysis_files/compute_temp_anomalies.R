@@ -293,6 +293,15 @@ recovery <- add_cummean_windows(recovery, "temp_anom_summer", "temp_ano_summer")
 recovery <- add_cummean_windows(recovery, "temp_anom_all",    "temp_ano_all")
 
 
+### write new csv
+# choose an output path
+out_dir  <- "/mnt/eo/EO4Alps/00_analysis/_recovery"
+out_file <- file.path(out_dir, "recovery_temp_anomalies.csv")
+
+if (!dir.exists(out_dir)) dir.create(out_dir, recursive = TRUE)
+
+# write everything
+write.csv(recovery, file = out_file, row.names = FALSE, na = "NA")
 
 
 
