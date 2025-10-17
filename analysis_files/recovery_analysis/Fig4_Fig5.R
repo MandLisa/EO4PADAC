@@ -190,6 +190,7 @@ fit.gam_interaction <- gam(mean_percent_recovered ~
                              s(long, lat, bs = "tp") +  
                              s(mean_severity) + 
                              s(mean_VPD_yod1, by = geolocation) +
+                             s(mean_temp_ano_summer_yod1, by=geolocation) +
                              s(mean_temp_total) +
                              s(mean_prec_total) +
                              s(mean_elevation) +
@@ -208,6 +209,7 @@ hexagons_recov10_centros$resid_gam <- residuals(fit.gam_interaction, type = "dev
 # Create a new data frame for predictions
 new_data <- hexagons_recov10_centros %>%
   dplyr::select(long, lat, mean_elevation, mean_severity, mean_VPD_yod1, 
+                mean_temp_ano_summer_yod1,
                 mean_prec_total, mean_temp_total, mean_pre_dist_tree_cover, mean_bare, geolocation)
 
 # Add predicted values to the new dataset
@@ -216,6 +218,7 @@ new_data$predicted <- predict(fit.gam_interaction, newdata = new_data, type = "r
 # Convert data to long format for plotting
 data_long <- new_data %>%
   pivot_longer(cols = c(mean_elevation, mean_severity, mean_VPD_yod1, 
+                        mean_temp_ano_summer_yod1,
                         mean_prec_total, mean_temp_total, 
                         mean_pre_dist_tree_cover, mean_bare),
                names_to = "predictor", values_to = "value")
@@ -223,6 +226,7 @@ data_long <- new_data %>%
 
 # Define new facet labels with line breaks
 facet_labels <- c(
+  "mean_temp_ano_summer_yod1" = "Temperature anomalies",
   "mean_VPD_yod1" = "VPD anomalies",
   "mean_temp_total" = "Temperature",
   "mean_prec_total" = "Precipitation",
@@ -238,6 +242,7 @@ data_long <- data_long %>%
 
 # Define order
 custom_order <- c(
+  "Temperature anomalies",
   "VPD anomalies",
   "Elevation", 
   "Severity",
@@ -254,7 +259,8 @@ data_long <- data_long %>%
 # Apply labels in facet_wrap
 ggplot(data_long, aes(x = value, y = predicted)) +
   geom_smooth(method = "gam", formula = y ~ s(x, bs = "tp"), color = "#11828A") +
-  facet_wrap(~ predictor, scales = "free_x", nrow = 2) + 
+  facet_wrap(~ predictor, scales = "free_x", nrow = 2) +
+  ylim(0,100)+
   theme_bw(base_size = 18) +
   labs(y = "Predicted recovery success", x = "Predictor values")
 
@@ -276,7 +282,7 @@ dev.off()
 # Get median values of all predictors except VPD
 # Get median values of all predictors except VPD
 fixed_values <- hexagons_recov10_centros %>%
-  summarise(across(c(long, lat, mean_elevation, mean_severity, mean_prec_total, 
+  summarise(across(c(long, lat, mean_elevation, mean_VPD_yod1, mean_severity, mean_prec_total, 
                      mean_temp_total, mean_pre_dist_tree_cover, mean_bare),
                    ~ median(., na.rm = TRUE)))  # Use median to avoid outliers
 
@@ -285,9 +291,20 @@ VPD_range <- seq(min(hexagons_recov10_centros$mean_VPD_yod1, na.rm = TRUE),
                  max(hexagons_recov10_centros$mean_VPD_yod1, na.rm = TRUE), 
                  length.out = 100)  # 100 evenly spaced points
 
+#temp
+temp_range <- seq(min(hexagons_recov10_centros$mean_temp_ano_summer_yod1, na.rm = TRUE),
+                 max(hexagons_recov10_centros$mean_temp_ano_summer_yod1, na.rm = TRUE), 
+                 length.out = 100)  # 100 evenly spaced points
 # Expand grid of VPD values and geolocation categories
 new_VPD_data <- expand.grid(
   mean_VPD_yod1 = VPD_range,
+  geolocation = unique(hexagons_recov10_centros$geolocation)  # Keep geolocations
+) %>%
+  cross_join(fixed_values)  # Attach fixed predictor values, including long & lat
+
+#temp
+new_temp_data <- expand.grid(
+  mean_temp_ano_summer_yod1 = temp_range,
   geolocation = unique(hexagons_recov10_centros$geolocation)  # Keep geolocations
 ) %>%
   cross_join(fixed_values)  # Attach fixed predictor values, including long & lat
@@ -296,13 +313,26 @@ new_VPD_data <- expand.grid(
 new_VPD_data <- new_VPD_data %>%
   mutate(geolocation = as.factor(geolocation))
 
+new_temp_data <- new_temp_data %>%
+  mutate(geolocation = as.factor(geolocation))
+
 # Predict recovery success while holding other predictors constant
 new_VPD_data$predicted <- predict(fit.gam_interaction, newdata = new_VPD_data, type = "response")
+new_temp_data$predicted <- predict(fit.gam_interaction, newdata = new_temp_data, type = "response")
+
 
 # Compute confidence intervals (assuming normal approximation)
 new_VPD_data <- new_VPD_data %>%
   mutate(
     se_fit = predict(fit.gam_interaction, newdata = new_VPD_data, se.fit = TRUE)$se.fit,
+    lower = predicted - 1.96 * se_fit,  # 95% confidence interval lower bound
+    upper = predicted + 1.96 * se_fit   # 95% confidence interval upper bound
+  )
+
+# Compute confidence intervals (assuming normal approximation)
+new_temp_data <- new_temp_data %>%
+  mutate(
+    se_fit = predict(fit.gam_interaction, newdata = new_temp_data, se.fit = TRUE)$se.fit,
     lower = predicted - 1.96 * se_fit,  # 95% confidence interval lower bound
     upper = predicted + 1.96 * se_fit   # 95% confidence interval upper bound
   )
@@ -316,6 +346,14 @@ new_VPD_data <- new_VPD_data %>%
                                   "Western Alps - south" = "western alps - south"
   ))
 
+new_temp_data <- new_temp_data %>%
+  mutate(geolocation = fct_recode(geolocation,
+                                  "Eastern Alps - north" = "eastern alps - north",
+                                  "Eastern Alps - central" = "eastern alps - central",
+                                  "Eastern Alps - south" = "eastern alps - south",
+                                  "Western Alps - north" = "western alps - north",
+                                  "Western Alps - south" = "western alps - south"
+  ))
 
 
 # Define custom colors for each geolocation
@@ -327,7 +365,7 @@ custom_colors <- c(
   "Western Alps - south" = "#FCDC4D"
 )
 
-new_VPD_data <- new_VPD_data %>%
+new_temp_data <- new_temp_data %>%
   mutate(geolocation = factor(geolocation, levels = c(
     "Eastern Alps - north", 
     "Eastern Alps - central", 
@@ -337,11 +375,12 @@ new_VPD_data <- new_VPD_data %>%
   )))
 
 # Plot the isolated VPD effect with geom_ribbon() for confidence intervals
-ggplot(new_VPD_data, aes(x = mean_VPD_yod1, y = predicted, color = geolocation)) +
+ggplot(new_temp_data, aes(x = mean_temp_ano_summer_yod1, y = predicted, color = geolocation)) +
   geom_ribbon(aes(ymin = lower, ymax = upper, fill = geolocation), alpha = 0.2, color = NA) +  # Confidence interval
   geom_line(size = 1.2) +  # Main effect line
   facet_wrap(~ geolocation, scales = "free_x") +  # One subplot per geolocation
   theme_bw(base_size = 18) +
+  ylim(0,100) +
   scale_color_manual(values = custom_colors) +  # Custom colors for lines
   scale_fill_manual(values = custom_colors) +  # Custom colors for ribbons
   labs(y = "Predicted recovery success [%]", x = "VPD anomalies") +
