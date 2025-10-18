@@ -211,4 +211,57 @@ mod_temp_by_geo_joint <- gam(
 
 
 # figures----------------
+# --- pick your fitted model ---
+mod <- mod_joint   # or whichever model you want to visualize
 
+# --- use the data that was used to fit 'mod' (must contain temp_ano_sc, vpd_ano_sc) ---
+# df should be the prepped frame with standardized columns
+stopifnot(all(c("temp_ano_sc","vpd_ano_sc") %in% names(df)))
+
+# helper for x-sequences (trim extremes)
+seqr <- function(x, n = 200, q = c(0.02, 0.98)){
+  r <- quantile(x, q, na.rm = TRUE); seq(r[1], r[2], length.out = n)
+}
+
+# base row with numeric means; set a representative geolocation
+base_row <- df %>% summarise(across(where(is.numeric), ~mean(.x, na.rm=TRUE)))
+if ("geolocation" %in% names(df)) {
+  common_geo <- names(sort(table(df$geolocation), decreasing = TRUE))[1]
+  base_row$geolocation <- factor(common_geo, levels = levels(df$geolocation))
+}
+
+# partial curve builder
+partial_curve <- function(var, data, mod, n = 200) {
+  xseq <- seqr(data[[var]], n)
+  grid <- base_row[rep(1, n), , drop = FALSE]
+  grid[[var]] <- xseq
+  pr <- predict(mod, newdata = grid, type = "response", se.fit = TRUE)
+  tibble(predictor = var, x = xseq, fit = as.numeric(pr$fit), se = as.numeric(pr$se.fit))
+}
+
+# variables MUST match the model's column names:
+vars_model <- c("temp_ano_sc","vpd_ano_sc","mean_elevation",
+                "mean_severity","mean_temp_total","mean_prec_total",
+                "mean_pre_dist_tree_cover","mean_bare")
+
+curves <- dplyr::bind_rows(lapply(vars_model, partial_curve, data = df, mod = mod))
+
+# pretty labels
+label_map <- c(
+  temp_ano_sc = "Temperature anomalies (std.)",
+  vpd_ano_sc  = "VPD anomalies (std.)",
+  mean_temp_total = "Temperature",
+  mean_prec_total = "Precipitation",
+  mean_severity = "Severity",
+  mean_pre_dist_tree_cover = "Pre-disturbance\ntree cover",
+  mean_bare = "Post-disturbance\nbare ground share",
+  mean_elevation = "Elevation"
+)
+curves$panel <- label_map[curves$predictor]
+
+ggplot(curves, aes(x, fit)) +
+  geom_ribbon(aes(ymin = fit - 1.96*se, ymax = fit + 1.96*se), alpha = .18) +
+  geom_line(size = 1, color = "#11828A") +
+  facet_wrap(~ panel, scales = "free_x", nrow = 2) +
+  labs(x = "Predictor values", y = "Predicted recovery success [%]") +
+  theme_bw(base_size = 18)
