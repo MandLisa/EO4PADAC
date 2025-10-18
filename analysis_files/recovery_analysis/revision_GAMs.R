@@ -216,7 +216,7 @@ mod_temp_by_geo_joint <- gam(
 
 # this is the global model (not per geoloc)
 mod <- mod_joint   # or whichever model you want to visualize
-mod <- mod_temp_by_geo_joint   # or whichever model you want to visualize
+#mod <- mod_temp_by_geo_joint   # or whichever model you want to visualize
 
 
 # --- use the data that was used to fit 'mod' (must contain temp_ano_sc, vpd_ano_sc) ---
@@ -296,6 +296,84 @@ ggplot(curves, aes(x, fit)) +
   facet_wrap(~ panel, scales = "free_x", nrow = 2, drop = TRUE) +
   labs(x = "Predictor values", y = "Predicted recovery success [%]") +
   theme_bw(base_size = 18)
+
+### temp only model
+# ---- pick the fitted model (temp-only) ----
+mod <- mod_temp_only
+
+# ---- data requirement: temp_ano_sc must exist ----
+stopifnot("temp_ano_sc" %in% names(df))
+
+# helper for x-sequences (trim extremes)
+seqr <- function(x, n = 200, q = c(0.02, 0.98)){
+  r <- quantile(x, q, na.rm = TRUE); seq(r[1], r[2], length.out = n)
+}
+
+# base row with numeric means; set a representative geolocation if present
+base_row <- df %>% dplyr::summarise(across(where(is.numeric), ~mean(.x, na.rm=TRUE)))
+if ("geolocation" %in% names(df)) {
+  common_geo <- names(sort(table(df$geolocation), decreasing = TRUE))[1]
+  base_row$geolocation <- factor(common_geo, levels = levels(df$geolocation))
+}
+
+# partial curve builder
+partial_curve <- function(var, data, mod, n = 200) {
+  xseq <- seqr(data[[var]], n)
+  grid <- base_row[rep(1, n), , drop = FALSE]
+  grid[[var]] <- xseq
+  pr <- predict(mod, newdata = grid, type = "response", se.fit = TRUE)
+  tibble::tibble(predictor = var, x = xseq, fit = as.numeric(pr$fit), se = as.numeric(pr$se.fit))
+}
+
+# variables MUST match the temp-only model's column names (no VPD here)
+vars_model <- c("temp_ano_sc",
+                "mean_elevation",
+                "mean_severity",
+                "mean_temp_total",
+                "mean_prec_total",
+                "mean_pre_dist_tree_cover",
+                "mean_bare")
+
+curves <- dplyr::bind_rows(lapply(vars_model, partial_curve, data = df, mod = mod))
+
+# pretty labels
+label_map <- c(
+  temp_ano_sc                  = "Temperature anomalies",
+  mean_temp_total              = "Temperature",
+  mean_prec_total              = "Precipitation",
+  mean_severity                = "Severity",
+  mean_pre_dist_tree_cover     = "Pre-disturbance\ntree cover",
+  mean_bare                    = "Post-disturbance\nbare ground share",
+  mean_elevation               = "Elevation"
+)
+
+# relabel safely
+curves <- curves %>%
+  dplyr::mutate(
+    predictor = as.character(predictor),
+    panel = dplyr::recode(predictor, !!!label_map, .default = predictor)
+  )
+
+# desired order (same as before, but without the VPD panel)
+panel_order <- c(
+  "Elevation",
+  "Temperature",
+  "Precipitation",
+  "Severity",
+  "Pre-disturbance\ntree cover",
+  "Post-disturbance\nbare ground share",
+  "Temperature anomalies"
+)
+
+curves$panel <- factor(curves$panel, levels = panel_order)
+
+# plot
+ggplot2::ggplot(curves, ggplot2::aes(x, fit)) +
+  ggplot2::geom_ribbon(ggplot2::aes(ymin = fit - 1.96*se, ymax = fit + 1.96*se), alpha = .18) +
+  ggplot2::geom_line(size = 1, color = "#11828A") +
+  ggplot2::facet_wrap(~ panel, scales = "free_x", nrow = 2, drop = TRUE) +
+  ggplot2::labs(x = "Predictor values", y = "Predicted recovery success [%]") +
+  ggplot2::theme_bw(base_size = 18)
 
 
 
@@ -534,4 +612,145 @@ mod_joint_ti <- gam(
 AIC(mod_temp_only, mod_vpd_only, mod_joint, mod_resid, mod_joint_ti)
 anova(mod_temp_only, mod_joint, test="Chisq")
 concurvity(mod_joint, full=TRUE)
+
+
+
+### partial effect plots
+mod_resid <- gam(
+  mean_percent_recovered ~
+    s(temp_ano_sc, k=6) + s(vpd_res_sc, k=6) +
+    s(long, lat, bs="tp") +
+    s(mean_severity) + s(mean_temp_total) + s(mean_prec_total) +
+    s(mean_elevation) + s(mean_pre_dist_tree_cover) + s(mean_bare),
+  data = df, method = "REML", select = TRUE
+)
+
+
+# ---------------- Residual model globals ----------------
+mod <- mod_resid
+stopifnot(all(c("temp_ano_sc","vpd_res_sc") %in% names(df)))
+
+seqr <- function(x, n = 200, q = c(0.02, 0.98)){
+  r <- quantile(x, q, na.rm = TRUE); seq(r[1], r[2], length.out = n)
+}
+base_row <- df %>% dplyr::summarise(across(where(is.numeric), ~mean(.x, na.rm=TRUE)))
+if ("geolocation" %in% names(df)) {
+  common_geo <- names(sort(table(df$geolocation), decreasing = TRUE))[1]
+  base_row$geolocation <- factor(common_geo, levels = levels(df$geolocation))
+}
+partial_curve <- function(var, data, mod, n = 200) {
+  xseq <- seqr(data[[var]], n)
+  grid <- base_row[rep(1, n), , drop = FALSE]
+  grid[[var]] <- xseq
+  pr <- predict(mod, newdata = grid, type = "response", se.fit = TRUE)
+  tibble::tibble(predictor = var, x = xseq, fit = as.numeric(pr$fit), se = as.numeric(pr$se.fit))
+}
+
+vars_model <- c("temp_ano_sc","vpd_res_sc","mean_elevation",
+                "mean_severity","mean_temp_total","mean_prec_total",
+                "mean_pre_dist_tree_cover","mean_bare")
+
+curves_resid <- dplyr::bind_rows(lapply(vars_model, partial_curve, data = df, mod = mod))
+
+label_map_resid <- c(
+  temp_ano_sc              = "Temperature anomalies",
+  vpd_res_sc               = "Residual VPD anomalies",
+  mean_temp_total          = "Temperature",
+  mean_prec_total          = "Precipitation",
+  mean_severity            = "Severity",
+  mean_pre_dist_tree_cover = "Pre-disturbance\ntree cover",
+  mean_bare                = "Post-disturbance\nbare ground share",
+  mean_elevation           = "Elevation"
+)
+
+curves_resid <- curves_resid %>%
+  dplyr::mutate(panel = dplyr::recode(as.character(predictor), !!!label_map_resid, .default = predictor))
+
+panel_order_resid <- c(
+  "Elevation","Temperature","Precipitation","Severity",
+  "Pre-disturbance\ntree cover","Post-disturbance\nbare ground share",
+  "Temperature anomalies","Residual VPD anomalies"
+)
+curves_resid$panel <- factor(curves_resid$panel, levels = panel_order_resid)
+
+p_resid <- ggplot2::ggplot(curves_resid, ggplot2::aes(x, fit)) +
+  ggplot2::geom_ribbon(ggplot2::aes(ymin = fit - 1.96*se, ymax = fit + 1.96*se), alpha = .18) +
+  ggplot2::geom_line(size = 1, color = "#11828A") +
+  ggplot2::facet_wrap(~ panel, scales = "free_x", nrow = 2, drop = TRUE) +
+  ggplot2::labs(x = "Predictor values", y = "Predicted recovery success [%]") +
+  ggplot2::theme_bw(base_size = 18)
+
+# print(p_resid)
+# ggsave("partials_residual_model.png", p_resid, width = 10, height = 6, dpi = 300)
+
+
+
+#### and for the tensor model
+mod_joint_ti <- gam(
+  mean_percent_recovered ~
+    s(temp_ano_sc, k=6) + s(vpd_ano_sc, k=6) +
+    ti(temp_ano_sc, vpd_ano_sc, k=c(6,6)) +
+    s(long, lat, bs="tp") +
+    s(mean_severity) + s(mean_temp_total) + s(mean_prec_total) +
+    s(mean_elevation) + s(mean_pre_dist_tree_cover) + s(mean_bare),
+  data = df, method = "REML", select = TRUE
+)
+
+
+# ---------------- Tensor model: global partials (1D) ----------------
+mod <- mod_joint_ti
+stopifnot(all(c("temp_ano_sc","vpd_ano_sc") %in% names(df)))
+
+seqr <- function(x, n = 200, q = c(0.02, 0.98)){
+  r <- quantile(x, q, na.rm = TRUE); seq(r[1], r[2], length.out = n)
+}
+base_row <- df %>% dplyr::summarise(across(where(is.numeric), ~mean(.x, na.rm=TRUE)))
+if ("geolocation" %in% names(df)) {
+  common_geo <- names(sort(table(df$geolocation), decreasing = TRUE))[1]
+  base_row$geolocation <- factor(common_geo, levels = levels(df$geolocation))
+}
+partial_curve <- function(var, data, mod, n = 200) {
+  xseq <- seqr(data[[var]], n)
+  grid <- base_row[rep(1, n), , drop = FALSE]
+  grid[[var]] <- xseq
+  pr <- predict(mod, newdata = grid, type = "response", se.fit = TRUE)
+  tibble::tibble(predictor = var, x = xseq, fit = as.numeric(pr$fit), se = as.numeric(pr$se.fit))
+}
+
+vars_model_ti <- c("temp_ano_sc","vpd_ano_sc","mean_elevation",
+                   "mean_severity","mean_temp_total","mean_prec_total",
+                   "mean_pre_dist_tree_cover","mean_bare")
+
+curves_ti <- dplyr::bind_rows(lapply(vars_model_ti, partial_curve, data = df, mod = mod))
+
+label_map_ti <- c(
+  temp_ano_sc              = "Temperature anomalies",
+  vpd_ano_sc               = "VPD anomalies",
+  mean_temp_total          = "Temperature",
+  mean_prec_total          = "Precipitation",
+  mean_severity            = "Severity",
+  mean_pre_dist_tree_cover = "Pre-disturbance\ntree cover",
+  mean_bare                = "Post-disturbance\nbare ground share",
+  mean_elevation           = "Elevation"
+)
+
+curves_ti <- curves_ti %>%
+  dplyr::mutate(panel = dplyr::recode(as.character(predictor), !!!label_map_ti, .default = predictor))
+
+panel_order_ti <- c(
+  "Elevation","Temperature","Precipitation","Severity",
+  "Pre-disturbance\ntree cover","Post-disturbance\nbare ground share",
+  "Temperature anomalies","VPD anomalies"
+)
+curves_ti$panel <- factor(curves_ti$panel, levels = panel_order_ti)
+
+p_ti_partials <- ggplot2::ggplot(curves_ti, ggplot2::aes(x, fit)) +
+  ggplot2::geom_ribbon(ggplot2::aes(ymin = fit - 1.96*se, ymax = fit + 1.96*se), alpha = .18) +
+  ggplot2::geom_line(size = 1, color = "#11828A") +
+  ggplot2::facet_wrap(~ panel, scales = "free_x", nrow = 2, drop = TRUE) +
+  ggplot2::labs(x = "Predictor values", y = "Predicted recovery success [%]") +
+  ggplot2::theme_bw(base_size = 18)
+
+# print(p_ti_partials)
+# ggsave("partials_tensor_model_main_effects.png", p_ti_partials, width = 10, height = 6, dpi = 300)
 
