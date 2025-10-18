@@ -501,3 +501,37 @@ p_temp_by_geo_only <- ggplot(nd_temp_only, aes(temp_ano_sc, fit)) +
 
 print(p_temp_by_geo_only)
 
+
+### resiudal VPD model
+# 0) assume df has standardized anomalies: temp_ano_sc, vpd_ano_sc
+df$vpd_res_sc <- scale(resid(lm(vpd_ano_sc ~ temp_ano_sc, data = df)))[,1]
+
+library(mgcv)
+
+# 1) Temperature + residual VPD (unique VPD component)
+mod_resid <- gam(
+  mean_percent_recovered ~
+    s(temp_ano_sc, k=6) +
+    s(vpd_res_sc, k=6) +
+    s(long, lat, bs="tp") +
+    s(mean_severity) + s(mean_temp_total) + s(mean_prec_total) +
+    s(mean_elevation) + s(mean_pre_dist_tree_cover) + s(mean_bare),
+  data = df, method = "REML", select = TRUE
+)
+
+# 2) Optional tensor (for SI)
+mod_joint_ti <- gam(
+  mean_percent_recovered ~
+    s(temp_ano_sc, k=6) + s(vpd_ano_sc, k=6) +
+    ti(temp_ano_sc, vpd_ano_sc, k=c(6,6)) +
+    s(long, lat, bs="tp") +
+    s(mean_severity) + s(mean_temp_total) + s(mean_prec_total) +
+    s(mean_elevation) + s(mean_pre_dist_tree_cover) + s(mean_bare),
+  data = df, method = "REML", select = TRUE
+)
+
+# 3) Report: AIC, anova, concurvity
+AIC(mod_temp_only, mod_vpd_only, mod_joint, mod_resid, mod_joint_ti)
+anova(mod_temp_only, mod_joint, test="Chisq")
+concurvity(mod_joint, full=TRUE)
+
