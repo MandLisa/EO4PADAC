@@ -377,4 +377,140 @@ p_temp_only <- ggplot(curves_temp, aes(x, fit)) +
 print(p_temp_only)
 
 
+#-------------------------------------------------------------------------------
+### joint model - VPD by region
 
+# --- models and data (assumed available) ---
+# mod_vpd_by_geo_joint:
+# mean_percent_recovered ~ geolocation + s(long,lat) + ... + s(temp_ano_sc) + s(vpd_ano_sc, by=geolocation)
+stopifnot(exists("mod_vpd_by_geo_joint"), exists("df"))
+
+# helper: region centroids for lon/lat to avoid spatial extrapolation
+region_centroids <- df %>%
+  group_by(geolocation) %>%
+  summarise(long = mean(long, na.rm=TRUE),
+            lat  = mean(lat,  na.rm=TRUE))
+
+# base row (means for all numeric covariates)
+base_row <- df %>% summarise(across(where(is.numeric), ~mean(.x, na.rm=TRUE)))
+
+# sequence for VPD (standardized)
+vpd_seq <- seq(quantile(df$vpd_ano_sc, .02, na.rm=TRUE),
+               quantile(df$vpd_ano_sc, .98, na.rm=TRUE), length.out = 200)
+
+# build newdata per region
+make_newdata_vpd <- function(reg) {
+  nd <- base_row[rep(1, length(vpd_seq)), ]
+  nd$vpd_ano_sc  <- vpd_seq
+  nd$temp_ano_sc <- mean(df$temp_ano_sc, na.rm=TRUE)   # global temperature control
+  nd$geolocation <- factor(reg, levels = levels(df$geolocation))
+  # plug region centroid for spatial smooth
+  cent <- region_centroids %>% filter(geolocation == reg)
+  nd$long <- cent$long; nd$lat <- cent$lat
+  nd
+}
+nd_vpd <- bind_rows(lapply(levels(df$geolocation), make_newdata_vpd))
+
+# predict once with SEs
+pred_vpd <- predict(mod_vpd_by_geo_joint, newdata = nd_vpd, type = "response", se.fit = TRUE)
+nd_vpd$fit <- as.numeric(pred_vpd$fit)
+nd_vpd$se  <- as.numeric(pred_vpd$se.fit)
+nd_vpd$lo  <- nd_vpd$fit - 1.96*nd_vpd$se
+nd_vpd$hi  <- nd_vpd$fit + 1.96*nd_vpd$se
+
+# Pretty labels
+pretty_map <- c(
+  "eastern alps - north"   = "Eastern Alps - north",
+  "eastern alps - central" = "Eastern Alps - central",
+  "eastern alps - south"   = "Eastern Alps - south",
+  "western alps - north"   = "Western Alps - north",
+  "western alps - south"   = "Western Alps - south"
+)
+
+# Desired facet order
+geo_order <- c(
+  "Eastern Alps - north",
+  "Eastern Alps - central",
+  "Eastern Alps - south",
+  "Western Alps - north",
+  "Western Alps - south"
+)
+
+# Apply to any data frame(s) you plot from, e.g. nd_vpd and/or nd_temp:
+nd_vpd <- nd_vpd %>%
+  mutate(geolocation = recode(as.character(geolocation), !!!pretty_map),
+         geolocation = factor(geolocation, levels = geo_order))
+
+
+p_vpd_by_geo_joint <- ggplot(nd_vpd, aes(vpd_ano_sc, fit)) +
+  geom_ribbon(aes(ymin=lo, ymax=hi), alpha=.2, color=NA) +
+  geom_line(size=1, color = "#11828A") +
+  geom_vline(xintercept = 0, linetype="dashed", alpha=.6) +
+  facet_wrap(~ geolocation, scales="free_y") +
+  ylim (25,70)+
+  labs(x="VPD anomalies", y="Predicted recovery [%]") +
+  theme_bw(16)
+
+
+### for temp by geoloc in the joint model
+# 1) helpers
+# Helper: region-specific sequence
+seqr_reg <- function(x, n = 200, q = c(0.10, 0.90)) {
+  r <- quantile(x, q, na.rm = TRUE)
+  seq(r[1], r[2], length.out = n)
+}
+
+# Region-specific summaries for all numerics
+region_means <- df %>%
+  group_by(geolocation) %>%
+  summarise(across(where(is.numeric), ~mean(.x, na.rm = TRUE)), .groups = "drop")
+
+# Build region-specific newdata for TEMP anomalies (joint model with s(temp_ano_sc, by=geolocation))
+make_nd_temp_reg <- function(reg) {
+  # region filter
+  dreg <- df %>% filter(geolocation == reg)
+  # x-seq from region's distribution
+  xseq <- seqr_reg(dreg$temp_ano_sc, q = c(0.10, 0.90))
+  # start from region-typical means
+  base <- region_means %>% filter(geolocation == reg)
+  nd <- base[rep(1, length(xseq)), , drop = FALSE]
+  
+  # vary temp anomaly; hold VPD at region mean (for joint model)
+  nd$temp_ano_sc <- xseq
+  if ("vpd_ano_sc" %in% names(df)) {
+    nd$vpd_ano_sc <- base$vpd_ano_sc[1]
+  }
+  nd
+}
+
+nd_temp <- bind_rows(lapply(levels(df$geolocation), make_nd_temp_reg))
+
+# Predict once with SEs
+pr <- predict(mod_temp_by_geo_joint, newdata = nd_temp, type = "response", se.fit = TRUE)
+nd_temp$fit <- as.numeric(pr$fit)
+nd_temp$se  <- as.numeric(pr$se.fit)
+nd_temp$lo  <- nd_temp$fit - 1.96 * nd_temp$se
+nd_temp$hi  <- nd_temp$fit + 1.96 * nd_temp$se
+
+# (Optional) pretty labels + order if needed
+pretty_map <- c(
+  "eastern alps - north"   = "Eastern Alps - north",
+  "eastern alps - central" = "Eastern Alps - central",
+  "eastern alps - south"   = "Eastern Alps - south",
+  "western alps - north"   = "Western Alps - north",
+  "western alps - south"   = "Western Alps - south"
+)
+geo_order <- c("Eastern Alps - north","Eastern Alps - central","Eastern Alps - south",
+               "Western Alps - north","Western Alps - south")
+nd_temp <- nd_temp %>%
+  mutate(geolocation = recode(as.character(geolocation), !!!pretty_map),
+         geolocation = factor(geolocation, levels = geo_order))
+
+# Plot
+ggplot(nd_temp, aes(temp_ano_sc, fit)) +
+  geom_ribbon(aes(ymin = lo, ymax = hi), alpha = .2, colour = NA) +
+  geom_line(size = 1) +
+  geom_vline(xintercept = 0, linetype = "dashed", alpha = .6) +
+  facet_wrap(~ geolocation, scales = "free_y") +
+  labs(x = "Temperature anomalies (standardized)", y = "Predicted recovery [%]") +
+  theme_bw(16)
