@@ -151,7 +151,7 @@ plot_temp_df <- bind_rows(
 ggplot(plot_temp_df, aes(x, fit, color = model, fill = model)) +
   geom_line(size = 1) +
   geom_ribbon(aes(ymin = fit - 1.96*se, ymax = fit + 1.96*se), alpha = 0.18, color = NA) +
-  labs(x = "standardized temperature anomaly", y = "predicted recovery (%)") +
+  labs(x = "Temperature anomaly", y = "Predicted recovery (%)") +
   theme_minimal() + theme(legend.position = "top")
 
 # =========================
@@ -185,5 +185,30 @@ ggplot(sm, aes(temp_ano_sc, est)) +
 
 
 
+# VPD by region
+mod_vpd_by_geo_joint <- gam(
+  mean_percent_recovered ~
+    geolocation +                                # parametric factor
+    s(long, lat, bs="tp") +
+    s(mean_severity) + s(mean_temp_total) + s(mean_prec_total) +
+    s(mean_elevation) + s(mean_pre_dist_tree_cover) + s(mean_bare) +
+    s(temp_ano_sc, k = 6) +                      # global temp anomaly control
+    s(vpd_ano_sc,  by = geolocation, k = 6),     # region-specific VPD effect
+  data = df, method = "REML", select = TRUE
+)
 
+# temp by region (for SI?)
+mod_temp_by_geo_joint <- gam(
+  mean_percent_recovered ~
+    geolocation +
+    s(long, lat, bs="tp") +
+    s(mean_severity) + s(mean_temp_total) + s(mean_prec_total) +
+    s(mean_elevation) + s(mean_pre_dist_tree_cover) + s(mean_bare) +
+    s(vpd_ano_sc,  k = 6) +                      # global VPD control
+    s(temp_ano_sc, by = geolocation, k = 6),     # region-specific Temp effect
+  data = df, method = "REML", select = TRUE
+)
+
+
+# figures----------------
 
