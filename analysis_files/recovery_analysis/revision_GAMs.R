@@ -74,7 +74,7 @@ mod_vpd_only <- gam(
 # =========================
 mod_joint <- gam(
   fml("s(temp_ano_sc, k = 6) + s(vpd_ano_sc, k = 6)"),
-  data = df, method = "REML", select = TRUE, gamma = 1.4
+  data = df, method = "REML", select = FALSE, gamma = 1.4
 )
 
 # =========================
@@ -183,7 +183,8 @@ ggplot(sm, aes(temp_ano_sc, est)) +
        title = "Temperature effect by region") +
   theme_minimal()
 
-
+#-------------------------------------------------------------------------------
+### models
 
 # VPD by region
 mod_vpd_by_geo_joint <- gam(
@@ -194,7 +195,7 @@ mod_vpd_by_geo_joint <- gam(
     s(mean_elevation) + s(mean_pre_dist_tree_cover) + s(mean_bare) +
     s(temp_ano_sc, k = 6) +                      # global temp anomaly control
     s(vpd_ano_sc,  by = geolocation, k = 6),     # region-specific VPD effect
-  data = df, method = "REML", select = TRUE
+  data = df, method = "REML", select = FALSE
 )
 
 # temp by region (for SI?)
@@ -204,15 +205,19 @@ mod_temp_by_geo_joint <- gam(
     s(long, lat, bs="tp") +
     s(mean_severity) + s(mean_temp_total) + s(mean_prec_total) +
     s(mean_elevation) + s(mean_pre_dist_tree_cover) + s(mean_bare) +
-    s(vpd_ano_sc,  k = 6) +                      # global VPD control
-    s(temp_ano_sc, by = geolocation, k = 6),     # region-specific Temp effect
-  data = df, method = "REML", select = TRUE
+    s(vpd_ano_sc,  k = 6) +                     
+    s(temp_ano_sc, by = geolocation, k = 6),     
+  data = df, method = "REML", select = FALSE
 )
 
 
 # figures----------------
 # --- pick your fitted model ---
+
+# this is the global model (not per geoloc)
 mod <- mod_joint   # or whichever model you want to visualize
+mod <- mod_temp_by_geo_joint   # or whichever model you want to visualize
+
 
 # --- use the data that was used to fit 'mod' (must contain temp_ano_sc, vpd_ano_sc) ---
 # df should be the prepped frame with standardized columns
@@ -293,206 +298,28 @@ ggplot(curves, aes(x, fit)) +
   theme_bw(base_size = 18)
 
 
-### same for temp-only model
-# --- 1) Fit temperature-only model (same covariates, no VPD) ---
-mod_temp_only <- gam(
-  mean_percent_recovered ~
-    s(temp_ano_sc, k = 6) +                 
-    s(long, lat, bs = "tp") +              
-    s(mean_severity) +
-    s(mean_temp_total) + s(mean_prec_total) +
-    s(mean_elevation) +
-    s(mean_pre_dist_tree_cover) +
-    s(mean_bare),
-  data   = df,
-  method = "REML",
-  select = TRUE,
-  gamma  = 1.4
-)
 
-# --- 2) Partial dependence curves on the response scale ---
+### same for by-geoloc models
+# ------------------------------
+# Common helpers
+# ------------------------------
+stopifnot(all(c("temp_ano_sc","vpd_ano_sc","geolocation","long","lat") %in% names(df)))
+
+# 2–98% trimmed sequence
 seqr <- function(x, n = 200, q = c(0.02, 0.98)){
   r <- quantile(x, q, na.rm = TRUE); seq(r[1], r[2], length.out = n)
 }
 
-# base row: hold other numeric covariates at their means
+# Global numeric means for "holding others fixed"
 base_row <- df %>% summarise(across(where(is.numeric), ~mean(.x, na.rm = TRUE)))
-if ("geolocation" %in% names(df)) {
-  common_geo <- names(sort(table(df$geolocation), decreasing = TRUE))[1]
-  base_row$geolocation <- factor(common_geo, levels = levels(df$geolocation))
-}
 
-partial_curve <- function(var, data, mod, n = 200){
-  xseq <- seqr(data[[var]], n)
-  grid <- base_row[rep(1, n), , drop = FALSE]
-  grid[[var]] <- xseq
-  pr <- predict(mod, newdata = grid, type = "response", se.fit = TRUE)
-  tibble(predictor = var, x = xseq, fit = as.numeric(pr$fit), se = as.numeric(pr$se.fit))
-}
-
-# Variables present in the temp-only model (note: no VPD)
-vars_temp_only <- c(
-  "mean_elevation",
-  "mean_temp_total",
-  "mean_prec_total",
-  "mean_severity",
-  "mean_pre_dist_tree_cover",
-  "mean_bare",
-  "temp_ano_sc"                 # anomalies (std)
-)
-
-curves_temp <- bind_rows(lapply(vars_temp_only, partial_curve, data = df, mod = mod_temp_only))
-
-# Pretty labels + desired panel order
-label_map <- c(
-  mean_elevation               = "Elevation",
-  mean_temp_total              = "Temperature",
-  mean_prec_total              = "Precipitation",
-  mean_severity                = "Severity",
-  mean_pre_dist_tree_cover     = "Pre-disturbance\ntree cover",
-  mean_bare                    = "Post-disturbance\nbare ground share",
-  temp_ano_sc                  = "Temperature anomalies"
-)
-
-curves_temp <- curves_temp %>%
-  mutate(panel = dplyr::recode(predictor, !!!label_map, .default = predictor),
-         panel = factor(panel, levels = c(
-           "Elevation",
-           "Temperature",
-           "Precipitation",
-           "Severity",
-           "Pre-disturbance\ntree cover",
-           "Post-disturbance\nbare ground share",
-           "Temperature anomalies"
-         )))
-
-# --- 3) Plot ---
-p_temp_only <- ggplot(curves_temp, aes(x, fit)) +
-  geom_ribbon(aes(ymin = fit - 1.96*se, ymax = fit + 1.96*se), alpha = 0.18) +
-  geom_line(size = 1, color = "#11828A") +
-  facet_wrap(~ panel, scales = "free_x", nrow = 2) +
-  labs(x = "Predictor values", y = "Predicted recovery success [%]") +
-  theme_bw(base_size = 18)
-
-print(p_temp_only)
-
-
-#-------------------------------------------------------------------------------
-### joint model - VPD by region
-
-# --- models and data (assumed available) ---
-# mod_vpd_by_geo_joint:
-# mean_percent_recovered ~ geolocation + s(long,lat) + ... + s(temp_ano_sc) + s(vpd_ano_sc, by=geolocation)
-stopifnot(exists("mod_vpd_by_geo_joint"), exists("df"))
-
-# helper: region centroids for lon/lat to avoid spatial extrapolation
+# Region centroids for spatial smooth evaluation
 region_centroids <- df %>%
   group_by(geolocation) %>%
   summarise(long = mean(long, na.rm=TRUE),
-            lat  = mean(lat,  na.rm=TRUE))
+            lat  = mean(lat,  na.rm=TRUE), .groups = "drop")
 
-# base row (means for all numeric covariates)
-base_row <- df %>% summarise(across(where(is.numeric), ~mean(.x, na.rm=TRUE)))
-
-# sequence for VPD (standardized)
-vpd_seq <- seq(quantile(df$vpd_ano_sc, .02, na.rm=TRUE),
-               quantile(df$vpd_ano_sc, .98, na.rm=TRUE), length.out = 200)
-
-# build newdata per region
-make_newdata_vpd <- function(reg) {
-  nd <- base_row[rep(1, length(vpd_seq)), ]
-  nd$vpd_ano_sc  <- vpd_seq
-  nd$temp_ano_sc <- mean(df$temp_ano_sc, na.rm=TRUE)   # global temperature control
-  nd$geolocation <- factor(reg, levels = levels(df$geolocation))
-  # plug region centroid for spatial smooth
-  cent <- region_centroids %>% filter(geolocation == reg)
-  nd$long <- cent$long; nd$lat <- cent$lat
-  nd
-}
-nd_vpd <- bind_rows(lapply(levels(df$geolocation), make_newdata_vpd))
-
-# predict once with SEs
-pred_vpd <- predict(mod_vpd_by_geo_joint, newdata = nd_vpd, type = "response", se.fit = TRUE)
-nd_vpd$fit <- as.numeric(pred_vpd$fit)
-nd_vpd$se  <- as.numeric(pred_vpd$se.fit)
-nd_vpd$lo  <- nd_vpd$fit - 1.96*nd_vpd$se
-nd_vpd$hi  <- nd_vpd$fit + 1.96*nd_vpd$se
-
-# Pretty labels
-pretty_map <- c(
-  "eastern alps - north"   = "Eastern Alps - north",
-  "eastern alps - central" = "Eastern Alps - central",
-  "eastern alps - south"   = "Eastern Alps - south",
-  "western alps - north"   = "Western Alps - north",
-  "western alps - south"   = "Western Alps - south"
-)
-
-# Desired facet order
-geo_order <- c(
-  "Eastern Alps - north",
-  "Eastern Alps - central",
-  "Eastern Alps - south",
-  "Western Alps - north",
-  "Western Alps - south"
-)
-
-# Apply to any data frame(s) you plot from, e.g. nd_vpd and/or nd_temp:
-nd_vpd <- nd_vpd %>%
-  mutate(geolocation = recode(as.character(geolocation), !!!pretty_map),
-         geolocation = factor(geolocation, levels = geo_order))
-
-
-p_vpd_by_geo_joint <- ggplot(nd_vpd, aes(vpd_ano_sc, fit)) +
-  geom_ribbon(aes(ymin=lo, ymax=hi), alpha=.2, color=NA) +
-  geom_line(size=1, color = "#11828A") +
-  geom_vline(xintercept = 0, linetype="dashed", alpha=.6) +
-  facet_wrap(~ geolocation, scales="free_y") +
-  ylim (25,70)+
-  labs(x="VPD anomalies", y="Predicted recovery [%]") +
-  theme_bw(16)
-
-
-### for temp by geoloc in the joint model
-# 1) helpers
-# Helper: region-specific sequence
-seqr_reg <- function(x, n = 200, q = c(0.10, 0.90)) {
-  r <- quantile(x, q, na.rm = TRUE)
-  seq(r[1], r[2], length.out = n)
-}
-
-# Region-specific summaries for all numerics
-region_means <- df %>%
-  group_by(geolocation) %>%
-  summarise(across(where(is.numeric), ~mean(.x, na.rm = TRUE)), .groups = "drop")
-
-# Build region-specific newdata for TEMP anomalies (joint model with s(temp_ano_sc, by=geolocation))
-make_nd_temp_reg <- function(reg) {
-  # region filter
-  dreg <- df %>% filter(geolocation == reg)
-  # x-seq from region's distribution
-  xseq <- seqr_reg(dreg$temp_ano_sc, q = c(0.10, 0.90))
-  # start from region-typical means
-  base <- region_means %>% filter(geolocation == reg)
-  nd <- base[rep(1, length(xseq)), , drop = FALSE]
-  
-  # vary temp anomaly; hold VPD at region mean (for joint model)
-  nd$temp_ano_sc <- xseq
-  if ("vpd_ano_sc" %in% names(df)) {
-    nd$vpd_ano_sc <- base$vpd_ano_sc[1]
-  }
-  nd
-}
-
-nd_temp <- bind_rows(lapply(levels(df$geolocation), make_nd_temp_reg))
-
-# Predict once with SEs
-pr <- predict(mod_temp_by_geo_joint, newdata = nd_temp, type = "response", se.fit = TRUE)
-nd_temp$fit <- as.numeric(pr$fit)
-nd_temp$se  <- as.numeric(pr$se.fit)
-nd_temp$lo  <- nd_temp$fit - 1.96 * nd_temp$se
-nd_temp$hi  <- nd_temp$fit + 1.96 * nd_temp$se
-
-# (Optional) pretty labels + order if needed
+# Pretty names + desired facet order
 pretty_map <- c(
   "eastern alps - north"   = "Eastern Alps - north",
   "eastern alps - central" = "Eastern Alps - central",
@@ -502,15 +329,175 @@ pretty_map <- c(
 )
 geo_order <- c("Eastern Alps - north","Eastern Alps - central","Eastern Alps - south",
                "Western Alps - north","Western Alps - south")
+
+# ------------------------------
+# (A) Temperature anomalies by geolocation (joint model)
+# ------------------------------
+temp_seq <- seqr(df$temp_ano_sc)
+
+make_nd_temp <- function(reg){
+  nd <- base_row[rep(1, length(temp_seq)), , drop = FALSE]
+  nd$temp_ano_sc <- temp_seq
+  nd$vpd_ano_sc  <- base_row$vpd_ano_sc[1]           # global VPD control
+  nd$geolocation <- factor(reg, levels = levels(df$geolocation))
+  cen <- region_centroids %>% filter(geolocation == reg)
+  nd$long <- cen$long; nd$lat <- cen$lat
+  nd
+}
+
+nd_temp <- bind_rows(lapply(levels(df$geolocation), make_nd_temp))
+prT <- predict(mod_temp_by_geo_joint, newdata = nd_temp, type = "response", se.fit = TRUE)
+nd_temp$fit <- as.numeric(prT$fit); nd_temp$se <- as.numeric(prT$se.fit)
+nd_temp$lo  <- nd_temp$fit - 1.96*nd_temp$se; nd_temp$hi <- nd_temp$fit + 1.96*nd_temp$se
+
+# map pretty labels & order
 nd_temp <- nd_temp %>%
   mutate(geolocation = recode(as.character(geolocation), !!!pretty_map),
-         geolocation = factor(geolocation, levels = geo_order))
+         geolocation = fct_relevel(factor(geolocation), geo_order))
 
-# Plot
-ggplot(nd_temp, aes(temp_ano_sc, fit)) +
-  geom_ribbon(aes(ymin = lo, ymax = hi), alpha = .2, colour = NA) +
-  geom_line(size = 1) +
+p_temp_by_geo <- ggplot(nd_temp, aes(temp_ano_sc, fit)) +
+  geom_ribbon(aes(ymin = lo, ymax = hi), alpha = .20, colour = NA) +
+  geom_line(size = 1, color = "#11828A") +
   geom_vline(xintercept = 0, linetype = "dashed", alpha = .6) +
   facet_wrap(~ geolocation, scales = "free_y") +
   labs(x = "Temperature anomalies (standardized)", y = "Predicted recovery [%]") +
   theme_bw(16)
+
+print(p_temp_by_geo)
+# ggsave("temp_anomaly_by_geolocation_joint.png", p_temp_by_geo, width = 9, height = 5.5, dpi = 300)
+
+# ------------------------------
+# (B) VPD anomalies by geolocation (joint model)
+# ------------------------------
+vpd_seq <- seqr(df$vpd_ano_sc)
+
+make_nd_vpd <- function(reg){
+  nd <- base_row[rep(1, length(vpd_seq)), , drop = FALSE]
+  nd$vpd_ano_sc  <- vpd_seq
+  nd$temp_ano_sc <- base_row$temp_ano_sc[1]          # global Temp control
+  nd$geolocation <- factor(reg, levels = levels(df$geolocation))
+  cen <- region_centroids %>% filter(geolocation == reg)
+  nd$long <- cen$long; nd$lat <- cen$lat
+  nd
+}
+
+nd_vpd <- bind_rows(lapply(levels(df$geolocation), make_nd_vpd))
+prV <- predict(mod_vpd_by_geo_joint, newdata = nd_vpd, type = "response", se.fit = TRUE)
+nd_vpd$fit <- as.numeric(prV$fit); nd_vpd$se <- as.numeric(prV$se.fit)
+nd_vpd$lo  <- nd_vpd$fit - 1.96*nd_vpd$se; nd_vpd$hi <- nd_vpd$fit + 1.96*nd_vpd$se
+
+nd_vpd <- nd_vpd %>%
+  mutate(geolocation = recode(as.character(geolocation), !!!pretty_map),
+         geolocation = fct_relevel(factor(geolocation), geo_order))
+
+p_vpd_by_geo <- ggplot(nd_vpd, aes(vpd_ano_sc, fit)) +
+  geom_ribbon(aes(ymin = lo, ymax = hi), alpha = .20, colour = NA) +
+  geom_line(size = 1, color = "#11828A") +
+  geom_vline(xintercept = 0, linetype = "dashed", alpha = .6) +
+  facet_wrap(~ geolocation, scales = "free_y") +
+  labs(x = "VPD anomalies (standardized)", y = "Predicted recovery [%]") +
+  theme_bw(16)
+
+
+#### and now the temp only by temp anomalies plot
+# ---------------------------------------------------
+# 0) Data assumptions
+#    df contains: mean_percent_recovered, temp_ano_sc, long, lat, geolocation,
+#    and covariates used before: mean_severity, mean_temp_total, mean_prec_total,
+#    mean_elevation, mean_pre_dist_tree_cover, mean_bare
+# ---------------------------------------------------
+stopifnot(all(c(
+  "mean_percent_recovered","temp_ano_sc","geolocation","long","lat",
+  "mean_severity","mean_temp_total","mean_prec_total","mean_elevation",
+  "mean_pre_dist_tree_cover","mean_bare"
+) %in% names(df)))
+
+# ---------------------------------------------------
+# 1) Fit temp-only by-region model (if not already fitted)
+#    (no VPD term here)
+# ---------------------------------------------------
+if (!exists("mod_temp_by_geo_only")) {
+  mod_temp_by_geo_only <- gam(
+    mean_percent_recovered ~
+      geolocation +
+      s(long, lat, bs = "tp") +
+      s(mean_severity) + s(mean_temp_total) + s(mean_prec_total) +
+      s(mean_elevation) + s(mean_pre_dist_tree_cover) + s(mean_bare) +
+      s(temp_ano_sc, by = geolocation, k = 6),
+    data = df, method = "REML", select = TRUE
+  )
+}
+
+# ---------------------------------------------------
+# 2) Helpers for prediction
+# ---------------------------------------------------
+# trimmed sequence for x-axis
+seqr <- function(x, n = 200, q = c(0.02, 0.98)) {
+  r <- quantile(x, q, na.rm = TRUE); seq(r[1], r[2], length.out = n)
+}
+
+# global numeric means (hold other covariates constant)
+base_row <- df %>%
+  summarise(across(where(is.numeric), ~ mean(.x, na.rm = TRUE)))
+
+# region centroids for spatial smooth evaluation
+region_centroids <- df %>%
+  group_by(geolocation) %>%
+  summarise(long = mean(long, na.rm = TRUE),
+            lat  = mean(lat,  na.rm = TRUE), .groups = "drop")
+
+temp_seq <- seqr(df$temp_ano_sc)
+
+make_nd_temp_only <- function(reg) {
+  nd <- base_row[rep(1, length(temp_seq)), , drop = FALSE]
+  nd$temp_ano_sc <- temp_seq
+  nd$geolocation <- factor(reg, levels = levels(df$geolocation))
+  cen <- region_centroids %>% filter(geolocation == reg)
+  nd$long <- cen$long; nd$lat <- cen$lat
+  nd
+}
+
+nd_temp_only <- bind_rows(lapply(levels(df$geolocation), make_nd_temp_only))
+
+# predict once with SEs
+pr <- predict(mod_temp_by_geo_only, newdata = nd_temp_only, type = "response", se.fit = TRUE)
+nd_temp_only$fit <- as.numeric(pr$fit)
+nd_temp_only$se  <- as.numeric(pr$se.fit)
+nd_temp_only$lo  <- nd_temp_only$fit - 1.96 * nd_temp_only$se
+nd_temp_only$hi  <- nd_temp_only$fit + 1.96 * nd_temp_only$se
+
+# ---------------------------------------------------
+# 3) Pretty labels + desired order for panels
+# ---------------------------------------------------
+pretty_map <- c(
+  "eastern alps - north"   = "Eastern Alps - north",
+  "eastern alps - central" = "Eastern Alps - central",
+  "eastern alps - south"   = "Eastern Alps - south",
+  "western alps - north"   = "Western Alps - north",
+  "western alps - south"   = "Western Alps - south"
+)
+geo_order <- c(
+  "Eastern Alps - north",
+  "Eastern Alps - central",
+  "Eastern Alps - south",
+  "Western Alps - north",
+  "Western Alps - south"
+)
+
+nd_temp_only <- nd_temp_only %>%
+  mutate(geolocation = recode(as.character(geolocation), !!!pretty_map),
+         geolocation = fct_relevel(factor(geolocation), geo_order))
+
+# ---------------------------------------------------
+# 4) Plot
+# ---------------------------------------------------
+p_temp_by_geo_only <- ggplot(nd_temp_only, aes(temp_ano_sc, fit)) +
+  geom_ribbon(aes(ymin = lo, ymax = hi), alpha = 0.20, colour = NA) +
+  geom_line(size = 1, color = "#11828A") +
+  geom_vline(xintercept = 0, linetype = "dashed", alpha = 0.6) +
+  facet_wrap(~ geolocation, scales = "free_y") +
+  labs(x = "Temperature anomalies (standardized)", y = "Predicted recovery [%]") +
+  theme_bw(16)
+
+print(p_temp_by_geo_only)
+
