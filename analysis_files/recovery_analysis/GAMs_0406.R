@@ -23,6 +23,10 @@ library(dplyr)
 install.packages(c("scales", "GWmodel", "spdep", "pheatmap", "kableExtra"))
 
 recovery <- read_csv("~/eo_nas/EO4Alps/00_analysis/_recovery/recovery_GWR.csv")
+recovery <- read_csv("/mnt/eo/EO4Alps/00_analysis/_recovery/recovery_temp_anomalies.csv")
+
+# remove the readr parsing spec
+attr(recovery, "spec") <- NULL
 
 
 # 1. VPD-Statistiken für die ersten 10 Jahre nach Störung
@@ -56,7 +60,7 @@ recovery_stat <- recovery %>%
   left_join(vpd_stats_combined, by = "ID")
 
 # Filter the dataset and compute the new column
-recovery_filt <- recovery_stat %>%
+recovery_filt <- recovery %>%
   group_by(ID) %>%
   filter(yod < 2013) %>%
   mutate(recov_10 = ifelse(recovery_rate <= 10, 1, 0)) %>%
@@ -80,7 +84,7 @@ recovery_unique <- recovery_filt %>%
 recovery_unique_sf <- st_as_sf(recovery_unique, coords = c("x", "y"), crs = 3035)
 
 # load hexagons and recovery df
-hexagons <- st_read("~/eo_nas/EO4Alps/gis/hexagons/hex_500.shp")
+hexagons <- st_read("/mnt/eo/EO4Alps/gis/hexagons/hex_500.shp")
 
 # just use GRID_ID for subsequent joins
 hexagons_selected <- hexagons %>%
@@ -104,14 +108,11 @@ hexagon_predictors <- recovery_unique_sf_recov10 %>%
   summarise(
     mean_elevation = mean(height, na.rm = TRUE),
     mean_severity = mean(severity_relative, na.rm = TRUE),
-    mean_VPD = mean(mean_VPD10, na.rm = TRUE),
-    mean_VPD_ano = mean(mean_VPD_ano10, na.rm = TRUE),
+    #mean_VPD = mean(mean_VPD10, na.rm = TRUE),
+    #mean_VPD_ano = mean(mean_VPD_ano10, na.rm = TRUE),
     mean_VPD_yod1 = mean(VPD_yod1, na.rm = TRUE),
-    max_VPD_yod1 = max(VPD_yod1, na.rm = TRUE),
-    min_VPD_yod1 = min(VPD_yod1, na.rm = TRUE),
-    sd_VPD_yod1 = sd(VPD_yod1, na.rm = TRUE),
-    mean_prec = mean(mean_prec10, na.rm = TRUE),
-    mean_temp = mean(mean_temp10, na.rm = TRUE),
+    #mean_prec = mean(mean_prec10, na.rm = TRUE),
+    #mean_temp = mean(mean_temp10, na.rm = TRUE),
     mean_prec_total = mean(mean_prec_total, na.rm = TRUE),
     mean_temp_total = mean(mean_temp_total, na.rm = TRUE),
     mean_recovery_rate = mean(recovery_rate, na.rm = TRUE),
@@ -119,24 +120,12 @@ hexagon_predictors <- recovery_unique_sf_recov10 %>%
     mean_broadleaved = mean(pre_dist_broadl, na.rm = TRUE),
     mean_coniferous = mean(pre_dist_coni, na.rm = TRUE),
     mean_bare = mean(post_dist_bare, na.rm = TRUE),
-    mean_sd_VPD = mean(VPD_sd, na.rm = TRUE),
-    max_sd_VPD = max(VPD_sd, na.rm = TRUE),
-    min_sd_VPD = min(VPD_sd, na.rm = TRUE),
-    mean_min_VPD = mean(VPD_min, na.rm = TRUE),
-    min_min_VPD = min(VPD_min, na.rm = TRUE),
-    max_min_VPD = max(VPD_min, na.rm = TRUE),
-    mean_max_VPD = mean(VPD_max, na.rm = TRUE),
-    max_max_VPD = max(VPD_max, na.rm = TRUE),
-    min_max_VPD = min(VPD_max, na.rm = TRUE),
-    mean_sd_VPD_yod3 = mean(VPD_sd_yod3, na.rm = TRUE), 
-    max_sd_VPD_yod3 = max(VPD_sd_yod3, na.rm = TRUE), 
-    min_sd_VPD_yod3 = min(VPD_sd_yod3, na.rm = TRUE), 
-    mean_min_VPD_yod3 = mean(VPD_min_yod3, na.rm = TRUE),
-    max_min_VPD_yod3 = max(VPD_min_yod3, na.rm = TRUE), 
-    min_min_VPD_yod3 = min(VPD_min_yod3, na.rm = TRUE), 
-    mean_max_VPD_yod3 = mean(VPD_max_yod3, na.rm = TRUE),
-    max_max_VPD_yod3 = max(VPD_max_yod3, na.rm = TRUE), 
-    min_max_VPD_yod3 = min(VPD_max_yod3, na.rm = TRUE), 
+    mean_temp_ano_all_yod1 = mean(temp_ano_all_yod1, na.rm = TRUE),
+    mean_temp_ano_summer_yod1 = mean(temp_ano_summer_yod1, na.rm = TRUE),
+    mean_temp_ano_spring_yod1 = mean(temp_ano_spring_yod1, na.rm = TRUE),
+    mean_temp_ano_all_yod3 = mean(temp_ano_all_yod3, na.rm = TRUE),
+    mean_temp_ano_summer_yod3 = mean(temp_ano_summer_yod3, na.rm = TRUE),
+    mean_temp_ano_spring_yod3 = mean(temp_ano_spring_yod3, na.rm = TRUE),
     dominant_forest_type = names(sort(table(forest_type), decreasing = TRUE))[1],  # Mode of forest type
     geolocation = names(sort(table(geoloc), decreasing = TRUE))[1],  # Mode of geolocation
     .groups = "drop"
@@ -168,19 +157,30 @@ na_checks <- paste0("    na_", vars, " = sum(is.na(", vars, "))")
 
 # Define the variable list as before
 vars <- c(
-  "mean_elevation", "mean_severity", "mean_VPD", "mean_VPD_ano", 
-  "mean_VPD_yod1", "max_VPD_yod1", "min_VPD_yod1", "sd_VPD_yod1",
-  "mean_prec", "mean_temp", "mean_prec_total", "mean_temp_total",
-  "mean_recovery_rate", "mean_percent_recovered",
-  "mean_broadleaved", "mean_coniferous", "mean_bare",
-  "mean_sd_VPD", "max_sd_VPD", "min_sd_VPD",
-  "mean_min_VPD", "min_min_VPD", "max_min_VPD",
-  "mean_max_VPD", "max_max_VPD", "min_max_VPD",
-  "mean_sd_VPD_yod3", "max_sd_VPD_yod3", "min_sd_VPD_yod3",
-  "mean_min_VPD_yod3", "max_min_VPD_yod3", "min_min_VPD_yod3",
-  "mean_max_VPD_yod3", "max_max_VPD_yod3", "min_max_VPD_yod3",
-  "dominant_forest_type", "geolocation"
+  "mean_elevation",
+  "mean_severity",
+  "mean_VPD",
+  "mean_VPD_ano",
+  "mean_VPD_yod1",
+  "mean_prec",
+  "mean_temp",
+  "mean_prec_total",
+  "mean_temp_total",
+  "mean_recovery_rate",
+  "mean_percent_recovered",
+  "mean_broadleaved",
+  "mean_coniferous",
+  "mean_bare",
+  "mean_temp_ano_all_yod1",
+  "mean_temp_ano_summer_yod1",
+  "mean_temp_ano_spring_yod1",
+  "mean_temp_ano_all_yod3",
+  "mean_temp_ano_summer_yod3",
+  "mean_temp_ano_spring_yod3",
+  "dominant_forest_type",
+  "geolocation"
 )
+
 
 # Build filter conditions
 filter_conditions <- paste0("    !is.na(", vars, ")")
@@ -213,19 +213,26 @@ hexagons_recov10_centros$centroid <- st_centroid(hexagons_recov10$geometry)
 hexagons_recov10_centros$long <- st_coordinates(hexagons_recov10_centros$centroid)[,1]
 hexagons_recov10_centros$lat <- st_coordinates(hexagons_recov10_centros$centroid)[,2]
 
-library(mgcv)
+
 hexagons_recov10_centros$geolocation <- as.factor(hexagons_recov10_centros$geolocation)
+hexagons_recov10_centros$GRID_ID.y <- NULL
+hexagons_recov10_centros <- hexagons_recov10_centros %>% rename(GRID_ID = GRID_ID.x)
 
-write.csv(hexagons_recov10_centros, "~/hexagons_recov_10_centros.csv", row.names = FALSE)
-write.csv(hexagons_recov10, "~/hexagons_recov_10.csv", row.names = FALSE)
-
+# write as gpkg
+st_write(
+  hexagons_recov10_centros,
+  "/mnt/eo/EO4Alps/00_analysis/_recovery/hexagons_recov10_centros.gpkg",  # adjust path to your network drive
+  driver = "GPKG",
+  append = FALSE
+)
 
 
 fit.gam <- gam(mean_percent_recovered ~ 
                  s(long, lat, bs = "tp") +  
                  s(mean_elevation) +
                  s(mean_severity) + 
-                 s(mean_VPD_yod1) + 
+                # s(mean_VPD_yod1) + 
+                 s(mean_temp_ano_summer_yod1) +
                  #s(mean_sd_VPD) +
                  s(mean_prec_total) +
                  s(mean_temp_total) +
@@ -237,7 +244,7 @@ fit.gam_geoloc <- gam(mean_percent_recovered ~
                         s(long, lat, bs = "tp") +  
                         s(mean_severity) + 
                         s(mean_VPD_yod1, by = geolocation) +
-                        #s(mean_sd_VPD, by = geolocation) +
+                        s(mean_temp_ano_summer_yod1, by = geolocation) +
                         s(mean_temp_total) +
                         s(mean_prec_total) +
                         s(mean_elevation) +
@@ -248,15 +255,20 @@ fit.gam_geoloc <- gam(mean_percent_recovered ~
 # prediction df
 # Create a new data frame for predictions
 new_data <- hexagons_recov10_centros %>%
-  select(long, lat, mean_elevation, mean_severity, mean_VPD_yod1, 
+  select(long, lat, mean_elevation, mean_severity, 
+         mean_VPD_yod1,
+         mean_temp_ano_summer_yod1,
          mean_prec_total, mean_temp_total, mean_pre_dist_tree_cover, mean_bare, geolocation)
 
 # Add predicted values to the new dataset
+new_data$predicted <- predict(fit.gam, newdata = new_data, type = "response")
 new_data$predicted <- predict(fit.gam_geoloc, newdata = new_data, type = "response")
 
 # Convert data to long format for plotting
 smooth_data <- new_data %>%
-  pivot_longer(cols = c(mean_elevation, mean_severity, mean_VPD_yod1, 
+  pivot_longer(cols = c(mean_elevation, mean_severity, 
+                        mean_VPD_yod1, 
+                        mean_temp_ano_summer_yod1,
                         mean_prec_total, mean_temp_total, 
                         mean_pre_dist_tree_cover, mean_bare),
                names_to = "predictor", values_to = "value")
@@ -264,6 +276,7 @@ smooth_data <- new_data %>%
 # Define new facet labels with line breaks
 facet_labels <- c(
   "mean_VPD_yod1" = "VPD anomalies",
+  "mean_temp_ano_summer_yod1" = "Temperature anomalies",
   "mean_temp_total" = "Temperature",
   "mean_prec_total" = "Precipitation",
   "mean_severity" = "Severity",
@@ -279,6 +292,7 @@ smooth_data <- smooth_data %>%
 # Define desired order based on the RENAMED facet labels
 custom_order <- c(
   "VPD anomalies",
+  "Temperature anomalies",
   "Elevation", 
   "Temperature",
   "Precipitation",
@@ -299,7 +313,7 @@ ggplot(smooth_data, aes(x = value, y = predicted)) +
   theme_bw(base_size = 18) +
   labs(y = "Predicted recovery success", x = "Predictor values")
 
-ggsave("~/predictors_effect_sd.png", width = 11, height = 6, dpi = 300)
+ggsave("/mnt/eo/EO4Alps/figs/revision/predictors_effect_temp_only.png", width = 11, height = 6, dpi = 300)
 
 
 # Filter out VPD anomalies
@@ -482,6 +496,7 @@ fit.gam_interaction <- gam(mean_percent_recovered ~
                              s(long, lat, bs = "tp") +  
                              s(mean_severity) + 
                              s(mean_VPD_yod1, by = geolocation) +
+                             s(mean_temp_ano_summer_yod1, by = geolocation) +
                              s(mean_temp_total) +
                              s(mean_prec_total) +
                              s(mean_elevation) +
@@ -502,6 +517,10 @@ VPD_range <- seq(min(hexagons_recov10_centros$mean_VPD_yod1, na.rm = TRUE),
                  max(hexagons_recov10_centros$mean_VPD_yod1, na.rm = TRUE), 
                  length.out = 100)  # 100 evenly spaced points
 
+Temp_range <- seq(min(hexagons_recov10_centros$mean_temp_ano_summer_yod1, na.rm = TRUE),
+                 max(hexagons_recov10_centros$mean_temp_ano_summer_yod1, na.rm = TRUE), 
+                 length.out = 100)  # 100 evenly spaced points
+
 # Expand grid of VPD values and geolocation categories
 new_VPD_data <- expand.grid(
   mean_VPD_yod1 = VPD_range,
@@ -509,12 +528,24 @@ new_VPD_data <- expand.grid(
 ) %>%
   cross_join(fixed_values)  # Attach fixed predictor values, including long & lat
 
+# for temo
+new_Temp_data <- expand.grid(
+  mean_temp_yod1 = Temp_range,
+  geolocation = unique(hexagons_recov10_centros$geolocation)  # Keep geolocations
+) %>%
+  cross_join(fixed_values)
+
 # Ensure geolocation is a factor
 new_VPD_data <- new_VPD_data %>%
   mutate(geolocation = as.factor(geolocation))
 
+new_Temp_data <- new_Temp_data %>%
+  mutate(geolocation = as.factor(geolocation))
+
 # Predict recovery success while holding other predictors constant
 new_VPD_data$predicted <- predict(fit.gam_interaction, newdata = new_VPD_data, type = "response")
+new_Temp_data$predicted <- predict(fit.gam_interaction, newdata = new_Temp_data, type = "response")
+
 
 # Compute confidence intervals (assuming normal approximation)
 new_VPD_data <- new_VPD_data %>%

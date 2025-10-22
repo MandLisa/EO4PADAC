@@ -754,3 +754,22 @@ p_ti_partials <- ggplot2::ggplot(curves_ti, ggplot2::aes(x, fit)) +
 # print(p_ti_partials)
 # ggsave("partials_tensor_model_main_effects.png", p_ti_partials, width = 10, height = 6, dpi = 300)
 
+
+
+
+
+
+fit.gam <- gam(mean_percent_recovered ~ 
+                 s(long, lat, bs = "tp") +  
+                 s(mean_elevation) +
+                 s(mean_severity) + 
+                 # s(mean_VPD_yod1) + 
+                 s(mean_temp_ano_summer_yod1) +
+                 #s(mean_sd_VPD) +
+                 s(mean_prec_total) +
+                 s(mean_temp_total) +
+                 s(mean_pre_dist_tree_cover) +
+                 s(mean_bare),
+               data = hexagons_recov10_centros, method = "REML")
+
+

@@ -190,7 +190,7 @@ fit.gam_interaction <- gam(mean_percent_recovered ~
                              s(long, lat, bs = "tp") +  
                              s(mean_severity) + 
                              s(mean_VPD_yod1, by = geolocation) +
-                             s(mean_temp_ano_summer_yod1, by=geolocation) +
+                             #s(mean_temp_ano_summer_yod1, by=geolocation) +
                              s(mean_temp_total) +
                              s(mean_prec_total) +
                              s(mean_elevation) +
