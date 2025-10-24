@@ -3,15 +3,15 @@ set -euo pipefail
 
 # --- CONFIG -------------------------------------------------------------------
 IN="/mnt/dss_europe/level3_interpolated"   # Input Tiles
-OUT_RAW="/mnt/eo/eu_mosaics/EVI"           # uncompressed annual mosaics
-OUT_COMP="/mnt/eo/eu_mosaics/EVI_comp"     # compressed EVI annual mosaics
-PREFIX="EVI_"
+OUT_RAW="/mnt/eo/eu_mosaics/NBR"           # uncompressed annual mosaics
+OUT_COMP="/mnt/eo/eu_mosaics/NBR_comp"     # compressed EVI annual mosaics
+PREFIX="NBR_"
 EXT=".tif"
 EPS="0.0001"   # absolute error bound for LERC
 BLOCK=512
 
 # --- YEAR RANGE (EVI only) ----------------------------------------------------
-YEAR_START=1998
+YEAR_START=1985
 YEAR_END=1999
 
 mkdir -p "$OUT_RAW" "$OUT_COMP"
@@ -22,7 +22,7 @@ mosaic_one_year () {
   local tmpvrt
   tmpvrt="$(mktemp --suffix=".vrt")"
 
-  find "$in" -type f -name "${year}*EVI*.tif" -print0 \
+  find "$in" -type f -name "${year}*NBR*.tif" -print0 \
     | xargs -0 gdalbuildvrt \
         -srcnodata -10000 -vrtnodata -10000 \
         -resolution highest \
