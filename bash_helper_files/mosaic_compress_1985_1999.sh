@@ -11,7 +11,7 @@ EPS="0.0001"   # absolute error bound for LERC
 BLOCK=512
 
 # --- YEAR RANGE (EVI only) ----------------------------------------------------
-YEAR_START=1985
+YEAR_START=1998
 YEAR_END=1999
 
 mkdir -p "$OUT_RAW" "$OUT_COMP"
