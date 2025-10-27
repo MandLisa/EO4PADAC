@@ -10,10 +10,11 @@ library(tidyr)
 hexagons_recov10_centros <- st_read("/mnt/eo/EO4Alps/00_analysis/_recovery/hexagons_recov10_centros.gpkg")
 
 # fit basic model
-fit.gam_temp_elev <- gam(mean_percent_recovered ~ 
+fit.gam_temp <- gam(mean_percent_recovered ~ 
                            s(long, lat, bs = "tp") +  
                            s(mean_severity) + 
-                           #s(mean_temp_ano_summer_yod1) + 
+                           s(mean_temp_ano_summer_yod1) + 
+                           #s(mean_temp_ano_all_yod1, by = geolocation) +
                            s(mean_prec_total) +
                            s(mean_temp_total) +
                            s(mean_pre_dist_tree_cover) +
@@ -34,7 +35,7 @@ mk_seq_te <- function(x, n = 200, q = range_q) {
 
 # ---------------------- Variables & newdata grid ------------------------------
 # discover smooths present in the model and extract variable names
-sm_te <- gratia::smooths(fit.gam_temp_elev)                     # e.g., "s(long,lat)", "s(mean_elevation)", ...
+sm_te <- gratia::smooths(fit.gam_temp)                     # e.g., "s(long,lat)", "s(mean_elevation)", ...
 vars_te <- gsub("^s\\(|\\)$", "", sm_te)                        # drop s( )
 vars_te <- vars_te[!grepl(",", vars_te, fixed = TRUE)]          # remove multi-var terms like "long,lat"
 vars_te <- setdiff(vars_te, c("long", "lat"))                   # just in case
@@ -54,16 +55,16 @@ nd_te[[focal_te]] <- seq_x_te
 
 # predictions on response scale; exclude spatial surface for clean covariate effect
 nd_te$fit <- predict(
-  fit.gam_temp_elev, newdata = nd_te, type = "response",
+  fit.gam_temp, newdata = nd_te, type = "response",
   exclude = "s(long,lat)"
 )
 
 # CIs via link-scale then back-transform using chosen z
 pr_te <- predict(
-  fit.gam_temp_elev, newdata = nd_te, type = "link", se.fit = TRUE,
+  fit.gam_temp, newdata = nd_te, type = "link", se.fit = TRUE,
   exclude = "s(long,lat)"
 )
-invlink <- family(fit.gam_temp_elev)$linkinv
+invlink <- family(fit.gam_temp)$linkinv
 nd_te$lo <- invlink(pr_te$fit - z * pr_te$se.fit)
 nd_te$hi <- invlink(pr_te$fit + z * pr_te$se.fit)
 
@@ -74,7 +75,7 @@ make_curve_te <- function(var) {
   ndv_te <- base_te[rep(1, length(x)), ]; ndv_te[[var]] <- x
   
   prv_te <- predict(
-    fit.gam_temp_elev, newdata = ndv_te, type = "link", se.fit = TRUE,
+    fit.gam_temp, newdata = ndv_te, type = "link", se.fit = TRUE,
     exclude = "s(long,lat)"
   )
   data.frame(
@@ -100,9 +101,9 @@ facet_labels_te <- c(
 
 custom_order_vars_te <- c(
   "mean_temp_ano_summer_yod1",
-  "mean_severity",
   "mean_temp_total",
   "mean_prec_total",
+  "mean_severity",
   "mean_pre_dist_tree_cover",
   "mean_bare"
 )
@@ -123,10 +124,38 @@ ggplot(curves_te, aes(x = x, y = fit)) +
     x = "Predictor value",
     y = "Predicted recovery success [%]"
   ) +
-  ylim(30,60) +
+  ylim(30,65) +
   theme_bw(base_size = 17)
 
-ggsave("/mnt/eo/EO4Alps/figs/predicted_recovery_24101.png", width = 8, height = 6, dpi = 300)
+ggsave("/mnt/eo/EO4Alps/figs/predicted_recovery_27101.png", width = 8, height = 6, dpi = 300)
+
+
+### without temp anomaly panel
+
+# 1) Remove the "Temperature anomalies" panel
+curves_noTA <- curves_te %>%
+  filter(predictor != "mean_temp_ano_all_yod1") %>%
+  mutate(predictor = droplevels(factor(predictor)))
+
+# 2) If you use a named labeller, drop that entry too
+facet_labels_noTA <- facet_labels_te[ names(facet_labels_te) != "mean_temp_ano_all_yod1" ]
+
+# 3) Plot (unchanged otherwise)
+ggplot(curves_noTA, aes(x = x, y = fit)) +
+  geom_ribbon(aes(ymin = lo, ymax = hi), alpha = 0.20) +
+  geom_line(linewidth = 0.8, color = "#11828A") +
+  facet_wrap(
+    ~ predictor, scales = "free_x", nrow = 2,
+    labeller = as_labeller(facet_labels_noTA)
+  ) +
+  labs(
+    x = "Predictor value",
+    y = "Predicted recovery success [%]"
+  ) +
+  ylim(30, 65) +
+  theme_bw(base_size = 17)
+
+ggsave("/mnt/eo/EO4Alps/figs/predicted_recovery_27101.png", width = 8, height = 6, dpi = 300)
 
 ### model diagnostics
 #global check: QQ, residuals vs fitted, k-index per smooth
@@ -274,7 +303,7 @@ ggplot(curves_summer, aes(x = x, y = fit)) +
     strip.text = element_text(face = "bold")
   )
 
-ggsave("/mnt/eo/EO4Alps/figs/pred_recovery_per_geoloc_title_2410.png", width = 10, height = 6, dpi = 300)
+ggsave("/mnt/eo/EO4Alps/figs/pred_recovery_per_geoloc_title_2710_4.png", width = 10, height = 6, dpi = 300)
 
 ### without title
 ggplot(curves_summer, aes(x = x, y = fit)) +
@@ -298,6 +327,8 @@ ggplot(curves_summer, aes(x = x, y = fit)) +
   )
 
 ggsave("/mnt/eo/EO4Alps/figs/pred_recovery_per_geoloc_without_title_2410.png", width = 10, height = 6, dpi = 300)
+
+
 
 ### model diagnostics
 # global check: QQ, residuals vs fitted, k-index per smooth
