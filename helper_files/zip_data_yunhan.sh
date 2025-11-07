@@ -5,7 +5,7 @@ cd /
 zip -9 -T /mnt/eo/EO4Alps/data_yunhan_part1.zip \
   mnt/eo/EO4Alps/level4_fcover/mosaics_Alps_convention_smoothed_filled/smoothed/yearly_stacks/mosaic_{1985..2005}.tif
 
-# Part 2: 2006–2024 + DEM + forest mask
+# Part 2: 2006–2024 + DEM + forest masks
 zip -9 -T /mnt/eo/EO4Alps/data_yunhan_part2.zip \
   mnt/eo/EO4Alps/level4_fcover/mosaics_Alps_convention_smoothed_filled/smoothed/yearly_stacks/mosaic_{2006..2024}.tif \
   mnt/eo/EO4Alps/dem/dem_crop.tif \
