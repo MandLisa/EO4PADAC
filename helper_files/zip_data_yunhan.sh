@@ -1,4 +1,4 @@
-# Create two archives 
+# Create two archive
 cd /
 
 # Part 1: 1985–2005 
