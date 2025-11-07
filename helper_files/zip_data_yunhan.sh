@@ -1,7 +1,7 @@
 # Create two archives with relative paths (no leading '/')
 cd /
 
-# Part 1: 1985–2005 only
+# Part 1: 1985–2005 
 zip -9 -T /mnt/eo/EO4Alps/data_yunhan_part1.zip \
   mnt/eo/EO4Alps/level4_fcover/mosaics_Alps_convention_smoothed_filled/smoothed/yearly_stacks/mosaic_{1985..2005}.tif
 
