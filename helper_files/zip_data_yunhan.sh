@@ -1,4 +1,4 @@
-# Create two archives with relative paths (no leading '/')
+# Create two archives 
 cd /
 
 # Part 1: 1985–2005 
