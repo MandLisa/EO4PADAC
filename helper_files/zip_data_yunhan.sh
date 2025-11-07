@@ -1,4 +1,4 @@
-# Create two archives with relative paths for GigaMove(no leading '/')
+# Create two archives with relative paths (no leading '/')
 cd /
 
 # Part 1: 1985–2005 only
