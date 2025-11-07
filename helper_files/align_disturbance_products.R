@@ -7,7 +7,7 @@ library(terra)
 r_ref    <- rast("/mnt/eo/eu_mosaics/NBR_comp/NBR_2023.tif")   
 
 # this refers to the Zenodo maps, directory to be replaced
-r_glance7 <- rast("/mnt/eo/EFDA_v211/latest_disturbance_eu_v211_2_3035.tif")           # to be aligned
+r_glance <- rast("/mnt/eo/EFDA_v211/forestlanduse_mask_EUmosaic3035.tif")           # to be aligned
 
 ## Quick checks, optional
 #crs(r_ref)
@@ -31,7 +31,7 @@ r_glance_on3035 <- project(
 ## 3) Write result
 writeRaster(
   r_glance_on3035,
-  "/mnt/eo/EFDA_v211//map_glance7_aligned_3035.tif", # to be replaced
+  "/mnt/eo/EFDA_v211/forest_landuse_aligned.tif", # to be replaced
   overwrite = TRUE
 )
 
