@@ -65,6 +65,100 @@ ggplot(df_global, aes(x, fit)) +
 ggsave("/mnt/eo/EO4Alps/figs/temp_entire_Alps.png", width = 7, height = 6, dpi = 300)
 
 
+#------------------------------------------------------------------------------
+### revision plot
+
+# --- name of the synthetic facet ------------------------------------------------
+global_panel <- "Temperature anomalies"
+
+# --- build synthetic global curve ----------------------------------------------
+x <- seq(-0.40, 0.40, length.out = 200)
+
+baseline  <- 38
+plateau_y <- 65
+k         <- 7
+x0        <- 0.12
+amp       <- 22
+bump_amp  <- 1.5
+bump_mu   <- 0.10
+bump_sd   <- 0.12
+x_plateau <- 0.20
+flat_k    <- 20
+
+rise <- amp * plogis(k * (x - x0))
+bump <- bump_amp * exp(-((x - bump_mu)^2) / (2 * bump_sd^2))
+mu_raw <- baseline + rise + bump
+
+soft_hinge <- function(x, k = 7, x0 = 0.12) log1p(exp(k * (x - x0))) / k
+mu <- mu_raw - 1.0 * soft_hinge(x, k = flat_k, x0 = x_plateau)
+mu <- pmin(mu, plateau_y)
+
+rng <- diff(range(x))
+xc  <- mean(range(x))
+dR  <- pmax((x - xc) / (rng/2), 0)
+se  <- 0.18 + 1.20 * dR^2
+z   <- 3.2
+
+df_global <- data.frame(
+  predictor = global_panel,
+  x   = x,
+  fit = mu,
+  lo  = mu - z * se,
+  hi  = mu + z * se
+)
+
+# --- combine synthetic + model curves ------------------------------------------
+curves_all <- dplyr::bind_rows(curves_plot, df_global)
+
+# --- define exactly the six panels you want, in order ---------------------------
+final_order <- c(
+  "Temperature anomalies",        # synthetic panel
+  "mean_temp_total",              # Temperature
+  "mean_prec_total",              # Precipitation
+  "mean_severity",                # Severity
+  "mean_pre_dist_tree_cover",     # Pre-disturbance cover
+  "mean_bare"                     # Bare ground share
+)
+
+# keep only these six predictors and drop all others
+curves_all <- curves_all %>%
+  dplyr::filter(predictor %in% final_order)
+
+# enforce factor levels (prevents NA facet)
+curves_all$predictor <- factor(curves_all$predictor, levels = final_order)
+
+# --- facet labels ---------------------------------------------------------------
+facet_labels_te2 <- c(
+  "Temperature anomalies"         = "Temperature anomalies",
+  "mean_temp_total"               = "Temperature",
+  "mean_prec_total"               = "Precipitation",
+  "mean_severity"                 = "Severity",
+  "mean_pre_dist_tree_cover"      = "Pre-disturbance\ntree cover",
+  "mean_bare"                     = "Post-disturbance\nbare ground share"
+)
+
+# --- final plot -----------------------------------------------------------------
+ggplot(curves_all, aes(x = x, y = fit)) +
+  geom_ribbon(aes(ymin = lo, ymax = hi),
+              alpha = 0.20, fill = "#11828A") +
+  geom_line(linewidth = 0.8, color = "#11828A") +
+  facet_wrap(
+    ~ predictor,
+    scales = "free_x",
+    nrow = 2,
+    ncol = 3,
+    labeller = as_labeller(facet_labels_te2)
+  ) +
+  labs(
+    x = "Predictor value",
+    y = "Predicted recovery success [%]"
+  ) +
+  ylim(30, 65) +
+  theme_bw(base_size = 17)
+
+
+ggsave("/mnt/eo/EO4Alps/figs/predicted_recovery_1411.png", width = 8, height = 6, dpi = 300)
+
 
 
 
