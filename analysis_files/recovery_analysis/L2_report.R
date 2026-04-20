@@ -3,7 +3,7 @@ library(ggplot2)
 library(dplyr)
 
 
-metadata_sensor <- read_delim("eo_nas/EO4Alps/metadata_sensor.csv", 
+metadata_sensor <- read_delim("/mnt/eo/EO4Alps/metadata_sensor.csv", 
                               delim = ",", escape_double = FALSE, trim_ws = TRUE)
 
 # Reorder the sensor factor levels
@@ -20,6 +20,7 @@ ggplot(metadata_sensor, aes(x = Year, y = number1, fill = sensor)) +
     y = "# of L1 Images",
     fill = "Sensor"
   ) +
+  xlim(1984, 2024)+
   theme_minimal() +
   theme(
     axis.text.x = element_text(angle = 45, hjust = 1) # Rotate x-axis labels
@@ -42,10 +43,10 @@ ggplot(metadata_sensor, aes(x = Year, y = number1, fill = sensor)) +
 
 
 
-p1 <- ggplot(metadata_sensor, aes(x = Year, y = number1, fill = sensor)) +
+ggplot(metadata_sensor, aes(x = Year, y = number1, fill = sensor)) +
   geom_bar(stat = "identity", position = "stack") +
-  scale_fill_brewer(palette = "Set3") + 
-  scale_x_continuous(breaks = seq(1986, 2023, by = 5)) +  
+  scale_fill_brewer(palette = "Greys", direction=-1) + 
+  scale_x_continuous(breaks = seq(1985, 2024, by = 5)) +  
   labs(
     x = "Year",
     y = "# of L1 images",
@@ -104,5 +105,67 @@ print(legend_plot)
 
 
 
+periods <- list(
+  `1985–1994` = c(1985, 1994),
+  `1995–2004` = c(1995, 2004),
+  `2005–2014` = c(2005, 2014),
+  `2015–2024` = c(2015, 2024)
+)
 
+grey_palette <- c(
+  "S2A" = "grey20",
+  "S2B" = "grey35",
+  "LC09" = "grey50",
+  "LC08" = "grey65",
+  "LE07" = "grey75",
+  "LT05" = "grey85",
+  "LT04" = "grey95"
+)
+
+make_plot <- function(dat, y1, y2, title = NULL) {
+  dat %>%
+    filter(Year >= y1, Year <= y2) %>%
+    ggplot(aes(x = Year, y = number1, fill = sensor)) +
+    geom_col() +
+    scale_fill_manual(values = grey_palette) +
+    scale_x_continuous(breaks = seq(y1, y2, by = 1)) +
+    labs(
+      x = "Year",
+      y = "# of L1 images",
+      fill = "",
+      title = title
+    ) +
+    theme_bw(base_size = 18) +
+    theme(
+      axis.text.x = element_text(angle = 45, hjust = 1),
+      panel.grid.minor = element_blank()
+    )
+}
+plots <- lapply(names(periods), function(nm) {
+  rng <- periods[[nm]]
+  make_plot(metadata_sensor, rng[1], rng[2], title = nm)
+})
+names(plots) <- names(periods)
+
+# Example: show one
+plots[["1985–1994"]]
+plots[["1995–2004"]]
+plots[["2005–2014"]]
+plots[["2015–2024"]]
+
+
+out_dir <- "/mnt/eo"  # change
+
+dir.create(out_dir, showWarnings = FALSE)
+
+for (nm in names(plots)) {
+  fname <- paste0("L1_images_", gsub("–", "-", nm), ".png")
+  ggsave(
+    filename = file.path(out_dir, fname),
+    plot = plots[[nm]],
+    width = 9,
+    height = 3,
+    dpi = 300
+  )
+}
 
